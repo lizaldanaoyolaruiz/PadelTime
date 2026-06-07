@@ -1,4 +1,8 @@
 const Solutions = () => {
+  const handleDashboardClick = () => {
+    alert("¡El panel de gestión estará disponible próximamente!");
+  };
+
   return (
     <section className="solutions" id="nosotros">
       <div className="solutions-content">
@@ -37,7 +41,7 @@ const Solutions = () => {
         </div>
       </div>
 
-      <div className="solutions-dashboard">
+      <div className="solutions-dashboard interactive-dashboard" onClick={handleDashboardClick}>
         <div className="dashboard-header">
           <span>DASHBOARD DE GESTIÓN</span>
           <div className="status-dot"></div>

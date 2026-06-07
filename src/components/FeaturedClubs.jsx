@@ -2,27 +2,27 @@ const FeaturedClubs = () => {
   const clubs = [
     {
       id: 1,
-      name: "Padel Elite Center",
+      name: "MARCOS PAZ PADEL",
       image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400&h=200",
-      price: "$$$",
-      location: "Madrid, Zona Norte",
+      price: "$30 000",
+      location: "San Miguel De Tucumán",
       time: "07:00 - 23:30",
       rating: "4.9 (120 reseñas)"
     },
     {
       id: 2,
-      name: "Arena Club Pro",
+      name: "GUILLERMINA PADEL",
       image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400&h=200",
-      price: "$$",
-      location: "Barcelona, Diagonal",
+      price: "$25 000",
+      location: "San Miguel De Tucumán",
       time: "08:00 - 23:00",
       rating: "4.7 (85 reseñas)"
     },
     {
       id: 3,
-      name: "Urban Padel Hub",
+      name: "LOMAS PADEL Y EVENTOS",
       image: "https://images.unsplash.com/photo-1574629810360-7efbb1925536?auto=format&fit=crop&q=80&w=400&h=200",
-      price: "$$",
+      price: "$18 000",
       location: "Valencia, Marina",
       time: "06:00 - 00:00",
       rating: "4.8 (210 reseñas)"
