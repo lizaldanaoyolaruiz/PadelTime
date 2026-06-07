@@ -2,6 +2,14 @@ import logo from '../assets/logo.png';
 import './Navbar.css';
 
 const Navbar = () => {
+  const handleLoginClick = () => {
+    console.log("Abriendo ventana de inicio de sesión");
+  };
+
+  const handleRegisterClick = () => {
+    console.log("Abriendo ventana de registro");
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-logo">
@@ -16,8 +24,8 @@ const Navbar = () => {
         <li><a href="#contacto">Contacto</a></li>
       </ul>
       <div className="navbar-actions">
-        <button className="btn-login">Iniciar Sesión</button>
-        <button className="btn-register">Registrarse</button>
+        <button className="btn-login" onClick={handleLoginClick}>Iniciar Sesión</button>
+        <button className="btn-register" onClick={handleRegisterClick}>Registrarse</button>
       </div>
     </nav>
   );
