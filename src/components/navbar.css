@@ -67,7 +67,9 @@
 @media (max-width: 992px) {
   .navbar {
     padding: 1rem 2rem;
+    position: relative;
   }
+  
   .navbar-links {
     gap: 1.5rem;
   }
@@ -78,6 +80,7 @@
     flex-direction: column;
     gap: 1.5rem;
     padding: 1.5rem 1rem;
+    position: relative;
   }
   
   .navbar-links {
