@@ -29,7 +29,7 @@ const FeaturedClubs = () => {
     }
   ];
 
-  return (
+ return (
     <section className="featured-clubs" id="clubes">
       <div className="section-header">
         <div className="section-title">
@@ -44,7 +44,12 @@ const FeaturedClubs = () => {
           <div className="club-card" key={club.id}>
             <div className="club-image-container">
               <img src={club.image} alt={club.name} className="club-image" />
-              <span className="badge-admin">✓ APROBADO POR ADMIN</span>
+              <span
+                className="badge-admin"
+                title="Este club ha sido verificado y certificado por nuestro equipo."
+              >
+                ✓ APROBADO POR ADMIN
+              </span>
               <span className="badge-rating">☆ {club.rating}</span>
             </div>
             <div className="club-info">
