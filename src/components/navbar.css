@@ -42,21 +42,28 @@
 }
 
 .btn-login {
+  display: inline-block;
   background: transparent;
   color: var(--color-text-base);
   border: none;
   cursor: pointer;
   font-weight: var(--fw-semibold);
   font-size: var(--text-base);
+  font-family: var(--font-base);
+  text-decoration: none;
 }
 
 .btn-register {
+  display: inline-block;
   background-color: var(--color-primary);
   color: var(--color-neutral);
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-weight: var(--fw-bold);
+  font-size: var(--text-base);
+  font-family: var(--font-base);
+  text-decoration: none;
   cursor: pointer;
   transition: transform 0.2s;
 }
