@@ -387,3 +387,7 @@
 .btn-detail:hover {
   background-color: var(--color-border);
 }
+.btn-detail:hover {
+  background-color: var(--color-primary);
+  color: var(--color-neutral); /* Cambiamos el texto a oscuro para que se lea bien sobre el verde */
+}
