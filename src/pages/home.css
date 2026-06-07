@@ -73,11 +73,15 @@
 
 .hero {
   text-align: center;
-  padding: 8rem 2rem;
+  padding: 4rem 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+.hero h1 {
+  margin: 0;
 }
 
 .highlight {
@@ -89,23 +93,25 @@
   max-width: 600px;
   line-height: 1.6;
   font-size: var(--text-lg);
+  margin: 0;
 }
 
 .search-bar {
   display: flex;
   align-items: center;
-  background: var(--color-border-subtle);
+  background: var(--color-surface-2);
   border: 1px solid var(--color-border-subtle);
   padding: 0.4rem;
   border-radius: 8px;
   width: 100%;
-  max-width: 600px;
-  margin-top: 2rem;
+  max-width: 650px;
+  margin-top: 1rem;
 }
 
 .search-icon {
   padding: 0 1rem;
   opacity: 0.5;
+  color: var(--color-primary);
 }
 
 .search-bar input {
@@ -125,7 +131,7 @@
   background-color: var(--color-primary);
   color: var(--color-neutral);
   border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 2rem;
   border-radius: 6px;
   font-weight: var(--fw-bold);
   cursor: pointer;
@@ -237,4 +243,147 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.featured-clubs {
+  padding: 2rem 4rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1.2rem;
+}
+
+.section-title h2 {
+  font-size: var(--text-xl);
+  color: var(--color-text-base);
+  margin: 0 0 0.3rem 0;
+  font-weight: var(--fw-bold);
+}
+
+.section-title p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin: 0;
+}
+
+.view-all {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.clubs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+}
+
+.club-card {
+  background-color: var(--color-surface-1);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.club-image-container {
+  position: relative;
+  height: 220px;
+  width: 100%;
+}
+
+.club-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.badge-admin {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: var(--color-primary);
+  color: var(--color-neutral);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+}
+
+.badge-rating {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: var(--color-primary);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+}
+
+.club-info {
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.club-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.club-title-row h3 {
+  font-size: var(--text-base);
+  margin: 0;
+  color: var(--color-text-base);
+  font-weight: var(--fw-bold);
+}
+
+.club-price {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.club-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.club-details p {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.btn-detail {
+  width: 100%;
+  background-color: var(--color-surface-3);
+  color: var(--color-text-base);
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-weight: var(--fw-semibold);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 0.2rem;
+}
+
+.btn-detail:hover {
+  background-color: var(--color-border);
 }
