@@ -5,7 +5,7 @@ import './Home.css';
 
 const Home = () => {
   return (
-    <div className="home-wrapper">
+    <div className="home-wrapper" id="inicio">
       <Navbar />
       <main>
         <Hero />

@@ -251,3 +251,15 @@ body {
 .btn-send:hover {
   transform: scale(1.05);
 }
+.logo-img {
+  height: 155px;
+  width: auto;
+  display: block;
+}
+
+.logo-img-footer {
+  height: 155px;
+  width: auto;
+  display: block;
+  margin-bottom: 1rem;
+}

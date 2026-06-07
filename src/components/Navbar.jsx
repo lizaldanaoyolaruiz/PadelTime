@@ -1,8 +1,12 @@
+import logo from '../assets/logo.png';
+
 const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <h2>PadelTime</h2>
+        <a href="#inicio">
+          <img src={logo} alt="Logo" className="logo-img" />
+        </a>
       </div>
       <ul className="navbar-links">
         <li><a href="#inicio" className="active">Inicio</a></li>

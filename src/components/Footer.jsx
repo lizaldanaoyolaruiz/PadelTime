@@ -1,8 +1,12 @@
+import logo from '../assets/logo.png';
+
 const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-brand">
-        <h2>PadelSaaS</h2>
+        <a href="#inicio">
+          <img src={logo} alt="Logo" className="logo-img-footer" />
+        </a>
         <p>© 2024 PadelSaaS. Elevando tu juego.</p>
         <div className="social-icons">
           <span>🌍</span>
