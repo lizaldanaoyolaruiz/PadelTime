@@ -7,7 +7,7 @@ import Contact from "./pages/Contact";
 import useAuthStore from './store/authStore';
 import './App.css';
 import ContactPage from './pages/Contact';
-
+import ClubDetail from './pages/ClubDetail';
 function ProtectedRoute({ children }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return isAuthenticated ? children : <Navigate to="/login" replace />;
@@ -35,6 +35,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
