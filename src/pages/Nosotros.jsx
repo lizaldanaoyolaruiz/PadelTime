@@ -17,6 +17,61 @@ const NosotrosPage = () => {
           </p>
         </Col>
       </Row>
+      <Row className="g-4 mb-5 text-center">
+        <Col md={3} sm={6}>
+            <Card className="h-100 shadow-sm border-0">
+                <Card.Body>
+                    <h2 className="display-4 fw-bold text-primary">404+</h2>
+                    <Card.Title>
+                        Clubes Activos
+                    </Card.Title>
+                    <Card.Text>
+                        Optimizando su gestión diaria con nuestra tecnología de punta.
+                    </Card.Text>
+                </Card.Body>
+            </Card>  
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="h-100 shadow-sm border-0">
+                <Card.Body>
+                    <h2 className="display-4 fw-bold text-primary">8+</h2>
+                    <Card.Title>
+                        Partido/Mes
+                    </Card.Title>
+                        Reservas procesadas sin interrupciones ni errores humanos.
+                    <Card.Text>
+                    </Card.Text>
+                </Card.Body>
+            </Card>  
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="h-100 shadow-sm border-0">
+                <Card.Body>
+                    <h2 className="display-4 fw-bold text-primary">4+</h2>
+                    <Card.Title>
+                        Canchas
+                    </Card.Title>
+                    <Card.Text>
+                        Digitalizadas y listas para ser reservadas en segundos.
+                    </Card.Text>
+                </Card.Body>
+            </Card>  
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="h-100 shadow-sm border-0">
+                <Card.Body>
+                    <h2 className="display-4 fw-bold text-primary">3+</h2>
+                    <Card.Title>
+                        Nuestra Vision 2027
+                    </Card.Title>
+                    <Card.Text>
+                        Liderar la transformación digital del deporte amateur en Europa, convirtiéndonos en el estándar de oro para la administración de recintos deportivos.
+                    </Card.Text>
+                </Card.Body>
+            </Card>  
+        </Col>
+      </Row>
+
     </Container>
   );
 };
