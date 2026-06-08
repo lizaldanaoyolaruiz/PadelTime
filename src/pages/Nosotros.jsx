@@ -89,6 +89,49 @@ const NosotrosPage = () => {
             </Card>
         </Col>
       </Row>
+      <h2 className="text-center mb-4 fw-bold">
+        El Equipo
+      </h2>
+      <p className="text-center text-secondary mb-5">Talento experto en SaaS y apasionados del deporte.</p>
+      <Row className="g-4 mb-5">
+        <Col md={3} sm={6}>
+            <Card className="text-center h-100 shadow-sm">
+                <Card.Body>
+                    <h4 className="fw-bold">Marisol Lamas</h4>
+                    <p className="text-muted">Scrum Master</p>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="text-center h-100 shadow-sm">
+                <Card.Body>
+                    <h4 className="fw-bold">Aldana Liz Oyola Ruiz</h4>
+                    <p className="text-muted">Lider Tecnica</p>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="text-center h-100 shadow-sm">
+                <Card.Body>
+                    <h4 className="fw-bold">Facuando Camaño</h4>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="text-center h-100 shadow-sm">
+                <Card.Body>
+                    <h4 className="fw-bold">Octavio Fernández Caram</h4>
+                </Card.Body>
+            </Card>
+        </Col>
+        <Col md={3} sm={6}>
+            <Card className="text-center h-100 shadow-sm">
+                <Card.Body>
+                    <h4 className="fw-bold">Leandro Blanca</h4>
+                </Card.Body>
+            </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
