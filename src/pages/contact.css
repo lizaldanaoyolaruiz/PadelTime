@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 .contact-page {
   min-height: 100vh;
   background: #02112d;
   padding: 50px;
   color: white;
+  font-family: 'Outfit', sans-serif;
 }
 
 .hero {
@@ -35,6 +38,13 @@
   border-radius: 18px;
   padding: 30px;
   border: 1px solid rgba(155, 226, 45, 0.2);
+  transition: all 0.3s ease;
+}
+
+.form-card:hover,
+.info-card:hover {
+  border-color: #9be22d;
+  box-shadow: 0 0 25px rgba(155, 226, 45, 0.15);
 }
 
 .form-card form {
@@ -68,6 +78,23 @@
   color: white;
   padding: 14px;
   font-size: 16px;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: #9be22d;
+  box-shadow: 0 0 12px rgba(155, 226, 45, 0.4);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: #9be22d;
+  box-shadow: 0 0 15px rgba(155, 226, 45, 0.6);
 }
 
 .field span {
@@ -83,7 +110,18 @@
   border-radius: 12px;
   font-size: 20px;
   font-weight: 700;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(155, 226, 45, 0.7);
+}
+
+.submit-btn:active {
+  transform: translateY(1px);
 }
 
 .sidebar {
@@ -114,6 +152,14 @@
   background: #26344d;
   color: white;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.socials button:hover {
+  background: #9be22d;
+  color: #02112d;
+  transform: translateY(-3px);
+  box-shadow: 0 0 15px rgba(155, 226, 45, 0.5);
 }
 
 .padel-image {
@@ -125,10 +171,12 @@
 
 .status.success {
   color: #9be22d;
+  font-weight: 600;
 }
 
 .status.error {
   color: #ff7a7a;
+  font-weight: 600;
 }
 
 @media (max-width: 900px) {
@@ -142,5 +190,9 @@
 
   .hero h1 {
     font-size: 48px;
+  }
+
+  .contact-page {
+    padding: 25px;
   }
 }

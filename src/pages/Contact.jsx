@@ -40,26 +40,48 @@ export default function ContactPage() {
   });
 
   const onSubmit = async (data) => {
-    setIsSubmitting(true);
+  setIsSubmitting(true);
+  setStatus({
+    type: null,
+    message: "",
+  });
 
-    try {
-      console.log(data);
+  try {
+    const response = await fetch(
+      "http://localhost:3000/api/send-email",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
 
+    const result = await response.json();
+
+    if (response.ok) {
       setStatus({
         type: "success",
-        message: "¡Mensaje enviado con éxito!",
+        message: result.message,
       });
 
       reset();
-    } catch {
+    } else {
       setStatus({
         type: "error",
-        message: "Error al enviar el mensaje",
+        message: result.message,
       });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+  } catch (error) {
+    setStatus({
+      type: "error",
+      message: "No se pudo conectar con el servidor",
+    });
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="contact-page">
