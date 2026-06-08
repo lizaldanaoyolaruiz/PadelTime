@@ -71,7 +71,24 @@ const NosotrosPage = () => {
             </Card>  
         </Col>
       </Row>
-
+      <Row className="g-4 mb-5">
+        <Col md={6}>
+            <Card className="h-100 border-0 bg-light">
+                <Card.Body>
+                    <h3 className="fw-bold">Precision Tecnica</h3>
+                    <p>Algoritmos de optimización de horarios que maximizan la rentabilidad por cancha hasta en un 40%. </p>
+                </Card.Body>
+            </Card>
+        </Col>
+         <Col md={6}>
+            <Card className="h-100 border-0 bg-light">
+                <Card.Body>
+                    <h3 className="fw-bold">Experiencia de Usuarios</h3>
+                    <p>Diseñado para ser veloz. Reservas completadas en menos de 3 clics desde cualquier dispositivo.</p>
+                </Card.Body>
+            </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };
