@@ -13,7 +13,7 @@ const Navbar = () => {
       <ul className="navbar-links">
         <li><a href="#inicio" className="active">Inicio</a></li>
         <li><a href="#clubes">Clubes</a></li>
-        <li><a href="#nosotros">Sobre Nosotros</a></li>
+        <li><Link to="/nosotros">Sobre Nosotros</Link></li>
         <li><a href="#contacto">Contacto</a></li>
       </ul>
       <div className="navbar-actions">
