@@ -54,3 +54,27 @@
     color: transparent;
     margin-bottom: 0.5rem;
 }
+.text-primary{
+    color: #94A3B8;
+}
+
+.card-title{
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color:#F8FAFC;
+}
+
+.card-text{
+    color: #94A3B8;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+.bg-light{
+    background-color: #1E293B;
+}
+
+.card.border-0.bg-light{
+    border-radius: 28px;
+    padding: 0.25rem;
+}
