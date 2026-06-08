@@ -1,0 +1,111 @@
+:root {
+  /* Colores de marca */
+  --color-primary:   #BEF264;
+  --color-secondary: #84CC16;
+  --color-tertiary:  #334155;
+  --color-neutral:   #0F172A;
+
+  /* Texto */
+  --color-text-base:    #F8FAFC;
+  --color-text-muted:   #94A3B8;
+  --color-text-inverse: #0F172A;
+
+  /* Superficies */
+  --color-surface-1: #0F172A;
+  --color-surface-2: #1E293B;
+  --color-surface-3: #334155;
+
+  /* Bordes */
+  --color-border:        #334155;
+  --color-border-subtle: rgba(255, 255, 255, .08);
+
+  /* Estado */
+  --color-success: #84CC16;
+  --color-error:   #EF4444;
+  --color-warning: #F59E0B;
+
+  /* Tipografía */
+  --font-base: 'Inter', system-ui, sans-serif;
+
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 15px;
+  --text-lg:   20px;
+  --text-xl:   24px;
+  --text-2xl:  32px;
+
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  font-family: var(--font-base);
+  font-size: var(--text-base);
+  color: var(--color-text-base);
+  background: var(--color-surface-1);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+h1,
+h2 {
+  font-family: var(--font-base);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-base);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
