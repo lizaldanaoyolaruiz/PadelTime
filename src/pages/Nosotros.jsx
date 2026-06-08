@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Card, Col, Row } from "react-bootstrap";
+import "./nosotros.css";
 
 const NosotrosPage = () => {
   return (
