@@ -3,14 +3,17 @@ import { Toaster } from 'sonner';
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
-import Contact from "./pages/Contact";
-import useAuthStore from './store/authStore';
-import './App.css';
 import ContactPage from './pages/Contact';
 import ClubDetail from './pages/ClubDetail';
-function ProtectedRoute({ children }) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+import OwnerDashboard from './pages/Owner/OwnerDashboard';
+import useAuthStore from './store/authStore';
+import './App.css';
+
+function ProtectedRoute({ children, role }) {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (role && user?.role !== role) return <Navigate to="/" replace />;
+  return children;
 }
 
 function App() {
@@ -36,6 +39,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
+        <Route
+          path="/owner/*"
+          element={
+            <ProtectedRoute role="owner">
+              <OwnerDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

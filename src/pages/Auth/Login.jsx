@@ -9,6 +9,11 @@ import useAuthStore from '../../store/authStore';
 import { loginUser } from '../../services/authService';
 import './Auth.css';
 
+const DEV_USERS = [
+  { label: 'Admin',   user: { id: 1, nombre: 'Marcos Padel', role: 'owner', club: 'Club Central' }, token: 'dev-owner-token' },
+  { label: 'Jugador', user: { id: 3, nombre: 'Juan Pérez',   role: 'user'  }, token: 'dev-user-token'  },
+];
+
 export default function Login() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((s) => s.setAuth);
@@ -36,6 +41,14 @@ export default function Login() {
 
   const onInvalid = () => {
     toast.error('Completá todos los campos correctamente.');
+  };
+
+  const devLogin = ({ user, token, label }) => {
+    setAuth(user, token);
+    toast.success(`Acceso dev: ${label}`);
+    if (user.role === 'admin') navigate('/admin');
+    else if (user.role === 'owner') navigate('/owner');
+    else navigate('/');
   };
 
   return (
@@ -101,6 +114,19 @@ export default function Login() {
             {isSubmitting ? 'ENTRANDO...' : 'ENTRAR A LA PISTA'}
           </button>
         </form>
+
+        {import.meta.env.DEV && (
+          <div className="dev-access">
+            <span className="dev-access-label">Acceso rápido (solo dev)</span>
+            <div className="dev-access-btns">
+              {DEV_USERS.map((u) => (
+                <button key={u.label} className="dev-btn" onClick={() => devLogin(u)}>
+                  {u.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
