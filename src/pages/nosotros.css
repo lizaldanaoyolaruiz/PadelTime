@@ -17,3 +17,15 @@
     color: transparent;
     letter-spacing: -0.02em;
 }
+.lead.fs-4{
+    color: #334155;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+.fs-5.text-secondary{
+    color:#475569 !important;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
