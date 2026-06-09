@@ -42,7 +42,14 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
-        <Route path="/confirmacion" element={<BookingConfirmation />} />
+        <Route 
+          path="/confirmacion" 
+          element={
+            <ProtectedRoute>
+              <BookingConfirmation />
+            </ProtectedRoute>
+          } 
+        />
         <Route
           path="/owner/*"
           element={
