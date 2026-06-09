@@ -49,10 +49,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route path="/404" element={<Error404 />} />
-
-        <Route path="*" element={<Navigate to="/" replace />} />/
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
