@@ -1,0 +1,294 @@
+.confirmation-main {
+  min-height: calc(100vh - 80px);
+  padding: 3rem 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.confirmation-container {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 2rem;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.confirmation-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.confirmation-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-base);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-card, .breakdown-card, .payment-methods-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.club-summary-header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.club-summary-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.club-summary-info h2 {
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.court-badge {
+  background: rgba(190, 242, 100, 0.1);
+  color: var(--color-primary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: var(--fw-semibold);
+  border: 1px solid rgba(190, 242, 100, 0.2);
+}
+
+.datetime-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.datetime-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.datetime-block .label, .breakdown-card .label {
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.datetime-block .value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-base);
+  font-weight: var(--fw-semibold);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  margin-top: 1rem;
+  font-size: 0.95rem;
+}
+
+.breakdown-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border-subtle);
+  color: var(--color-text-base);
+  font-weight: var(--fw-bold);
+  font-size: 1.1rem;
+}
+
+.total-amount {
+  color: var(--color-primary);
+  font-size: 1.4rem;
+}
+
+.deposit-warning {
+  margin-top: 1.5rem;
+  background: rgba(190, 242, 100, 0.05);
+  border: 1px solid rgba(190, 242, 100, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.warning-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-primary);
+  font-weight: var(--fw-semibold);
+  margin-bottom: 0.25rem;
+}
+
+.deposit-warning p {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-left: 1.5rem;
+}
+
+.confirmation-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-methods-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.payment-methods-card h2 {
+  color: var(--color-text-base);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.method-box {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.method-box:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.method-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.mp-icon {
+  background: #009EE3;
+}
+
+.wa-icon {
+  background: #25D366;
+}
+
+.method-box h3 {
+  color: var(--color-text-base);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.method-box p {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-mp, .btn-wa {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  color: #fff;
+  transition: opacity 0.2s;
+}
+
+.btn-mp {
+  background: #009EE3;
+}
+
+.btn-wa {
+  background: #128C7E;
+}
+
+.btn-mp:hover, .btn-wa:hover {
+  opacity: 0.9;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.divider::before {
+  margin-right: 1rem;
+}
+
+.divider::after {
+  margin-left: 1rem;
+}
+
+.terms-text {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.terms-text a {
+  color: var(--color-text-base);
+  text-decoration: underline;
+  text-decoration-color: var(--color-border-subtle);
+}
+
+@media (max-width: 992px) {
+  .confirmation-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .datetime-row {
+    grid-template-columns: 1fr;
+  }
+  .club-summary-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
