@@ -262,6 +262,17 @@ h2.text-titulo::after {
   font-weight: 500;
   letter-spacing: 0.3px;
 }
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1rem auto;
+  display: block;
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  background-color: var(--color-surface-3);
+}
 
 
 @media (max-width: 768px) {
@@ -285,6 +296,10 @@ h2.text-titulo::after {
   }
   .row-intengrantes .col-md-2 {
     width: 150px;
+  }
+  avatar-img {
+    width: 60px;
+    height: 60px;
   }
 }
 
