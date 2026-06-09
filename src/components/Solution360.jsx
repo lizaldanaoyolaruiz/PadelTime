@@ -1,8 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-
 const Solutions = () => {
-  const navigate = useNavigate();
-
   const handleDashboardClick = () => {
     alert("¡El panel de gestión estará disponible próximamente!");
   };
@@ -40,8 +36,8 @@ const Solutions = () => {
         </div>
 
         <div className="solutions-actions">
-          <button className="btn-reserve" onClick={() => navigate('/register')}>QUIERO RESERVAR</button>
-          <button className="btn-club" onClick={() => navigate('/register')}>SOY UN CLUB</button>
+          <button className="btn-reserve">QUIERO RESERVAR</button>
+          <button className="btn-club">SOY UN CLUB</button>
         </div>
       </div>
 
