@@ -123,6 +123,7 @@ const NosotrosPage = () => {
             <Card.Body>
               <img src="https://randomuser.me/api/portraits/men/52.jpg" alt="Facuando Camaño" className="avatar-img" />
               <h4 className="text-inten-nom">Facuando Camaño</h4>
+              <p className="text-muted">Desarrollador</p>
             </Card.Body>
           </Card>
         </Col>
@@ -131,6 +132,7 @@ const NosotrosPage = () => {
             <Card.Body>
               <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Octavio Fernández Caram" className="avatar-img" />  
               <h4 className="text-inten-nom">Octavio Fernández Caram</h4>
+              <p className="text-muted">Desarrollador</p>
             </Card.Body>
           </Card>
         </Col>
@@ -139,6 +141,7 @@ const NosotrosPage = () => {
             <Card.Body>
               <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Leandro Blanca" className="avatar-img" />  
               <h4 className="text-inten-nom">Leandro Blanca</h4>
+              <p className="text-muted">Desarrollador</p>
             </Card.Body>
           </Card>
         </Col>
