@@ -3,6 +3,8 @@ import { Toaster } from 'sonner';
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
+import Contact from "./pages/Contact";
+import Complexes from './pages/Complexes';
 import ContactPage from './pages/Contact';
 import ClubDetail from './pages/ClubDetail';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
@@ -38,7 +40,11 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+<<<<<<< HEAD
         <Route path="/complejo/:id" element={<ClubDetail />} />
+=======
+        <Route path="/complejos" element={<Complexes />} />
+>>>>>>> 6cf2557a545d6a69d90c6bb1e0f78c2b6d380b6f
         <Route
           path="/owner/*"
           element={

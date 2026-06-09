@@ -13,10 +13,17 @@ const Navbar = () => {
         </Link>
       </div>
       <ul className="navbar-links">
+<<<<<<< HEAD
         <li><Link to="/">Inicio</Link></li>
         <li><a href="/#clubes">Clubes</a></li>
         <li><a href="/#nosotros">Sobre Nosotros</a></li>
         <li><Link to="/contact">Contacto</Link></li>
+=======
+        <li><a href="#inicio" className="active">Inicio</a></li>
+        <li><Link to="/complejos">Clubes</Link></li>
+        <li><a href="#nosotros">Sobre Nosotros</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+>>>>>>> 6cf2557a545d6a69d90c6bb1e0f78c2b6d380b6f
       </ul>
       <div className="navbar-actions">
         <button className="btn-login" onClick={() => navigate('/login')}>
