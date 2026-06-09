@@ -38,7 +38,7 @@ const FeaturedClubs = () => {
           <h2>Clubes Destacados</h2>
           <p>Seleccionados por su excelencia y calidad técnica.</p>
         </div>
-        <a href="#todos" className="view-all">Ver todos los clubes →</a>
+        <a href="/complejos" className="view-all">Ver todos los clubes →</a>
       </div>
 
       <div className="clubs-grid">

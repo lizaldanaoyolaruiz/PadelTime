@@ -22,6 +22,13 @@ const emailField = z
   .max(100,  'Máximo 100 caracteres')
   .email('Ingresa un correo electrónico válido');
 
+export const contactSchema = z.object({
+  nombre:  z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
+  email:   emailField,
+  asunto:  z.string().min(1, 'Selecciona un asunto'),
+  mensaje: z.string().min(10, 'El mensaje debe tener al menos 10 caracteres'),
+});
+
 export const loginSchema = z.object({
   email:    emailField,
   password: passwordField,
