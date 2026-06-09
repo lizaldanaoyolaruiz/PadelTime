@@ -1,13 +1,27 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './Footer.css';
 
 const Footer = () => {
+  const [email, setEmail] = useState('');
+
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (!email) return;
+
+    console.log("Email listo para enviar a la base de datos:", email);
+    
+    setEmail('');
+    alert("¡Gracias por suscribirte al newsletter!");
+  };
+
   return (
     <footer className="footer">
       <div className="footer-brand">
-        <a href="#inicio">
+        <Link to="/">
           <img src={logo} alt="Logo" className="logo-img-footer" />
-        </a>
+        </Link>
         <p>© 2026 PadelTime. Elevando tu juego.</p>
         <div className="social-icons">
           <span>
@@ -30,10 +44,10 @@ const Footer = () => {
       <div className="footer-nav">
         <h3>NAVEGACIÓN</h3>
         <ul>
-          <li>Inicio</li>
-          <li>Clubes</li>
-          <li>Sobre Nosotros</li>
-          <li>Contacto</li>
+          <li><Link to="/">Inicio</Link></li>
+          <li><Link to="/complejos">Clubes</Link></li>
+          <li><a href="/#nosotros">Sobre Nosotros</a></li>
+          <li><Link to="/contact">Contacto</Link></li>
         </ul>
       </div>
       <div className="footer-legal">
@@ -47,10 +61,16 @@ const Footer = () => {
       <div className="footer-newsletter">
         <h3>NEWSLETTER</h3>
         <p>Recibe las mejores ofertas y torneos.</p>
-        <div className="newsletter-input">
-          <input type="email" placeholder="Email" />
-          <button className="btn-send">➤</button>
-        </div>
+        <form className="newsletter-input" onSubmit={handleSubscribe}>
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button type="submit" className="btn-send">➤</button>
+        </form>
       </div>
     </footer>
   );
