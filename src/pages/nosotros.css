@@ -78,3 +78,39 @@
     border-radius: 28px;
     padding: 0.25rem;
 }
+.card.bg-light .card-body {
+  padding: 2rem;
+}
+.card.bg-light h3{
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color:#F8FAFC;
+}
+.card.bg-light p{
+    font-size: 1rem;
+    color:#94A3B8;
+    line-height: 1.5rem;
+}
+h2.text-center{
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-top:2rem;
+    position:relative;
+    display:inline-block;
+    width: auto;
+    padding-bottom: 0.5rem;
+}
+
+h2.text-center::after{
+    content:'';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background:linear-gradient(90deg, #10B981, #34D399) ;
+    border-radius: 2px;
+    
+}
