@@ -1,7 +1,6 @@
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import FeaturedClubs from '../components/FeaturedClubs';
-import Solutions from '../components/Solution360'; // <-- Importar esto
+import Solutions from '../components/Solution360';
 import Footer from '../components/Footer';
 import './Home.css';
 
@@ -11,8 +10,7 @@ const Home = () => {
       <Navbar />
       <main>
         <Hero />
-        <FeaturedClubs />
-        <Solutions /> {/* <-- Agregar esto */}
+        <Solutions />
       </main>
       <Footer />
     </div>
