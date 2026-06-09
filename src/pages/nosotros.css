@@ -112,5 +112,57 @@ h2.text-center::after{
     height: 4px;
     background:linear-gradient(90deg, #10B981, #34D399) ;
     border-radius: 2px;
-    
 }
+.text-center.text-secondary {
+  font-size: 1.1rem;
+  color: #64748B ;
+  margin-bottom: 2.5rem ;
+}
+.row.justify-content-center .card{
+    border-radius: 20px;
+    background: white;
+    transition: all 0.25s;
+}
+.row.justify-content-center .card:hover{
+    transform: translateY(-5px);
+    background: #FEFEFE;
+    border-color: #334155;
+}
+.row.justify-content-center .text-muted{
+color: #94A3B8;
+font-size: 0.85rem;
+font-weight: 500;
+letter-spacing: 0.3px;
+}
+
+@media (max-width: 768px){
+    .display-3 {
+    font-size: 2.2rem !important;
+  }
+  .display-4 {
+    font-size: 2.5rem !important;
+  }
+  .card.bg-light .card-body {
+    padding: 1.5rem;
+  }
+  h2.text-center {
+    font-size: 2rem;
+  }
+  .row.g-4 {
+    --bs-gutter-y: 1rem;
+  }
+}
+
+.card.border-0 {
+  border-bottom: 3px solid transparent !important;
+  transition: border 0.2s;
+}
+
+.card.border-0:hover {
+  border-bottom-color: #10B981 !important;
+}
+
+.card:last-child .display-4 {
+  font-size: 2.8rem; 
+}
+
