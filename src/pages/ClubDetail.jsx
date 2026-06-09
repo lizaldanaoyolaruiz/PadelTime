@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './ClubDetail.css';
 
 const ClubDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   
   const [club, setClub] = useState(null);
   const [canchas, setCanchas] = useState([]);
@@ -47,13 +48,20 @@ const ClubDetail = () => {
     }, 1000);
   }, [id]);
 
-  const handleReserva = () => {
-    console.log("Datos listos para enviar a la Base de Datos:", {
-      complejo_id: id,
-      dia: diaSeleccionado,
-      horario: horarioSeleccionado,
-      cancha: "Cancha Central",
-      total: "36,50€"
+const handleReserva = () => {
+    navigate('/confirmacion', { 
+      state: { 
+        complejo_id: id,
+        clubNombre: club?.nombre || "Premium Padel Club",
+        ubicacion: club?.ubicacion || "Buenos Aires, Argentina",
+        canchaNombre: "Cancha Central WPT", // Cuando tengas selección de cancha, lo pasás acá
+        dia: diaSeleccionado,
+        horario: horarioSeleccionado,
+        precioAlquiler: 12000,
+        precioLuz: 1500,
+        total: 13500,
+        senia: 5000
+      } 
     });
   };
 
