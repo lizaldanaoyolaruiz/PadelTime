@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './ClubDetail.css';
 
 const ClubDetail = () => {
-  const { id } = useParams(); // 1. Atrapamos el ID de la URL
+  const { id } = useParams();
   
-  // 2. Preparamos los estados para guardar lo que mande el backend
   const [club, setClub] = useState(null);
   const [canchas, setCanchas] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -15,25 +14,20 @@ const ClubDetail = () => {
   const [diaSeleccionado, setDiaSeleccionado] = useState(13);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('10:00');
 
-  // 3. Acá es donde ocurre la magia de la conexión
   useEffect(() => {
-    // ESTO SIMULA LA LLAMADA AL BACKEND. 
-    // Cuando tengas tu API lista, vas a cambiar este setTimeout por un fetch o axios
-    // Ejemplo: axios.get(`http://localhost:3000/api/complejos/${id}`)
-    
     setTimeout(() => {
       setClub({
         nombre: "Marcos Paz PADEL",
         ubicacion: "San Miguel De Tucuman",
-        telefono: "381-1234567",
+        telefono: "+54 381 1234567",
         horario: "Lun - Dom: 07:00 - 23:30",
       });
       
       setCanchas([
         {
           id: 1,
-          name: "Guillermina PADEL",
-          price: "25 000/h",
+          name: "Cancha Central WPT",
+          price: "35€/h",
           status: "Habilitada",
           description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
           tags: ["Interior", "Panorámica", "Césped Azul"],
@@ -41,8 +35,8 @@ const ClubDetail = () => {
         },
         {
           id: 2,
-          name: "lomas PADEL Y EVENTOS",
-          price: "18 000/h",
+          name: "Cancha 2 - Outdoor",
+          price: "28€/h",
           status: "Habilitada",
           description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
           tags: ["Exterior", "LED Pro", "Césped Verde"],
@@ -50,7 +44,7 @@ const ClubDetail = () => {
         }
       ]);
       setCargando(false);
-    }, 1000); // Simula 1 segundo de carga
+    }, 1000);
   }, [id]);
 
   const handleReserva = () => {
@@ -58,12 +52,11 @@ const ClubDetail = () => {
       complejo_id: id,
       dia: diaSeleccionado,
       horario: horarioSeleccionado,
-      cancha: "Cancha Central", // Esto también lo haremos dinámico después
+      cancha: "Cancha Central",
       total: "36,50€"
     });
   };
 
-  // Pantalla de carga mientras el backend responde
   if (cargando) return <div style={{textAlign: 'center', padding: '100px'}}>Cargando complejo...</div>;
 
   return (
@@ -72,7 +65,6 @@ const ClubDetail = () => {
       <main className="club-detail-main">
         <div className="club-header-section">
           <span className="badge-premium">✓ Club Premium</span>
-          {/* Reemplazamos los textos fijos por las variables del estado */}
           <h1>{club.nombre}</h1>
           <div className="club-info-row">
             <div className="club-location-contact">
@@ -100,7 +92,9 @@ const ClubDetail = () => {
           <section className="courts-list">
             <div className="courts-header">
               <h2>Nuestras Canchas</h2>
-              <span>{canchas.length} canchas disponibles</span>
+              <Link to="/canchas" style={{ cursor: 'pointer', textDecoration: 'underline', color: 'inherit' }}>
+                {canchas.length} canchas disponibles
+              </Link>
             </div>
             
             {canchas.map((cancha) => (
