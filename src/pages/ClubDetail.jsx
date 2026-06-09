@@ -1,41 +1,70 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './ClubDetail.css';
 
 const ClubDetail = () => {
+  const { id } = useParams(); // 1. Atrapamos el ID de la URL
+  
+  // 2. Preparamos los estados para guardar lo que mande el backend
+  const [club, setClub] = useState(null);
+  const [canchas, setCanchas] = useState([]);
+  const [cargando, setCargando] = useState(true);
+
   const [diaSeleccionado, setDiaSeleccionado] = useState(13);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('10:00');
 
-  const canchasMock = [
-    {
-      id: 1,
-      name: "Cancha Central WPT",
-      price: "35€/h",
-      status: "Habilitada",
-      description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
-      tags: ["Interior", "Panorámica", "Césped Azul"],
-      image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400"
-    },
-    {
-      id: 2,
-      name: "Cancha 2 - Outdoor",
-      price: "28€/h",
-      status: "Habilitada",
-      description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
-      tags: ["Exterior", "LED Pro", "Césped Verde"],
-      image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
-    }
-  ];
+  // 3. Acá es donde ocurre la magia de la conexión
+  useEffect(() => {
+    // ESTO SIMULA LA LLAMADA AL BACKEND. 
+    // Cuando tengas tu API lista, vas a cambiar este setTimeout por un fetch o axios
+    // Ejemplo: axios.get(`http://localhost:3000/api/complejos/${id}`)
+    
+    setTimeout(() => {
+      setClub({
+        nombre: "Padel Arena Elite",
+        ubicacion: "Av. Deportiva 450, Madrid",
+        telefono: "+34 912 345 678",
+        horario: "Lun - Dom: 07:00 - 23:30",
+      });
+      
+      setCanchas([
+        {
+          id: 1,
+          name: "Cancha Central WPT",
+          price: "35€/h",
+          status: "Habilitada",
+          description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
+          tags: ["Interior", "Panorámica", "Césped Azul"],
+          image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400"
+        },
+        {
+          id: 2,
+          name: "Cancha 2 - Outdoor",
+          price: "28€/h",
+          status: "Habilitada",
+          description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
+          tags: ["Exterior", "LED Pro", "Césped Verde"],
+          image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
+        }
+      ]);
+      setCargando(false);
+    }, 1000); // Simula 1 segundo de carga
+  }, [id]);
 
   const handleReserva = () => {
     console.log("Datos listos para enviar a la Base de Datos:", {
+      complejo_id: id,
       dia: diaSeleccionado,
       horario: horarioSeleccionado,
-      cancha: "Cancha Central",
+      cancha: "Cancha Central", // Esto también lo haremos dinámico después
       total: "36,50€"
     });
   };
+
+  // Pantalla de carga mientras el backend responde
+  if (cargando) return <div style={{textAlign: 'center', padding: '100px'}}>Cargando complejo...</div>;
 
   return (
     <div className="page-wrapper">
@@ -43,12 +72,13 @@ const ClubDetail = () => {
       <main className="club-detail-main">
         <div className="club-header-section">
           <span className="badge-premium">✓ Club Premium</span>
-          <h1>Padel Arena Elite</h1>
+          {/* Reemplazamos los textos fijos por las variables del estado */}
+          <h1>{club.nombre}</h1>
           <div className="club-info-row">
             <div className="club-location-contact">
-              <span>📍 Av. Deportiva 450, Madrid</span>
-              <span>📞 +34 912 345 678</span>
-              <span>🕒 Lun - Dom: 07:00 - 23:30</span>
+              <span>📍 {club.ubicacion}</span>
+              <span>📞 {club.telefono}</span>
+              <span>🕒 {club.horario}</span>
             </div>
             <div className="club-action-buttons">
               <button className="btn-secondary">🔗 Compartir</button>
@@ -70,10 +100,10 @@ const ClubDetail = () => {
           <section className="courts-list">
             <div className="courts-header">
               <h2>Nuestras Canchas</h2>
-              <span>{canchasMock.length} canchas disponibles</span>
+              <span>{canchas.length} canchas disponibles</span>
             </div>
             
-            {canchasMock.map((cancha) => (
+            {canchas.map((cancha) => (
               <div className="court-card" key={cancha.id}>
                 <div className="court-img-container">
                   <span className="badge-status">{cancha.status}</span>
