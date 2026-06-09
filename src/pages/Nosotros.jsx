@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Card, Col, Row } from "react-bootstrap";
+import Counter from "../components/CounterNumero";
 import "./nosotros.css";
 
 const NosotrosPage = () => {
@@ -21,7 +22,9 @@ const NosotrosPage = () => {
         <Col md={3} sm={6}>
           <Card className="card">
             <Card.Body>
-              <h2 className="text-titulo">404+</h2>
+              <h2 className="text-titulo">
+                <Counter end={404} suffix="+" />
+              </h2>
               <Card.Title>Clubes Activos</Card.Title>
               <Card.Text>
                 Optimizando su gestión diaria con nuestra tecnología de punta.
@@ -32,7 +35,9 @@ const NosotrosPage = () => {
         <Col md={3} sm={6}>
           <Card className="card">
             <Card.Body>
-              <h2 className="text-titulo">8+</h2>
+              <h2 className="text-titulo">
+                <Counter end={8} suffix="+" />
+              </h2>
               <Card.Title>Partido/Mes</Card.Title>
               <Card.Text>
                 Reservas procesadas sin interrupciones ni errores humanos.
@@ -43,7 +48,9 @@ const NosotrosPage = () => {
         <Col md={3} sm={6}>
           <Card className="card">
             <Card.Body>
-              <h2 className="text-titulo">4+</h2>
+              <h2 className="text-titulo">
+                <Counter end={4} suffix="+" />
+              </h2>
               <Card.Title>Canchas</Card.Title>
               <Card.Text>
                 Digitalizadas y listas para ser reservadas en segundos.
