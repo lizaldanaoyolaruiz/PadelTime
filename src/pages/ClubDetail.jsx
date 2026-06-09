@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './ClubDetail.css';
@@ -14,6 +14,7 @@ const ClubDetail = () => {
 
   const [diaSeleccionado, setDiaSeleccionado] = useState(13);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('10:00');
+  const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -24,11 +25,12 @@ const ClubDetail = () => {
         horario: "Lun - Dom: 07:00 - 23:30",
       });
       
-      setCanchas([
+      const canchasMock = [
         {
           id: 1,
           name: "Cancha Central WPT",
           price: "35€/h",
+          precioNumerico: 12000,
           status: "Habilitada",
           description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
           tags: ["Interior", "Panorámica", "Césped Azul"],
@@ -38,31 +40,72 @@ const ClubDetail = () => {
           id: 2,
           name: "Cancha 2 - Outdoor",
           price: "28€/h",
+          precioNumerico: 9500,
           status: "Habilitada",
           description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
           tags: ["Exterior", "LED Pro", "Césped Verde"],
           image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
+        },
+        {
+          id: 3,
+          name: "Cancha 3 - Techada",
+          price: "30€/h",
+          precioNumerico: 10500,
+          status: "Habilitada",
+          description: "Cancha techada estándar, ideal para días de lluvia o mucho sol.",
+          tags: ["Interior", "Estándar", "Césped Verde"],
+          image: "https://images.unsplash.com/photo-1574629810360-7efbb1925536?auto=format&fit=crop&q=80&w=400"
+        },
+        {
+          id: 4,
+          name: "Cancha 4 - Entrenamiento",
+          price: "25€/h",
+          precioNumerico: 8000,
+          status: "Habilitada",
+          description: "Pista adaptada para clases y entrenamiento intensivo con profesores.",
+          tags: ["Interior", "Entrenamiento", "Césped Azul"],
+          image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400"
+        },
+        {
+          id: 5,
+          name: "Cancha 5 - Premium",
+          price: "40€/h",
+          precioNumerico: 14000,
+          status: "Habilitada",
+          description: "La mejor experiencia con gradas y servicio al pie de pista.",
+          tags: ["Interior", "Premium", "Césped Azul"],
+          image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
         }
-      ]);
+      ];
+
+      setCanchas(canchasMock);
+      setCanchaSeleccionada(canchasMock[0]);
       setCargando(false);
     }, 1000);
   }, [id]);
 
-const handleReserva = () => {
-    navigate('/confirmacion', { 
-      state: { 
+  const handleReserva = () => {
+    if (!canchaSeleccionada) return;
+
+    navigate('/confirmacion', {
+      state: {
         complejo_id: id,
         clubNombre: club?.nombre || "Premium Padel Club",
         ubicacion: club?.ubicacion || "Buenos Aires, Argentina",
-        canchaNombre: "Cancha Central WPT", // Cuando tengas selección de cancha, lo pasás acá
+        canchaNombre: canchaSeleccionada.name,
+        canchaImagen: canchaSeleccionada.image,
         dia: diaSeleccionado,
         horario: horarioSeleccionado,
-        precioAlquiler: 12000,
+        precioAlquiler: canchaSeleccionada.precioNumerico,
         precioLuz: 1500,
-        total: 13500,
+        total: canchaSeleccionada.precioNumerico + 1500,
         senia: 5000
-      } 
+      }
     });
+  };
+
+  const formatearDinero = (monto) => {
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
   };
 
   if (cargando) return <div style={{textAlign: 'center', padding: '100px'}}>Cargando complejo...</div>;
@@ -100,17 +143,36 @@ const handleReserva = () => {
           <section className="courts-list">
             <div className="courts-header">
               <h2>Nuestras Canchas</h2>
-              <Link to="/canchas" style={{ cursor: 'pointer', textDecoration: 'underline', color: 'inherit' }}>
+              <span style={{ color: 'var(--color-text-muted)' }}>
                 {canchas.length} canchas disponibles
-              </Link>
+              </span>
             </div>
             
             {canchas.map((cancha) => (
-              <div className="court-card" key={cancha.id}>
-                <div className="court-img-container">
-                  <span className="badge-status">{cancha.status}</span>
-                  <img src={cancha.image} alt={cancha.name} />
+              <div 
+                className={`court-card ${canchaSeleccionada?.id === cancha.id ? 'selected' : ''}`} 
+                key={cancha.id}
+                onClick={() => setCanchaSeleccionada(cancha)}
+              >
+                <div className="court-media-col">
+                  <div className="court-img-container">
+                    <span className="badge-status">{cancha.status}</span>
+                    <img src={cancha.image} alt={cancha.name} />
+                    {canchaSeleccionada?.id === cancha.id && (
+                      <div className="selected-badge">✓</div>
+                    )}
+                  </div>
+                  <button 
+                    className="btn-secondary btn-detalle-cancha" 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/cancha/${cancha.id}`);
+                    }}
+                  >
+                    Ver detalle
+                  </button>
                 </div>
+                
                 <div className="court-info">
                   <div className="court-title-row">
                     <h3>{cancha.name}</h3>
@@ -163,18 +225,25 @@ const handleReserva = () => {
 
             <div className="booking-summary">
               <div className="summary-row">
-                <span>Cancha Central x 1h</span>
-                <span>35,00€</span>
+                <span>{canchaSeleccionada ? canchaSeleccionada.name : 'Seleccione una cancha'} x 1h</span>
+                <span>{canchaSeleccionada ? formatearDinero(canchaSeleccionada.precioNumerico) : '$0,00'}</span>
               </div>
               <div className="summary-row">
                 <span>Tasa de Servicio</span>
-                <span>1,50€</span>
+                <span>$1.500,00</span>
               </div>
               <div className="summary-total">
                 <span>Total</span>
-                <span>36,50€</span>
+                <span>{canchaSeleccionada ? formatearDinero(canchaSeleccionada.precioNumerico + 1500) : '$0,00'}</span>
               </div>
-              <button className="btn-book" onClick={handleReserva}>Realizar Reserva</button>
+              <button 
+                className="btn-book" 
+                onClick={handleReserva}
+                disabled={!canchaSeleccionada}
+                style={{ opacity: canchaSeleccionada ? 1 : 0.5, cursor: canchaSeleccionada ? 'pointer' : 'not-allowed' }}
+              >
+                Realizar Reserva
+              </button>
             </div>
           </aside>
         </div>
