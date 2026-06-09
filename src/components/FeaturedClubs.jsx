@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const FeaturedClubs = () => {
   const clubs = [
     {
@@ -29,7 +31,7 @@ const FeaturedClubs = () => {
     }
   ];
 
- return (
+  return (
     <section className="featured-clubs" id="clubes">
       <div className="section-header">
         <div className="section-title">
@@ -61,7 +63,7 @@ const FeaturedClubs = () => {
                 <p><span>📍</span> {club.location}</p>
                 <p><span>🕒</span> {club.time}</p>
               </div>
-              <button className="btn-detail">VER DETALLE</button>
+              <Link to={`/complejo/${club.id}`} className="btn-detail">VER DETALLE</Link>
             </div>
           </div>
         ))}
