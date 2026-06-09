@@ -3,16 +3,19 @@ import { Toaster } from 'sonner';
 import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
-import Contact from "./pages/Contact";
-import Complexes from './pages/Complexes';
-import FeaturedClubs from './components/FeaturedClubs';
-import useAuthStore from './store/authStore';
-import './App.css';
 import ContactPage from './pages/Contact';
+import ClubDetail from './pages/ClubDetail';
+import Complexes from './pages/Complexes';
+import OwnerDashboard from './pages/Owner/OwnerDashboard';
+import useAuthStore from './store/authStore';
+import Error404 from "./pages/Error404";
+import './App.css';
 
-function ProtectedRoute({ children }) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+function ProtectedRoute({ children, role }) {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (role && user?.role !== role) return <Navigate to="/" replace />;
+  return children;
 }
 
 function App() {
@@ -37,8 +40,17 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
-        <Route path="/complejo/:id" element={<FeaturedClubs />} />
+        <Route
+          path="/owner/*"
+          element={
+            <ProtectedRoute role="owner">
+              <OwnerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
