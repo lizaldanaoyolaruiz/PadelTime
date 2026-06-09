@@ -54,8 +54,7 @@ const NosotrosPage = () => {
         <Col md={3} sm={6}>
           <Card className="card-descrip">
             <Card.Body>
-              <h2 className="text-titulo">3+</h2>
-              <Card.Title>Nuestra Vision 2027</Card.Title>
+              <h2 className="text-titulo">Nuestra Vision 2027</h2>
               <Card.Text>
                 Liderar la transformación digital del deporte amateur en Europa,
                 convirtiéndonos en el estándar de oro para la administración de
