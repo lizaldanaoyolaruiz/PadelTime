@@ -1,11 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import './solutions.css';
 
 const Solutions = () => {
   const navigate = useNavigate();
-
-  const handleDashboardClick = () => {
-    alert("¡El panel de gestión estará disponible próximamente!");
-  };
 
   return (
     <section className="solutions" id="nosotros">
@@ -40,32 +37,69 @@ const Solutions = () => {
         </div>
 
         <div className="solutions-actions">
-          <button className="btn-reserve" onClick={() => navigate('/register')}>QUIERO RESERVAR</button>
+          <button className="btn-reserve" onClick={() => navigate('/complejos')}>QUIERO RESERVAR</button>
           <button className="btn-club" onClick={() => navigate('/register')}>SOY UN CLUB</button>
         </div>
       </div>
 
-      <div className="solutions-dashboard interactive-dashboard" onClick={handleDashboardClick}>
+      <div className="solutions-dashboard tournaments-widget">
         <div className="dashboard-header">
-          <span>DASHBOARD DE GESTIÓN</span>
-          <div className="status-dot"></div>
-        </div>
-        <div className="dashboard-mockup">
-          <div className="mock-line long"></div>
-          <div className="mock-line short"></div>
-          <div className="mock-cards">
-            <div className="mock-card"></div>
-            <div className="mock-card"></div>
-            <div className="mock-card"></div>
+          <div className="header-title-live">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#bef264" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <span>PRÓXIMOS EVENTOS</span>
           </div>
-          <div className="mock-chart">
-             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="12" y1="20" x2="12" y2="10"></line>
-                <line x1="18" y1="20" x2="18" y2="4"></line>
-                <line x1="6" y1="20" x2="6" y2="16"></line>
-             </svg>
+          <span className="badge-zone">Tucumán</span>
+        </div>
+        
+        <div className="tournaments-list">
+          <div className="tournament-card">
+            <div className="tournament-date">
+              <span className="t-month">MAY</span>
+              <span className="t-day">18</span>
+            </div>
+            <div className="tournament-info">
+              <span className="t-title">Americana 6ta y 7ma</span>
+              <span className="t-club">Marcos Paz PADEL</span>
+              <div className="t-tags">
+                <span className="tag-cupos">Últimos 2 cupos</span>
+                <span className="tag-price">$6.000</span>
+              </div>
+            </div>
+            <button className="btn-anotarse" onClick={() => navigate('/login')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div className="tournament-card">
+            <div className="tournament-date">
+              <span className="t-month">MAY</span>
+              <span className="t-day">25</span>
+            </div>
+            <div className="tournament-info">
+              <span className="t-title">Torneo Suma 11</span>
+              <span className="t-club">Guillermina Padel</span>
+              <div className="t-tags">
+                <span className="tag-open">Abierto</span>
+                <span className="tag-price">$12.000</span>
+              </div>
+            </div>
+            <button className="btn-anotarse outline" onClick={() => navigate('/login')}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+              </svg>
+            </button>
           </div>
         </div>
+
+        <button className="btn-view-all-tournaments" onClick={() => navigate('/complejos')}>
+          VER CALENDARIO COMPLETO
+        </button>
       </div>
     </section>
   );
