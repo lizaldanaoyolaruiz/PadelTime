@@ -169,7 +169,7 @@ const ClubDetail = () => {
                       navigate(`/cancha/${cancha.id}`);
                     }}
                   >
-                    Ver detalle
+                    Ver Cancha
                   </button>
                 </div>
                 
