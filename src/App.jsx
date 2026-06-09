@@ -6,6 +6,7 @@ import Login from './pages/Auth/Login';
 import ContactPage from './pages/Contact';
 import ClubDetail from './pages/ClubDetail';
 import Complexes from './pages/Complexes';
+import BookingConfirmation from './pages/BookingConfirmation';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import useAuthStore from './store/authStore';
 import NosotrosPage from './pages/Nosotros';
@@ -49,7 +50,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
