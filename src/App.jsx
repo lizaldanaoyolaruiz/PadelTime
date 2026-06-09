@@ -4,8 +4,11 @@ import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
 import ContactPage from './pages/Contact';
+import ClubDetail from './pages/ClubDetail';
+import Complexes from './pages/Complexes';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import useAuthStore from './store/authStore';
+import Error404 from "./pages/Error404";
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -37,6 +40,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/complejo/:id" element={<ClubDetail />} />
+        <Route path="/complejos" element={<Complexes />} />
         <Route
           path="/owner/*"
           element={
@@ -45,7 +50,10 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        <Route path="/404" element={<Error404 />} />
+
+        <Route path="*" element={<Navigate to="/" replace />} />/
       </Routes>
     </BrowserRouter>
   );
