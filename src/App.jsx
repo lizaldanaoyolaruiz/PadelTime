@@ -40,11 +40,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
-<<<<<<< HEAD
         <Route path="/complejo/:id" element={<ClubDetail />} />
-=======
-        <Route path="/complejos" element={<Complexes />} />
->>>>>>> 6cf2557a545d6a69d90c6bb1e0f78c2b6d380b6f
         <Route
           path="/owner/*"
           element={
