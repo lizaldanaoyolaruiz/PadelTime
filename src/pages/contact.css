@@ -1,44 +1,57 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
-.contact-page {
-  min-height: 100vh;
+/* ── Wrapper de página ───────────────────────────────── */
+.contact-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
   background: #02112d;
+}
+
+/* ── Página ──────────────────────────────────────────── */
+.contact-page {
+  flex: 1;
   padding: 50px;
   color: white;
   font-family: 'Outfit', sans-serif;
 }
 
-.hero {
+/* ── Hero ────────────────────────────────────────────── */
+.contact-hero {
   margin-bottom: 40px;
 }
 
-.hero h1 {
+.contact-hero h1 {
   color: #9be22d;
   font-size: 70px;
   font-weight: 900;
   font-style: italic;
   margin-bottom: 20px;
+  line-height: 1;
 }
 
-.hero p {
+.contact-hero p {
   max-width: 700px;
   font-size: 20px;
   color: #d0d6e0;
+  line-height: 1.6;
 }
 
+/* ── Grid principal ──────────────────────────────────── */
 .contact-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
 }
 
+/* ── Tarjetas base ───────────────────────────────────── */
 .form-card,
 .info-card {
   background: #15233d;
   border-radius: 18px;
   padding: 30px;
   border: 1px solid rgba(155, 226, 45, 0.2);
-  transition: all 0.3s ease;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-card:hover,
@@ -47,6 +60,7 @@
   box-shadow: 0 0 25px rgba(155, 226, 45, 0.15);
 }
 
+/* ── Formulario ──────────────────────────────────────── */
 .form-card form {
   display: flex;
   flex-direction: column;
@@ -67,6 +81,7 @@
 
 .field label {
   font-weight: 600;
+  font-size: 15px;
 }
 
 .field input,
@@ -79,7 +94,17 @@
   padding: 14px;
   font-size: 16px;
   font-family: 'Outfit', sans-serif;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.field select option {
+  background: #15233d;
+  color: white;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: #4a6080;
 }
 
 .field input:hover,
@@ -97,33 +122,62 @@
   box-shadow: 0 0 15px rgba(155, 226, 45, 0.6);
 }
 
-.field span {
+.field-error {
   color: #ff7a7a;
-  font-size: 14px;
+  font-size: 13px;
 }
 
+/* ── Botón enviar ────────────────────────────────────── */
 .submit-btn {
   background: #9be22d;
   color: #02112d;
   border: none;
   padding: 18px;
   border-radius: 12px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   font-family: 'Outfit', sans-serif;
   cursor: pointer;
-  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   transform: translateY(-3px);
   box-shadow: 0 0 20px rgba(155, 226, 45, 0.7);
 }
 
-.submit-btn:active {
+.submit-btn:active:not(:disabled) {
   transform: translateY(1px);
 }
 
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Feedback de envío ───────────────────────────────── */
+.status-msg {
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+.status-msg.success {
+  color: #9be22d;
+  background: rgba(155, 226, 45, 0.08);
+  border: 1px solid rgba(155, 226, 45, 0.25);
+}
+
+.status-msg.error {
+  color: #ff7a7a;
+  background: rgba(255, 122, 122, 0.08);
+  border: 1px solid rgba(255, 122, 122, 0.25);
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -135,7 +189,49 @@
 }
 
 .contact-data {
-  margin-top: 20px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-data p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #d0d6e0;
+}
+
+/* ── WhatsApp card ───────────────────────────────────── */
+.whatsapp-card {
+  cursor: pointer;
+}
+
+.whatsapp-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.whatsapp-arrow {
+  color: #9be22d;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.whatsapp-card:hover .whatsapp-arrow {
+  transform: translateX(4px);
+}
+
+/* ── Redes sociales ──────────────────────────────────── */
+.info-card h4 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #9be22d;
+  margin: 0 0 4px;
 }
 
 .socials {
@@ -145,14 +241,17 @@
 }
 
 .socials button {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border: none;
   border-radius: 10px;
   background: #26344d;
-  color: white;
+  color: #d0d6e0;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.2s;
 }
 
 .socials button:hover {
@@ -162,24 +261,90 @@
   box-shadow: 0 0 15px rgba(155, 226, 45, 0.5);
 }
 
+/* ── Imagen lateral ──────────────────────────────────── */
 .padel-image {
   width: 100%;
   border-radius: 18px;
   object-fit: cover;
-  height: 240px;
+  height: 200px;
 }
 
-.status.success {
+/* ── Sección mapa ────────────────────────────────────── */
+.map-section {
+  margin-top: 50px;
+}
+
+.map-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
+  margin: 0 0 6px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.map-subtitle {
+  font-size: 15px;
+  color: #6b7f9a;
+  margin: 0 0 20px;
+}
+
+.map-container {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(155, 226, 45, 0.2);
+  height: 260px;
+}
+
+.map-mock {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #07162f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Patrón de cuadrícula que simula calles */
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(155, 226, 45, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155, 226, 45, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(155, 226, 45, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(155, 226, 45, 0.015) 1px, transparent 1px);
+  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+}
+
+.map-pin-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  text-align: center;
+}
+
+.map-pin-icon {
   color: #9be22d;
-  font-weight: 600;
+  filter: drop-shadow(0 0 8px rgba(155, 226, 45, 0.7));
 }
 
-.status.error {
-  color: #ff7a7a;
-  font-weight: 600;
-}
-
+/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
+  .contact-page {
+    padding: 25px;
+  }
+
+  .contact-hero h1 {
+    font-size: 48px;
+  }
+
   .contact-grid {
     grid-template-columns: 1fr;
   }
@@ -188,11 +353,17 @@
     grid-template-columns: 1fr;
   }
 
-  .hero h1 {
-    font-size: 48px;
+  .map-container {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-hero h1 {
+    font-size: 36px;
   }
 
-  .contact-page {
-    padding: 25px;
+  .contact-hero p {
+    font-size: 16px;
   }
 }
