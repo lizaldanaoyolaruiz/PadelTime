@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
 import Contact from "./pages/Contact";
+import Complexes from './pages/Complexes';
 import useAuthStore from './store/authStore';
 import './App.css';
 import ContactPage from './pages/Contact';
@@ -35,6 +36,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/complejos" element={<Complexes />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
