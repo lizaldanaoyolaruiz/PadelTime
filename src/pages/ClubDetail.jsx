@@ -23,17 +23,17 @@ const ClubDetail = () => {
     
     setTimeout(() => {
       setClub({
-        nombre: "Padel Arena Elite",
-        ubicacion: "Av. Deportiva 450, Madrid",
-        telefono: "+34 912 345 678",
+        nombre: "Marcos Paz PADEL",
+        ubicacion: "San Miguel De Tucuman",
+        telefono: "381-1234567",
         horario: "Lun - Dom: 07:00 - 23:30",
       });
       
       setCanchas([
         {
           id: 1,
-          name: "Cancha Central WPT",
-          price: "35€/h",
+          name: "Guillermina PADEL",
+          price: "25 000/h",
           status: "Habilitada",
           description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
           tags: ["Interior", "Panorámica", "Césped Azul"],
@@ -41,8 +41,8 @@ const ClubDetail = () => {
         },
         {
           id: 2,
-          name: "Cancha 2 - Outdoor",
-          price: "28€/h",
+          name: "lomas PADEL Y EVENTOS",
+          price: "18 000/h",
           status: "Habilitada",
           description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
           tags: ["Exterior", "LED Pro", "Césped Verde"],
