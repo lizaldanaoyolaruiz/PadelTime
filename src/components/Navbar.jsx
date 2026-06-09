@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import './Navbar.css';
 
@@ -8,9 +8,9 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-logo">
-        <Link to="/">
+        <NavLink to="/">
           <img src={logo} alt="Logo" className="logo-img" />
-        </Link>
+        </NavLink>
       </div>
       <ul className="navbar-links">
         <li><a href="#inicio" className="active">Inicio</a></li>
