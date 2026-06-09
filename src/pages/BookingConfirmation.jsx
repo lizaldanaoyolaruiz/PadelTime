@@ -1,10 +1,41 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './BookingConfirmation.css';
 
 const BookingConfirmation = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+  
+  const datosReserva = location.state;
+  const [procesandoPago, setProcesandoPago] = useState(false);
+
+  if (!datosReserva) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px', color: '#fff' }}>
+        <h2>No hay ninguna reserva en proceso.</h2>
+        <button onClick={() => navigate('/')} style={{ padding: '10px', marginTop: '20px', cursor: 'pointer' }}>Volver al inicio</button>
+      </div>
+    );
+  }
+
+  const handleMercadoPago = async () => {
+    setProcesandoPago(true);
+    
+    setTimeout(() => {
+      alert("¡Simulación: Redirigiendo a Mercado Pago!");
+      setProcesandoPago(false);
+    }, 1500);
+  };
+
+  const handleWhatsApp = () => {
+    alert("¡Simulación: Abriendo WhatsApp del club!");
+  };
+
+  const formatearDinero = (monto) => {
+    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
+  };
 
   return (
     <div className="page-wrapper">
@@ -26,15 +57,15 @@ const BookingConfirmation = () => {
               <div className="club-summary-header">
                 <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=150" alt="Club" className="club-summary-img" />
                 <div className="club-summary-info">
-                  <h2>Premium Padel Club</h2>
+                  <h2>{datosReserva.clubNombre}</h2>
                   <span className="location">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="14" height="14">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    Buenos Aires, Argentina
+                    {datosReserva.ubicacion}
                   </span>
-                  <span className="court-badge">Pista Central #4</span>
+                  <span className="court-badge">{datosReserva.canchaNombre}</span>
                 </div>
               </div>
 
@@ -48,7 +79,7 @@ const BookingConfirmation = () => {
                       <line x1="8" y1="2" x2="8" y2="6"></line>
                       <line x1="3" y1="10" x2="21" y2="10"></line>
                     </svg>
-                    Viernes, 24 Mayo
+                    Día {datosReserva.dia} de Mayo
                   </span>
                 </div>
                 <div className="datetime-block">
@@ -58,7 +89,7 @@ const BookingConfirmation = () => {
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    19:00 - 20:30 (90 min)
+                    {datosReserva.horario} (1h)
                   </span>
                 </div>
               </div>
@@ -68,16 +99,16 @@ const BookingConfirmation = () => {
               <span className="label">Desglose de Pago</span>
               <div className="breakdown-row">
                 <span>Alquiler de Pista</span>
-                <span>$12.000,00</span>
+                <span>{formatearDinero(datosReserva.precioAlquiler)}</span>
               </div>
               <div className="breakdown-row">
                 <span>Luz (Nocturno)</span>
-                <span>$1.500,00</span>
+                <span>{formatearDinero(datosReserva.precioLuz)}</span>
               </div>
               
               <div className="breakdown-total">
                 <span>Total Reserva</span>
-                <span className="total-amount">$13.500,00</span>
+                <span className="total-amount">{formatearDinero(datosReserva.total)}</span>
               </div>
 
               <div className="deposit-warning">
@@ -87,7 +118,7 @@ const BookingConfirmation = () => {
                     <line x1="12" y1="16" x2="12" y2="12"></line>
                     <line x1="12" y1="8" x2="12.01" y2="8"></line>
                   </svg>
-                  <span>Seña requerida: $5.000,00</span>
+                  <span>Seña requerida: {formatearDinero(datosReserva.senia)}</span>
                 </div>
                 <p>El resto se abona en el club el día del turno.</p>
               </div>
@@ -107,7 +138,13 @@ const BookingConfirmation = () => {
                 </div>
                 <h3>Mercado Pago</h3>
                 <p>Confirmación Inmediata</p>
-                <button className="btn-mp">PAGAR AHORA</button>
+                <button 
+                  className="btn-mp" 
+                  onClick={handleMercadoPago}
+                  disabled={procesandoPago}
+                >
+                  {procesandoPago ? 'PROCESANDO...' : 'PAGAR AHORA'}
+                </button>
               </div>
 
               <div className="divider">
@@ -122,7 +159,9 @@ const BookingConfirmation = () => {
                 </div>
                 <h3>WhatsApp</h3>
                 <p>Estado: Pendiente</p>
-                <button className="btn-wa">RESERVAR VÍA CHAT</button>
+                <button className="btn-wa" onClick={handleWhatsApp}>
+                  RESERVAR VÍA CHAT
+                </button>
               </div>
 
               <p className="terms-text">
