@@ -5,13 +5,16 @@ import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
 import Contact from "./pages/Contact";
 import Complexes from './pages/Complexes';
+import ContactPage from './pages/Contact';
+import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import useAuthStore from './store/authStore';
 import './App.css';
-import ContactPage from './pages/Contact';
 
-function ProtectedRoute({ children }) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+function ProtectedRoute({ children, role }) {
+  const { isAuthenticated, user } = useAuthStore();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  if (role && user?.role !== role) return <Navigate to="/" replace />;
+  return children;
 }
 
 function App() {
@@ -37,6 +40,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/complejos" element={<Complexes />} />
+        <Route
+          path="/owner/*"
+          element={
+            <ProtectedRoute role="owner">
+              <OwnerDashboard />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

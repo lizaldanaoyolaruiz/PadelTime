@@ -1,0 +1,100 @@
+.section-desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: -10px 0 18px;
+  line-height: 1.5;
+}
+
+/* Seña options */
+.sena-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.sena-option {
+  position: relative;
+  border: 2px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 18px 16px 14px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+  user-select: none;
+}
+.sena-option:hover { border-color: var(--color-border); }
+.sena-option--active {
+  border-color: var(--color-primary);
+  background: rgba(190, 242, 100, 0.06);
+}
+.sena-option-pct {
+  font-size: 28px;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-base);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.sena-option--active .sena-option-pct { color: var(--color-primary); }
+.sena-option-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: 1.4;
+}
+.sena-recommended {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+/* MP key */
+.mp-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.mp-input-wrap .form-input {
+  padding-right: 44px;
+  font-family: 'Courier New', monospace;
+  font-size: var(--text-sm);
+  letter-spacing: 0.3px;
+}
+.btn-eye-mp {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  transition: color 0.2s;
+}
+.btn-eye-mp:hover { color: var(--color-text-base); }
+
+.mp-security-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+.mp-security-note svg { color: var(--color-success); flex-shrink: 0; }
+
+.link-mp {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+.link-mp:hover { text-decoration: underline; }
+
+@media (max-width: 600px) {
+  .sena-options { grid-template-columns: 1fr; }
+}
