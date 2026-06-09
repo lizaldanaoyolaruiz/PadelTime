@@ -304,14 +304,22 @@ h2.text-titulo::after {
   .row-card {
     gap: 1rem;
   }
-  .row-intengrantes .col-md-2 {
-    width: 150px;
+
+  .row-intengrantes {
+    gap: 1rem;
   }
-  avatar-img {
-    width: 60px;
-    height: 60px;
+  .row-intengrantes .col-md-2 {
+    width: 150px;          
+  }
+  .avatar-img {            
+    width: 70px;
+    height: 70px;
+  }
+  .text-inten-nom {
+    font-size: 0.85rem;
   }
 }
+
 
 @media (max-width: 576px) {
   .row-card .col-md-3 {
@@ -322,5 +330,10 @@ h2.text-titulo::after {
   }
   h2.text-titulo {
     font-size: 2rem;
+  }
+
+  .avatar-img {
+    width: 60px;
+    height: 60px;
   }
 }
