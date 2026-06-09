@@ -40,7 +40,6 @@ const Solutions = () => {
         </div>
 
         <div className="solutions-actions">
-          {/* Le agregamos la navegación a ambos botones */}
           <button className="btn-reserve" onClick={() => navigate('/register')}>QUIERO RESERVAR</button>
           <button className="btn-club" onClick={() => navigate('/register')}>SOY UN CLUB</button>
         </div>
