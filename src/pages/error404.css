@@ -1,0 +1,131 @@
+.error404-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #03112d;
+}
+
+.error404 {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 40px 0;
+}
+
+.overlay::before,
+.overlay::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: #95ff00;
+  border-radius: 50%;
+  filter: blur(150px);
+  opacity: 0.12;
+}
+
+.overlay::before {
+  top: -150px;
+  right: -150px;
+}
+
+.overlay::after {
+  bottom: -150px;
+  left: -150px;
+}
+
+.content {
+  text-align: center;
+  max-width: 1100px;
+  padding: 20px;
+  z-index: 2;
+}
+
+.ball-container {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.number {
+  font-size: 220px;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.05);
+}
+
+.ball {
+  width: 160px;
+  height: 160px;
+  background: #70ff00;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 60px #70ff00;
+}
+
+h1 {
+  font-size: 56px;
+  margin-bottom: 20px;
+}
+
+.content p {
+  font-size: 22px;
+  color: #d2d2d2;
+  max-width: 800px;
+  margin: auto;
+}
+
+.buttons {
+  margin-top: 40px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  background: #95ff00;
+  color: #000;
+  border: none;
+  padding: 18px 35px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid #666;
+  padding: 18px 35px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.cards {
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 280px;
+  padding: 25px;
+  border-radius: 18px;
+  text-align: left;
+}
+
+.card h3 {
+  margin-bottom: 10px;
+}
