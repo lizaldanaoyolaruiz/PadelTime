@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 import logo from '../assets/logo.png';
 import './Footer.css';
 
@@ -10,10 +11,8 @@ const Footer = () => {
     e.preventDefault();
     if (!email) return;
 
-    console.log("Email listo para enviar a la base de datos:", email);
-    
     setEmail('');
-    alert("¡Gracias por suscribirte al newsletter!");
+    toast.success('¡Gracias por suscribirte al newsletter!');
   };
 
   return (
@@ -46,7 +45,7 @@ const Footer = () => {
         <ul>
           <li><Link to="/">Inicio</Link></li>
           <li><Link to="/complejos">Clubes</Link></li>
-          <li><a href="/#nosotros">Sobre Nosotros</a></li>
+          <li><Link to="/nosotros">Sobre Nosotros</Link></li>
           <li><Link to="/contact">Contacto</Link></li>
         </ul>
       </div>
