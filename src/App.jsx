@@ -11,6 +11,7 @@ import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import useAuthStore from './store/authStore';
 import NosotrosPage from './pages/Nosotros';
 import Error404 from './pages/Error404';
+import CourtDetail from './pages/CourtDetail';
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -46,6 +47,7 @@ function App() {
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/404" element={<Error404 />} />
+        <Route path="/cancha/:id" element={<CourtDetail />} />
         <Route
           path="/owner/*"
           element={
