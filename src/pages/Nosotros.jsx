@@ -1,11 +1,14 @@
-import React from "react";
 import { Container, Card, Col, Row } from "react-bootstrap";
 import Counter from "../components/CounterNumero";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import "./nosotros.css";
 
 const NosotrosPage = () => {
   return (
-    <Container className="container">
+    <div className="nosotros-page">
+      <Navbar />
+      <Container className="nosotros-container">
       <Row className="row-principal">
         <Col>
           <h1 className="h1-hero">EL FUTURO DEL PADEL</h1>
@@ -20,7 +23,7 @@ const NosotrosPage = () => {
       </Row>
       <Row className="row-card">
         <Col md={3} sm={6}>
-          <Card className="card">
+          <Card className="card-stats">
             <Card.Body>
               <h2 className="text-titulo">
                 <Counter end={404} suffix="+" />
@@ -33,7 +36,7 @@ const NosotrosPage = () => {
           </Card>
         </Col>
         <Col md={3} sm={6}>
-          <Card className="card">
+          <Card className="card-stats">
             <Card.Body>
               <h2 className="text-titulo">
                 <Counter end={8} suffix="+" />
@@ -46,7 +49,7 @@ const NosotrosPage = () => {
           </Card>
         </Col>
         <Col md={3} sm={6}>
-          <Card className="card">
+          <Card className="card-stats">
             <Card.Body>
               <h2 className="text-titulo">
                 <Counter end={4} suffix="+" />
@@ -146,7 +149,9 @@ const NosotrosPage = () => {
           </Card>
         </Col>
       </Row>
-    </Container>
+      </Container>
+      <Footer />
+    </div>
   );
 };
 

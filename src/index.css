@@ -50,8 +50,12 @@
 }
 
 
-body {
+body,
+html {
   margin: 0;
+  background-color: var(--color-surface-1);
+  color: var(--color-text-base);
+  font-family: var(--font-base);
 }
 
 #root {
