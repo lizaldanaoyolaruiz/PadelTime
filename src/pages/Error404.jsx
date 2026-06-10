@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import "./error404.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function Error404() {
+  const navigate = useNavigate();
   return (
     <div className="error404-page">
       <Navbar />
@@ -26,7 +28,7 @@ export default function Error404() {
           <div className="buttons">
             <button
               className="btn-primary"
-              onClick={() => (window.location.href = "/")}
+              onClick={() => navigate("/")}
             >
               Volver al Inicio
             </button>
