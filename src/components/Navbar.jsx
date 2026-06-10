@@ -1,6 +1,6 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
-import "./Navbar.css";
+import { NavLink, Link, useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -13,20 +13,10 @@ const Navbar = () => {
         </NavLink>
       </div>
       <ul className="navbar-links">
-        <li>
-          <a href="#inicio" className="active">
-            Inicio
-          </a>
-        </li>
-        <li>
-          <a href="#clubes">Clubes</a>
-        </li>
-        <li>
-          <a to="/nosotros">Sobre Nosotros</a>
-        </li>
-        <li>
-          <a href="#contacto">Contacto</a>
-        </li>
+        <li><NavLink to="/" end>Inicio</NavLink></li>
+        <li><NavLink to="/complejos">Clubes</NavLink></li>
+        <li><Link to="/nosotros">Sobre Nosotros</Link></li>
+        <li><NavLink to="/contact">Contacto</NavLink></li>
       </ul>
       <div className="navbar-actions">
         <button className="btn-login" onClick={() => navigate("/login")}>
