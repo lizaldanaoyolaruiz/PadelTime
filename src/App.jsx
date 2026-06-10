@@ -48,6 +48,14 @@ function App() {
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/cancha/:id" element={<CourtDetail />} />
+        <Route 
+          path="/confirmacion" 
+          element={
+            <ProtectedRoute>
+              <BookingConfirmation />
+            </ProtectedRoute>
+          } 
+        />
         <Route
           path="/owner/*"
           element={
