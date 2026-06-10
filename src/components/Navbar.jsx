@@ -13,10 +13,10 @@ const Navbar = () => {
         </NavLink>
       </div>
       <ul className="navbar-links">
-        <li><a href="#inicio" className="active">Inicio</a></li>
-        <li><a href="#clubes">Clubes</a></li>
+        <li><NavLink to="/" end>Inicio</NavLink></li>
+        <li><NavLink to="/complejos">Clubes</NavLink></li>
         <li><Link to="/nosotros">Sobre Nosotros</Link></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><NavLink to="/contact">Contacto</NavLink></li>
       </ul>
       <div className="navbar-actions">
         <button className="btn-login" onClick={() => navigate('/login')}>
