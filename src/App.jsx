@@ -10,6 +10,7 @@ import BookingConfirmation from './pages/BookingConfirmation';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import useAuthStore from './store/authStore';
 import NosotrosPage from './pages/Nosotros';
+import Error404 from './pages/Error404';
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -42,6 +43,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/nosotros" element={<NosotrosPage />} />
+        <Route path="/complejo/:id" element={<ClubDetail />} />
+        <Route path="/complejos" element={<Complexes />} />
+        <Route path="/404" element={<Error404 />} />
         <Route
           path="/owner/*"
           element={
