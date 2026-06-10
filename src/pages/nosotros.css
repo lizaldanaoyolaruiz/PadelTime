@@ -1,339 +1,450 @@
-:root {
-  /* Colores de marca */
-  --color-primary:    #BEF264;
-  --color-secondary:  #84CC16;
-  --color-tertiary:   #334155;
-  --color-neutral:    #0F172A;
+/* ============================================================
+   NOSOTROS PAGE
+   ============================================================ */
 
-  /* Texto */
-  --color-text-base:    #F8FAFC;
-  --color-text-muted:   #94A3B8;
-  --color-text-inverse: #0F172A;
+/* ─── PAGE WRAPPER ───────────────────────────────────────── */
 
-  /* Superficies */
-  --color-surface-1: #0F172A;
-  --color-surface-2: #1E293B;
-  --color-surface-3: #334155;
-
-  /* Bordes */
-  --color-border:         #334155;
-  --color-border-subtle:  rgba(255,255,255,.08);
-
-  /* Estado */
-  --color-success: #84CC16;
-  --color-error:   #EF4444;
-  --color-warning: #F59E0B;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
+.nosotros-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: var(--color-surface-1);
   color: var(--color-text-base);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-  line-height: 1.5;
 }
 
+/* ─── CONTAINER PRINCIPAL ────────────────────────────────── */
+/*
+  Sobreescribe Bootstrap Container a un wrapper simple.
+  margin: 0 auto centra en cualquier viewport.
+  width: 100% + box-sizing evita desborde lateral.
+  Los !important son necesarios para ganar a Bootstrap.
+*/
 
-.container {
-  max-width: 1280px;
-  width: 100%;
-  margin-left:auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+.nosotros-container {
+  max-width: 1200px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 4rem 1.5rem 6rem !important;
+  box-sizing: border-box;
+  flex: 1;
 }
 
+/* ─── RESET BOOTSTRAP ROW — margen negativo ──────────────── */
+/*
+  Bootstrap Row aplica margin negativo (–gutter/2) para
+  compensar el padding de los Col. Esto desalinea los
+  elementos que son hijos directos del container (h2, p).
+  Convertir a CSS Grid elimina completamente ese problema.
+*/
+
+.row-principal,
+.row-card,
+.row-description,
+.row-intengrantes {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Reset padding y anchos fijos de los Col Bootstrap */
+.row-principal > *,
+.row-card > *,
+.row-description > *,
+.row-intengrantes > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: none !important;
+}
+
+/* ─── HERO ───────────────────────────────────────────────── */
 
 .row-principal {
-  display: flex;
-  justify-content: center;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  margin-bottom: 4rem;
-  width: 100%;
+  margin-bottom: 4.5rem !important;
+  padding-top: 2rem;
 }
 
 .row-principal .col {
-  max-width: 900px; 
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.h1-hero {
-  font-size: 3.5rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  letter-spacing: -0.02em;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.p-hero {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-text-base);
-  margin-bottom: 1.5rem;
-  text-align: center;
-}
-
-.p-hero-text {
-  font-size: 1.125rem;
-  color: var(--color-text-muted);
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.6;
-  text-align: center;
-}
-
-
-.row-card {
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-bottom: 4rem;
-}
-
-
-.card {
-  background-color: var(--color-surface-2);
-  border: 1px solid var(--color-border-subtle);
-  border-radius: 24px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  height: 100%;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.3);
-  border-color: var(--color-primary);
-}
-
-
-.text-titulo {
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--color-primary);
-  margin-bottom: 0.5rem;
-  line-height: 1.2;
-}
-
-
-.card-title {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--color-text-base);
-  margin-bottom: 0.75rem;
-}
-
-
-.card-text {
-  color: var(--color-text-muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-
-.card-descrip {
-  background-color: var(--color-surface-3);
-  border: none;
-  border-radius: 28px;
-  height: 100%;
-  transition: transform 0.2s;
-}
-
-.card-descrip:hover {
-  transform: translateY(-4px);
-}
-
-.card-descrip .card-body {
-  padding: 2rem;
-}
-
-.card-descrip .text-titulo {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--color-text-base);
-}
-
-
-.card-descrip .text-titilo {
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--color-text-base);
-}
-
-.card-descrip p {
-  font-size: 1rem;
-  color: var(--color-text-muted);
-  line-height: 1.5;
-}
-
-
-.text-titulo.equipo {
-  text-align: center;
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
-  position: relative;
-  display: inline-block;
+  max-width: 700px;
   width: 100%;
 }
 
-
-h2.text-titulo {
-  text-align: center;
-  font-size: 2.5rem;
+.h1-hero {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
   font-weight: 800;
-  margin: 3rem 0 0.5rem;
-  position: relative;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
 }
 
-h2.text-titulo::after {
+.p-hero {
+  font-size: clamp(1.1rem, 2.5vw, 1.375rem);
+  font-weight: 600;
+  color: var(--color-text-base);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+}
+
+.p-hero-text {
+  font-size: 1.0625rem;
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── STATS (4 columnas) — CSS Grid ─────────────────────── */
+
+.row-card {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-bottom: 1.5rem !important;
+}
+
+.card-stats {
+  background-color: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  height: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-stats .card-body {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card-stats:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+  border-color: rgba(190, 242, 100, 0.35);
+}
+
+/* ─── TIPOGRAFÍA COMPARTIDA ──────────────────────────────── */
+
+.text-titulo {
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text-base);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.card-text {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ─── CARDS VISIÓN + DESCRIPCIÓN ─────────────────────────── */
+
+.card-descrip {
+  background: linear-gradient(160deg, var(--color-surface-3) 0%, var(--color-surface-2) 100%);
+  border: 1px solid rgba(190, 242, 100, 0.1);
+  border-radius: 18px;
+  height: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.card-descrip:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+  border-color: rgba(190, 242, 100, 0.25);
+}
+
+.card-descrip .card-body {
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.card-descrip .text-titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.875rem;
+  color: var(--color-text-base);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.card-descrip p {
+  font-size: 0.9375rem;
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* ─── DESCRIPCIÓN (2 columnas) — CSS Grid ────────────────── */
+
+.row-description {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-bottom: 5rem !important;
+}
+
+/* ─── ENCABEZADO EQUIPO ──────────────────────────────────── */
+/*
+  Apuntamos al h2 hijo DIRECTO del container (el encabezado
+  "El Equipo"), NO a los h2 dentro de las cards de stats.
+  Con > evitamos que el ::after y el font-size se apliquen
+  a los contadores 404+, 8+, 4+ que también usan h2.text-titulo
+*/
+
+.nosotros-container > h2.text-titulo {
+  text-align: center;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  position: relative;
+  color: var(--color-primary);
+  letter-spacing: -0.02em;
+}
+
+.nosotros-container > h2.text-titulo::after {
   content: '';
   display: block;
-  width: 80px;
-  height: 4px;
+  width: 56px;
+  height: 3px;
   background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
   border-radius: 2px;
-  margin: 0.75rem auto 0;
+  margin: 0.65rem auto 0;
 }
 
 .text-descEquipo {
   text-align: center;
   color: var(--color-text-muted);
-  font-size: 1.1rem;
-  margin-bottom: 3rem;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
 }
 
+/* ─── EQUIPO — CSS Grid (5 columnas) ─────────────────────── */
 
 .row-intengrantes {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-.row-intengrantes .col-md-2 {
-  flex: 0 0 auto;
-  width: 160px;
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-top: 0 !important;
 }
 
 .card-integrante {
   background-color: var(--color-surface-2);
   border: 1px solid var(--color-border-subtle);
-  border-radius: 24px;
+  border-radius: 18px;
   text-align: center;
-  transition: all 0.2s ease;
   height: 100%;
-  padding: 0.75rem 0.5rem;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .card-integrante:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-primary);
-  box-shadow: 0 12px 20px -8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+  border-color: rgba(190, 242, 100, 0.4);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
 }
 
 .card-integrante .card-body {
-  padding: 1.25rem 0.5rem;
+  padding: 1.75rem 0.75rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
 }
-
 
 .avatar-img {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 1rem auto;
-    display: block;
-    border: 2px solid var(--color-primary);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    background-color: var(--color-surface-3);
-    transition: transform 0.2s, border-color 0.2s;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 0.875rem;
+  display: block;
+  border: 2px solid rgba(190, 242, 100, 0.45);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-surface-3);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
+
 .card-integrante:hover .avatar-img {
-    transform: scale(1.02);
-    border-color: var(--color-secondary);
+  transform: scale(1.07);
+  border-color: var(--color-primary);
+  box-shadow: 0 6px 20px rgba(190, 242, 100, 0.18);
 }
+
 .text-inten-nom {
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.3rem;
   color: var(--color-text-base);
-  line-height: 1.3;
-  padding: 0 0.5rem;
+  line-height: 1.35;
+  padding: 0 0.25rem;
+  text-align: center;
 }
 
 .card-integrante .text-muted {
   color: var(--color-text-muted) !important;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 500;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  margin-top: 0.25rem;
+  margin: 0;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem;
+/* ─── RESPONSIVE — TABLET 768px–1023px ───────────────────── */
+
+@media (max-width: 1023px) {
+  .nosotros-container {
+    padding: 3.5rem 1.5rem 5rem !important;
   }
-  .h1-hero {
-    font-size: 2.2rem;
+
+  .row-principal {
+    margin-bottom: 3.5rem !important;
   }
-  .p-hero {
-    font-size: 1.2rem;
-  }
-  .text-titulo {
-    font-size: 2.5rem;
-  }
-  .card-descrip .text-titulo {
-    font-size: 1.4rem;
-  }
+
+  /* Stats: 2 columnas */
   .row-card {
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+    margin-bottom: 1.5rem !important;
   }
 
+  /* Descripción: columna única */
+  .row-description {
+    grid-template-columns: 1fr !important;
+    margin-bottom: 4rem !important;
+  }
+
+  /* Equipo: 3 columnas */
   .row-intengrantes {
-    gap: 1rem;
-  }
-  .row-intengrantes .col-md-2 {
-    width: 150px;          
-  }
-  .avatar-img {            
-    width: 70px;
-    height: 70px;
-  }
-  .text-inten-nom {
-    font-size: 0.85rem;
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 }
 
+/* ─── RESPONSIVE — MOBILE 425px–767px ────────────────────── */
 
-@media (max-width: 576px) {
-  .row-card .col-md-3 {
-    flex: 1 1 100%;
+@media (max-width: 767px) {
+  .nosotros-container {
+    padding: 2.5rem 1rem 4rem !important;
   }
-  .row-intengrantes .col-md-2 {
-    width: calc(50% - 1rem);
+
+  .row-principal {
+    margin-bottom: 2.75rem !important;
+    padding-top: 1rem;
   }
-  h2.text-titulo {
+
+  .h1-hero {
     font-size: 2rem;
   }
 
+  .p-hero {
+    font-size: 1.1rem;
+  }
+
+  .p-hero-text {
+    font-size: 0.9375rem;
+  }
+
+  /* Stats: columna única */
+  .row-card {
+    grid-template-columns: 1fr !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .text-titulo {
+    font-size: 2.25rem;
+  }
+
+  .card-stats .card-body {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .card-descrip .text-titulo {
+    font-size: 1.25rem;
+  }
+
+  .card-descrip .card-body {
+    padding: 1.5rem 1.25rem;
+  }
+
+  /* Descripción: columna única */
+  .row-description {
+    grid-template-columns: 1fr !important;
+    margin-bottom: 3rem !important;
+  }
+
+  .nosotros-container > h2.text-titulo {
+    font-size: 1.875rem;
+  }
+
+  .text-descEquipo {
+    font-size: 0.9375rem;
+    margin-bottom: 1.75rem;
+  }
+
+  /* Equipo: 2 columnas */
+  .row-intengrantes {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
   .avatar-img {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
+  }
+
+  .text-inten-nom {
+    font-size: 0.8125rem;
+  }
+}
+
+/* ─── RESPONSIVE — MOBILE PEQUEÑO 320px–424px ────────────── */
+
+@media (max-width: 424px) {
+  .nosotros-container {
+    padding: 2rem 0.875rem 3.5rem !important;
+  }
+
+  .nosotros-container > h2.text-titulo {
+    font-size: 1.625rem;
+  }
+
+  .row-intengrantes {
+    gap: 0.875rem !important;
+  }
+
+  .card-integrante .card-body {
+    padding: 1.25rem 0.5rem;
   }
 }
