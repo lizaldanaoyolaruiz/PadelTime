@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 :root {
-  /* Tipografía */
+
   --font-base: 'Inter', system-ui, sans-serif;
 
   --text-xs: 11px;
@@ -66,7 +66,8 @@ body {
   grid-template-columns: minmax(300px, 370px) 1fr;
   gap: var(--space-lg);
   padding: var(--space-lg);
-  min-height: auto;
+  min-height: 100vh;
+
 }
 
 .card {
@@ -75,7 +76,6 @@ body {
   box-shadow: var(--shadow-card);
 }
 
-/* PERFIL */
 
 .profile-card {
   padding: var(--space-md);
@@ -131,8 +131,6 @@ body {
   font-weight: var(--fw-bold);
   margin-top: 8px;
 }
-
-/* PROXIMO PARTIDO */
 
 .next-match {
   margin-top: var(--space-md);
@@ -195,7 +193,7 @@ body {
   letter-spacing: 0.05em;
 }
 
-/* CONFIGURACION */
+
 
 .settings-card {
   margin-top: var(--space-md);
@@ -222,7 +220,7 @@ body {
   color: var(--danger);
 }
 
-/* DERECHA */
+
 
 .tabs {
   display: flex;
@@ -242,7 +240,7 @@ body {
   padding-bottom: 8px;
 }
 
-/* RESERVAS */
+
 
 .right-column h2 {
   margin-bottom: var(--space-md);
@@ -302,3 +300,86 @@ body {
   color: #ffb8b8;
 }
 
+/* TABLETS */
+
+@media (max-width: 1024px) {
+.panel {
+grid-template-columns: 1fr;
+}
+
+.left-column,
+.right-column {
+width: 100%;
+}
+}
+
+/* MÓVILES */
+
+@media (max-width: 768px) {
+.dashboard {
+padding: 15px;
+gap: 15px;
+}
+
+.profile-header {
+flex-direction: column;
+text-align: center;
+}
+
+.stats {
+flex-direction:row;
+}
+.stat-box {
+    max-height: 6em;
+}
+.countdown {
+flex-direction: column;
+}
+
+.tabs {
+overflow-x: auto;
+white-space: nowrap;
+gap: 20px;
+padding-bottom: 10px;
+}
+
+.reservation-card {
+flex-direction: column;
+text-align: center;
+}
+
+.reservation-card img {
+width: 100%;
+max-width: 250px;
+height: auto;
+}
+
+.status {
+width: 100%;
+}
+}
+
+/* CELULARES PEQUEÑOS */
+
+@media (max-width: 480px) {
+.profile-header img {
+width: 70px;
+height: 70px;
+}
+
+.next-match h1 {
+font-size: 1.5rem;
+}
+
+.reservation-info h3 {
+font-size: 1rem;
+}
+
+.tabs span {
+font-size: 0.9rem;
+}
+
+.stat-box h3 {
+font-size: 1.5rem;
+}
+}

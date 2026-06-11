@@ -28,22 +28,21 @@ function PanelCliente() {
     <div className="panel-cliente-page">
       <Navbar />
 
-      <div className="dashboard">
+      <div className="panel">
 
-      <div className="left-column">
+        <div className="left-column">
 
-        <div className="card profile-card">
-          <div className="profile-header">
-            <img
+         <div className="card profile-card">
+            <div className="profile-header">
+             <img
               src="https://i.pravatar.cc/150"
-              alt="perfil"
-            />
-
-            <div>
-              <h2>Facundo Camaño</h2>
-              <p>Nivel: 2.2 • Jugador Novato</p>
+              alt="perfil"/>
+             
+                <div>
+                    <h2>Facundo Camaño</h2>
+                    <p>Nivel: 2.2 • Jugador Novato</p>
+                </div>
             </div>
-          </div>
 
           <div className="stats">
             <div className="stat-box">
