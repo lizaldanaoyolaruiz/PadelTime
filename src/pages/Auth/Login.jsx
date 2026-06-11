@@ -10,8 +10,9 @@ import { loginUser } from '../../services/authService';
 import './Auth.css';
 
 const DEV_USERS = [
-  { label: 'Admin',   user: { id: 1, nombre: 'Marcos Padel', role: 'owner', club: 'Club Central' }, token: 'dev-owner-token' },
-  { label: 'Jugador', user: { id: 3, nombre: 'Juan Pérez',   role: 'user'  }, token: 'dev-user-token'  },
+  { label: 'Admin',       user: { id: 1, nombre: 'Marcos Padel',  role: 'owner',       club: 'Club Central' }, token: 'dev-owner-token'  },
+  { label: 'Jugador',     user: { id: 3, nombre: 'Juan Pérez',    role: 'user'         },                       token: 'dev-user-token'   },
+  { label: 'Super Admin', user: { id: 9, nombre: 'Juan Delgado',  role: 'SUPER_ADMIN'  },                       token: 'dev-superadmin-token' },
 ];
 
 export default function Login() {
@@ -46,7 +47,8 @@ export default function Login() {
   const devLogin = ({ user, token, label }) => {
     setAuth(user, token);
     toast.success(`Acceso dev: ${label}`);
-    if (user.role === 'admin') navigate('/admin');
+    if (user.role === 'SUPER_ADMIN') navigate('/superadmin');
+    else if (user.role === 'admin') navigate('/admin');
     else if (user.role === 'owner') navigate('/owner');
     else navigate('/');
   };
