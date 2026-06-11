@@ -1,8 +1,8 @@
 import { Container, Card, Col, Row } from "react-bootstrap";
-import Counter from "../components/CounterNumero";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import "./nosotros.css";
+import Counter from "../../components/CounterNumber";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import "./about.css";
 
 const NosotrosPage = () => {
   return (

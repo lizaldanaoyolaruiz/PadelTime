@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import { getConfigPagos, updateConfigPagos } from '../../../services/ownerService';
-import './ConfigPagos.css';
+import { getConfigPagos, updateConfigPagos } from '../../services/ownerService';
+import './PaymentConfig.css';
 
 const SENA_OPTIONS = [
   { value: 20, label: '20%', desc: 'Seña baja — más reservas, mayor riesgo de ausencia' },
@@ -10,7 +10,7 @@ const SENA_OPTIONS = [
   { value: 50, label: '50%', desc: 'Seña alta — mayor compromiso del jugador' },
 ];
 
-export default function ConfigPagos() {
+export default function PaymentConfig() {
   const [sena,       setSena]       = useState(30);
   const [mpKey,      setMpKey]      = useState('');
   const [showKey,    setShowKey]    = useState(false);

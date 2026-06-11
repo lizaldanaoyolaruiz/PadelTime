@@ -1,19 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import Home from './pages/Home';
+import Home from './pages/Home/Home';
 import Register from './pages/Auth/Register';
 import Login from './pages/Auth/Login';
-import ContactPage from './pages/Contact';
-import ClubDetail from './pages/ClubDetail';
-import Complexes from './pages/Complexes';
-import BookingConfirmation from './pages/BookingConfirmation';
+import ContactPage from './pages/Contact/Contact';
+import ClubDetail from './pages/ClubDetail/ClubDetail';
+import Complexes from './pages/Complexes/Complexes';
+import BookingConfirmation from './pages/BookingConfirmation/BookingConfirmation';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
 import SuperAdminDashboard from './pages/SuperAdmin/SuperAdminDashboard';
 import useAuthStore from './store/authStore';
-import NosotrosPage from './pages/Nosotros';
-import Error404 from './pages/Error404';
-import CourtDetail from './pages/CourtDetail';
-import PanelCliente from './pages/PanelCliente';
+import AboutPage from './pages/About/About';
+import Error404 from './pages/Error404/Error404';
+import CourtDetail from './pages/CourtDetail/CourtDetail';
+import ClientPanel from './pages/ClientPanel/ClientPanel';
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -45,7 +45,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/nosotros" element={<NosotrosPage />} />
+        <Route path="/nosotros" element={<AboutPage />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/404" element={<Error404 />} />
@@ -58,7 +58,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route path="/panelcliente" element={<PanelCliente/>}/>
+        <Route path="/panelcliente" element={<ClientPanel/>}/>
         <Route
           path="/owner/*"
           element={

@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
-import { getMisCanchas, createCancha, updateCancha, deleteCancha } from '../../../services/ownerService';
-import './MisCanchas.css';
+import { getMisCanchas, createCancha, updateCancha, deleteCancha } from '../../services/ownerService';
+import './MyCourts.css';
 
 const schema = z.object({
   nombre:           z.string().min(2, 'Mínimo 2 caracteres'),
@@ -102,7 +102,7 @@ function CanchaModal({ cancha, onClose, onSave }) {
   );
 }
 
-export default function MisCanchas() {
+export default function MyCourts() {
   const [canchas,     setCanchas]     = useState([]);
   const [loading,     setLoading]     = useState(true);
   const [modal,       setModal]       = useState(null); // null | { cancha? }
