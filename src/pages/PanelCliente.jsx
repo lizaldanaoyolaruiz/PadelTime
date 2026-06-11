@@ -45,7 +45,7 @@ function App() {
               <span>PARTIDOS</span>
               <h3>12</h3>
             </div>
-
+            
             <div className="stat-box">
               <span>VICTORIAS</span>
               <h3>1</h3>
@@ -60,14 +60,14 @@ function App() {
 
           <h1>Mañana, 18:30</h1>
 
-          <p>Padel Club Pro Center - Pista 4</p>
+          <p>En Bullnes Padel</p>
 
           <div className="countdown">
             <div>
               <h2>22</h2>
               <span>HORAS</span>
             </div>
-
+            
             <div>
               <h2>14</h2>
               <span>MINS</span>
