@@ -52,9 +52,9 @@ const Footer = () => {
       <div className="footer-legal">
         <h3>LEGAL</h3>
         <ul>
-          <li>Privacidad</li>
-          <li>Términos</li>
-          <li>Cookies</li>
+          <li><Link to="/404">Privacidad</Link></li>
+          <li><Link to="/404">Términos</Link></li>
+          <li><Link to="/404">Cookies</Link></li>
         </ul>
       </div>
       <div className="footer-newsletter">
