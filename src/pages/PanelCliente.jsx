@@ -76,7 +76,7 @@ function App() {
         </div>
 
         <div className="card settings-card">
-          <h3>Configuración de Cuenta</h3>
+             <h3>Configuración de Cuenta</h3>
 
           <ul>
             <li>Editar Información</li>
@@ -88,7 +88,7 @@ function App() {
         </div>
       </div>
 
-      {/* COLUMNA DERECHA */}
+    
       <div className="right-column">
 
         <div className="tabs">
