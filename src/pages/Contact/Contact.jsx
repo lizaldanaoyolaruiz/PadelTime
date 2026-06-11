@@ -5,9 +5,9 @@ import {
   Mail, Phone, ArrowRight,
   Globe, Camera, Play, Briefcase, MapPin,
 } from 'lucide-react';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { contactSchema } from '../utils/authValidations';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
+import { contactSchema } from '../../utils/authValidations';
 import './contact.css';
 
 const ASUNTOS = ['Soporte Técnico', 'Registrar Club', 'Comercial'];

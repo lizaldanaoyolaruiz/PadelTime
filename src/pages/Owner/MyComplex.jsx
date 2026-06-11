@@ -4,8 +4,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Upload, X, ImagePlus } from 'lucide-react';
-import { getMyComplejo, createComplejo, updateComplejo, uploadImage } from '../../../services/ownerService';
-import './MiComplejo.css';
+import { getMyComplejo, createComplejo, updateComplejo, uploadImage } from '../../services/ownerService';
+import './MyComplex.css';
 
 const schema = z.object({
   nombre:      z.string().min(2, 'Mínimo 2 caracteres'),
@@ -15,7 +15,7 @@ const schema = z.object({
   descripcion: z.string().optional(),
 });
 
-export default function MiComplejo() {
+export default function MyComplex() {
   const [complejo,     setComplejo]     = useState(null);
   const [loading,      setLoading]      = useState(true);
   const [saving,       setSaving]       = useState(false);

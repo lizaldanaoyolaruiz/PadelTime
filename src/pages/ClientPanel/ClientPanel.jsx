@@ -1,6 +1,6 @@
-import "./PanelCliente.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import "./ClientPanel.css";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
 function PanelCliente() {
   const reservas = [

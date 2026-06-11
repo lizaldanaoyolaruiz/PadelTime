@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { MapPin, Star, Search, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import './complexes.css';
 
 // TODO: Conectar con useEffect y fetch al endpoint GET /api/complexes
