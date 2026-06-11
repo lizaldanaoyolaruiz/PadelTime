@@ -8,6 +8,7 @@ import ClubDetail from './pages/ClubDetail';
 import Complexes from './pages/Complexes';
 import BookingConfirmation from './pages/BookingConfirmation';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
+import SuperAdminDashboard from './pages/SuperAdmin/SuperAdminDashboard';
 import useAuthStore from './store/authStore';
 import NosotrosPage from './pages/Nosotros';
 import Error404 from './pages/Error404';
@@ -63,6 +64,14 @@ function App() {
           element={
             <ProtectedRoute role="owner">
               <OwnerDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/superadmin/*"
+          element={
+            <ProtectedRoute role="SUPER_ADMIN">
+              <SuperAdminDashboard />
             </ProtectedRoute>
           }
         />
