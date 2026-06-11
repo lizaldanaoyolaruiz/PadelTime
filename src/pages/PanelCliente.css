@@ -273,3 +273,59 @@ body {
   background: #5d4040;
   color: #ffb8b8;
 }
+
+@media (max-width: 1024px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 15px;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .stats,
+  .countdown {
+    flex-direction: column;
+  }
+
+  .tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .reservation-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reservation-card img {
+    width: 100%;
+    height: 180px;
+  }
+
+  .status {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 10px;
+  }
+
+  .profile-header h2 {
+    font-size: var(--text-lg);
+  }
+
+  .next-match h1 {
+    font-size: var(--text-xl);
+  }
+}
