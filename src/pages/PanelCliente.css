@@ -54,12 +54,19 @@ body {
   font-size: var(--text-base);
 }
 
-.dashboard {
+.panel-cliente-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard {
+  flex: 1;
   display: grid;
   grid-template-columns: minmax(300px, 370px) 1fr;
   gap: var(--space-lg);
   padding: var(--space-lg);
+  min-height: auto;
 }
 
 .card {
@@ -72,12 +79,15 @@ body {
 
 .profile-card {
   padding: var(--space-md);
+  height: 22em;
 }
 
 .profile-header {
   display: flex;
   align-items: center;
   gap: var(--space-md);
+  margin-top: 15px;
+  width: 50%;
 }
 
 .profile-header img {
@@ -129,43 +139,60 @@ body {
   background: var(--primary);
   color: #08152e;
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  padding: calc(var(--space-md) + 8px);
+  display: grid;
+  gap: var(--space-sm);
+  min-width: 0;
 }
 
 .tag {
-  display: inline-block;
-  background: rgba(0,0,0,.1);
-  padding: 10px 20px;
-  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 10px 18px;
+  border-radius: 999px;
   font-size: var(--text-xs);
   font-weight: var(--fw-bold);
+  width: fit-content;
 }
 
 .next-match h1 {
-  margin: 20px 0 10px;
-  font-size: var(--text-2xl);
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.05;
 }
 
 .next-match p {
-  margin-bottom: 20px;
+  margin: 0;
   font-size: var(--text-sm);
+  color: rgba(8, 21, 46, 0.85);
 }
 
 .countdown {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-sm);
 }
 
 .countdown div {
-  flex: 1;
   text-align: center;
-  background: rgba(255,255,255,.15);
-  padding: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 18px 12px;
   border-radius: var(--radius-md);
+  min-width: 0;
 }
 
 .countdown h2 {
   font-size: var(--text-xl);
+  margin: 0 0 6px;
+}
+
+.countdown span {
+  display: block;
+  color: rgba(8, 21, 46, 0.9);
+  font-size: var(--text-xs);
+  letter-spacing: 0.05em;
 }
 
 /* CONFIGURACION */
@@ -173,6 +200,7 @@ body {
 .settings-card {
   margin-top: var(--space-md);
   padding: var(--space-md);
+  height: 17em;
 }
 
 .settings-card h3 {
@@ -274,58 +302,3 @@ body {
   color: #ffb8b8;
 }
 
-@media (max-width: 1024px) {
-  .dashboard {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard {
-    padding: 15px;
-  }
-
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .stats,
-  .countdown {
-    flex-direction: column;
-  }
-
-  .tabs {
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-
-  .reservation-card {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .reservation-card img {
-    width: 100%;
-    height: 180px;
-  }
-
-  .status {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .dashboard {
-    padding: 10px;
-  }
-
-  .profile-header h2 {
-    font-size: var(--text-lg);
-  }
-
-  .next-match h1 {
-    font-size: var(--text-xl);
-  }
-}
