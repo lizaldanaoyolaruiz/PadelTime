@@ -133,8 +133,8 @@ const NosotrosPage = () => {
         <Col md={2} sm={4}>
           <Card className="card-integrante">
             <Card.Body>
-              <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Octavio Fernández Caram" className="avatar-img" />  
-              <h4 className="text-inten-nom">Octavio Fernández Caram</h4>
+              <img src="https://randomuser.me/api/portraits/men/33.jpg" alt="Octavio Fernández" className="avatar-img" />  
+              <h4 className="text-inten-nom">Octavio Fernández</h4>
               <p className="text-muted">Desarrollador</p>
             </Card.Body>
           </Card>
