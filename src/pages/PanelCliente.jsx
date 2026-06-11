@@ -112,7 +112,7 @@ function App() {
               src={`https://picsum.photos/100?random=${index}`}
               alt=""
             />
-
+            
             <div className="reservation-info">
               <h3>{reserva.club}</h3>
               <p>{reserva.fecha}</p>
@@ -121,7 +121,7 @@ function App() {
 
             <span
               className={`status ${reserva.estado.toLowerCase()}`}
-            >
+                >
               {reserva.estado}
             </span>
           </div>
