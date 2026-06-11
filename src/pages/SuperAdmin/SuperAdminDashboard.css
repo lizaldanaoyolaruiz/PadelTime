@@ -1,0 +1,206 @@
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
+.sa-layout {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: var(--color-surface-1);
+  font-family: var(--font-base);
+  z-index: 10;
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.sa-sidebar {
+  width: 228px;
+  flex-shrink: 0;
+  background: #08101e;
+  border-right: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── Brand ───────────────────────────────────────────────────────────────── */
+.sa-brand {
+  padding: 26px 20px 20px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.sa-brand-name {
+  font-size: var(--text-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  letter-spacing: -0.4px;
+}
+.sa-brand-badge {
+  font-size: 10px;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.8px;
+  color: var(--color-text-inverse);
+  background: var(--color-primary);
+  border-radius: 5px;
+  padding: 2px 7px;
+  line-height: 1.6;
+}
+
+/* ── Nav ─────────────────────────────────────────────────────────────────── */
+.sa-nav {
+  flex: 1;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.sa-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-family: var(--font-base);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+}
+.sa-nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-base);
+}
+.sa-nav-item.active {
+  background: rgba(190, 242, 100, 0.12);
+  color: var(--color-primary);
+}
+.sa-nav-item.active svg {
+  color: var(--color-primary);
+}
+
+/* ── Sidebar Footer ──────────────────────────────────────────────────────── */
+.sa-sidebar-footer {
+  padding: 14px 10px;
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.sa-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+.sa-sidebar-avatar {
+  width: 36px;
+  height: 36px;
+  background: rgba(190, 242, 100, 0.18);
+  border: 1.5px solid rgba(190, 242, 100, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+.sa-sidebar-user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sa-sidebar-user-name {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-base);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sa-sidebar-user-role {
+  font-size: 11px;
+  color: var(--color-primary);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.8;
+}
+
+.sa-btn-logout {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.sa-btn-logout:hover {
+  color: var(--color-error);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ── Main area ───────────────────────────────────────────────────────────── */
+.sa-main {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ── Coming soon / Access denied ─────────────────────────────────────────── */
+.sa-coming-soon,
+.sa-access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--color-text-muted);
+  gap: 10px;
+  padding: 80px 20px;
+}
+.sa-coming-soon h3,
+.sa-access-denied h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  color: var(--color-text-base);
+}
+.sa-coming-soon p,
+.sa-access-denied p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.sa-access-denied-icon {
+  color: var(--color-error);
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sa-sidebar { width: 64px; }
+  .sa-brand-badge,
+  .sa-sidebar-user-info,
+  .sa-nav-item span { display: none; }
+  .sa-brand { padding: 20px 12px; justify-content: center; }
+  .sa-brand-name { font-size: var(--text-sm); }
+  .sa-nav-item { justify-content: center; padding: 12px; }
+  .sa-sidebar-footer { justify-content: center; flex-direction: column; gap: 6px; padding: 10px 6px; }
+  .sa-sidebar-user { justify-content: center; }
+  .sa-sidebar-avatar { width: 32px; height: 32px; }
+}
