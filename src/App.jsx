@@ -12,6 +12,7 @@ import useAuthStore from './store/authStore';
 import NosotrosPage from './pages/Nosotros';
 import Error404 from './pages/Error404';
 import CourtDetail from './pages/CourtDetail';
+import PanelCliente from './pages/PanelCliente';
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -56,6 +57,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="/panelcliente" element={<PanelCliente/>}/>
         <Route
           path="/owner/*"
           element={

@@ -1,29 +1,34 @@
-import "./App.css";
+import "./PanelCliente.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-function App() {
+function PanelCliente() {
   const reservas = [
     {
-      club: "Padel Club Pro Center",
-      fecha: "15 Mayo, 2024",
+      club: "La Caldera Padel",
+      fecha: "15 julio, 2026",
       hora: "18:30 - 20:00",
       estado: "Confirmado",
     },
     {
-      club: "Arena Padel Indoor",
-      fecha: "10 Mayo, 2024",
+      club: "Tucumam Psddel",
+      fecha: "10 julio, 2024",
       hora: "10:00 - 11:30",
       estado: "Finalizado",
     },
     {
-      club: "Urban Padel Hub",
-      fecha: "04 Mayo, 2024",
+      club: "Alpha Padel",
+      fecha: "04 Julio, 2024",
       hora: "20:00 - 21:30",
       estado: "Cancelado",
     },
   ];
 
   return (
-    <div className="dashboard">
+    <div className="panel-cliente-page">
+      <Navbar />
+
+      <div className="dashboard">
 
       <div className="left-column">
 
@@ -112,7 +117,7 @@ function App() {
               src={`https://picsum.photos/100?random=${index}`}
               alt=""
             />
-            
+
             <div className="reservation-info">
               <h3>{reserva.club}</h3>
               <p>{reserva.fecha}</p>
@@ -127,8 +132,11 @@ function App() {
           </div>
         ))}
       </div>
+      </div>
+
+      <Footer />
     </div>
   );
 }
 
-export default App;
+export default PanelCliente;
