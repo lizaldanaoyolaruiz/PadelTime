@@ -88,7 +88,7 @@ function App() {
         </div>
       </div>
 
-    
+
       <div className="right-column">
 
         <div className="tabs">
