@@ -179,6 +179,20 @@ export async function suspendComplex(id) {
   // Real: return api.patch(`/api/complexes/${id}/suspend`);
 }
 
+export async function createComplex(data) {
+  await delay(600);
+  const newComplex = {
+    ...data,
+    id: Date.now(),
+    image: null,
+    registeredAt: new Date().toISOString().split('T')[0],
+    status: 'PENDING',
+    observations: data.observations || '',
+  };
+  return { data: newComplex };
+  // Real: return api.post('/admin/complexes', data);
+}
+
 export async function sendApprovalEmail(id) {
   await delay(300);
   return { data: { sent: true } };
