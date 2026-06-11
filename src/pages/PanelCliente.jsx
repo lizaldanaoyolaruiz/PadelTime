@@ -25,7 +25,6 @@ function App() {
   return (
     <div className="dashboard">
 
-      {/* COLUMNA IZQUIERDA */}
       <div className="left-column">
 
         <div className="card profile-card">
@@ -36,20 +35,20 @@ function App() {
             />
 
             <div>
-              <h2>Carlos Peláez</h2>
-              <p>Nivel: 4.5 • Jugador Pro</p>
+              <h2>Facundo Camaño</h2>
+              <p>Nivel: 2.2 • Jugador Novato</p>
             </div>
           </div>
 
           <div className="stats">
             <div className="stat-box">
               <span>PARTIDOS</span>
-              <h3>124</h3>
+              <h3>12</h3>
             </div>
 
             <div className="stat-box">
               <span>VICTORIAS</span>
-              <h3>78</h3>
+              <h3>1</h3>
             </div>
           </div>
         </div>
