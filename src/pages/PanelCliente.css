@@ -1,0 +1,42 @@
+:root {
+  /* Tipografía */
+  --font-base: 'Inter', system-ui, sans-serif;
+
+  --text-xs: 11px;
+  --text-sm: 13px;
+  --text-base: 15px;
+  --text-lg: 20px;
+  --text-xl: 24px;
+  --text-2xl: 32px;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Colores */
+  --bg-primary: #020f2d;
+  --bg-card: #0e1c42;
+  --bg-card-light: #15284f;
+
+  --primary: #9cf42f;
+  --primary-dark: #7ed61d;
+
+  --text-primary: #ffffff;
+  --text-secondary: #a7b0c2;
+
+  --danger: #ff8d8d;
+
+  /* Bordes */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 20px;
+
+  /* Espaciado */
+  --space-sm: 10px;
+  --space-md: 20px;
+  --space-lg: 30px;
+
+  /* Sombras */
+  --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
