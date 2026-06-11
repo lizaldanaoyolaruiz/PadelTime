@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, BarChart2, Users, Settings, LogOut, ShieldAlert } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import GestionComplejos from './panels/GestionComplejos';
+import GestionComplejos from './GestionComplejos';
 import './SuperAdminDashboard.css';
 
 const NAV = [
