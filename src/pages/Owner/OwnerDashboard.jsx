@@ -5,10 +5,10 @@ import {
   CreditCard, Clock, LogOut,
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import PanelGeneral from './panels/PanelGeneral';
-import MiComplejo   from './panels/MiComplejo';
-import MisCanchas   from './panels/MisCanchas';
-import ConfigPagos  from './panels/ConfigPagos';
+import GeneralPanel   from './GeneralPanel';
+import MyComplex      from './MyComplex';
+import MyCourts       from './MyCourts';
+import PaymentConfig  from './PaymentConfig';
 import './OwnerDashboard.css';
 
 const NAV = [
@@ -21,10 +21,10 @@ const NAV = [
 ];
 
 const PANELS = {
-  panel:    <PanelGeneral />,
-  complejo: <MiComplejo />,
-  canchas:  <MisCanchas />,
-  pagos:    <ConfigPagos />,
+  panel:    <GeneralPanel />,
+  complejo: <MyComplex />,
+  canchas:  <MyCourts />,
+  pagos:    <PaymentConfig />,
 };
 
 export default function OwnerDashboard() {

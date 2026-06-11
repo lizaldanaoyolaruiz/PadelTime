@@ -9,9 +9,9 @@ import { ChartSection }      from './components/ChartSection';
 import { DetailDrawer }      from './components/DetailDrawer';
 import { NewComplexModal }   from './components/NewComplexModal';
 import { ActionModals }      from './components/ActionModals';
-import './GestionComplejos.css';
+import './ComplexManagement.css';
 
-export default function GestionComplejos() {
+export default function ComplexManagement() {
   const [complexes,    setComplexes]    = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [searchTerm,   setSearchTerm]   = useState('');

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { CheckCircle2, XCircle, TrendingUp, Users, CalendarCheck, DollarSign } from 'lucide-react';
-import './PanelGeneral.css';
+import './GeneralPanel.css';
 
 // Placeholder data — wire each section to its real endpoint when backend is ready
 const MOCK_PENDING = [
@@ -40,7 +40,7 @@ function SlotCell({ slot }) {
   );
 }
 
-export default function PanelGeneral() {
+export default function GeneralPanel() {
   const [pending, setPending] = useState(MOCK_PENDING);
 
   const confirm = (id) => setPending(p => p.filter(t => t.id !== id));
