@@ -1,12 +1,31 @@
+
+import { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
+import useAuthStore from '../store/authStore';
 import logo from '../assets/logo.png';
 import './Navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuthStore();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleLogout = () => {
+    if (logout) logout();
+    navigate('/');
+  };
 
   return (
-    <nav className="navbar">
+    <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-logo">
         <NavLink to="/">
           <img src={logo} alt="Logo" className="logo-img" />
@@ -19,12 +38,33 @@ const Navbar = () => {
         <li><NavLink to="/contact">Contacto</NavLink></li>
       </ul>
       <div className="navbar-actions">
-        <button className="btn-login" onClick={() => navigate("/login")}>
-          Iniciar Sesión
-        </button>
-        <button className="btn-register" onClick={() => navigate("/register")}>
-          Registrarse
-        </button>
+        {isAuthenticated ? (
+          <div className="user-menu">
+            <div className="user-info">
+              <div className="user-avatar">
+                {user?.name ? user.name.charAt(0).toUpperCase() : 'O'}
+              </div>
+              <span className="user-name">Hola, {user?.name || 'Octavio'}</span>
+            </div>
+            <button className="btn-logout" onClick={handleLogout}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Salir
+            </button>
+          </div>
+        ) : (
+          <>
+            <button className="btn-login" onClick={() => navigate("/login")}>
+              Iniciar Sesión
+            </button>
+            <button className="btn-register" onClick={() => navigate("/register")}>
+              Registrarse
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );
