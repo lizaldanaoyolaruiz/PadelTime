@@ -1,52 +1,149 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { CheckCircle2, XCircle, TrendingUp, Users, CalendarCheck, DollarSign } from 'lucide-react';
+import Swal from 'sweetalert2';
+import { getMyCourts } from '../../api/courtApi';
+import { getReservasOwner, confirmarReserva, rechazarReserva } from '../../api/reservasApi';
 import './GeneralPanel.css';
 
-// Placeholder data — wire each section to its real endpoint when backend is ready
-const MOCK_PENDING = [
-  { id: 1, nombre: 'Carlos Ruiz',  cancha: 'Cancha 2', horario: '18:30 - 20:00', monto: '$1.500', estado: 'pagado' },
-  { id: 2, nombre: 'Laura Gomez',  cancha: 'Cancha 1', horario: '20:00 - 21:30', monto: null,     estado: 'seña_pendiente' },
-];
-
-const MOCK_AGENDA = [
-  { horario: '17:00', c1: { nombre: 'M. Lopez',   estado: 'confirmado' }, c2: null,               c3: { nombre: 'J. Perez', estado: 'vip' } },
-  { horario: '18:30', c1: { nombre: 'Turno Pendiente', estado: 'pendiente' }, c2: { nombre: 'R. Sanchez', estado: 'confirmado' }, c3: null },
-  { horario: '20:00', c1: { nombre: 'S. Martinez', estado: 'confirmado' }, c2: { nombre: 'F. Torres', estado: 'confirmado' }, c3: { nombre: 'D. Blanco', estado: 'confirmado' } },
-];
-
 const STATS = [
-  { label: 'Reservas hoy',    value: '8',       Icon: CalendarCheck, color: '#BEF264' },
-  { label: 'Ingresos hoy',    value: '$12.400', Icon: DollarSign,    color: '#84CC16' },
-  { label: 'Jugadores activos', value: '24',    Icon: Users,         color: '#60A5FA' },
-  { label: 'Ocupación',       value: '75%',     Icon: TrendingUp,    color: '#F59E0B' },
+  { label: 'Reservas hoy',      Icon: CalendarCheck, color: '#BEF264' },
+  { label: 'Ingresos hoy',      Icon: DollarSign,    color: '#84CC16' },
+  { label: 'Jugadores activos', Icon: Users,         color: '#60A5FA' },
+  { label: 'Ocupación',         Icon: TrendingUp,    color: '#F59E0B' },
 ];
 
-function SlotCell({ slot }) {
-  if (!slot) return <div className="slot slot--libre"><span>Turno Libre</span><span className="slot-sub">Click para reservar</span></div>;
-  const cls = slot.estado === 'confirmado' ? 'slot--confirmado'
-            : slot.estado === 'pendiente'  ? 'slot--pendiente'
-            : slot.estado === 'vip'        ? 'slot--vip'
-            : 'slot--libre';
+function generarSlots(inicio = '08:00', fin = '22:00') {
+  const slots = [];
+  const [hI, mI] = inicio.split(':').map(Number);
+  const [hF, mF] = fin.split(':').map(Number);
+  let total = hI * 60 + mI;
+  const limite = hF * 60 + mF;
+  while (total < limite) {
+    const h = String(Math.floor(total / 60)).padStart(2, '0');
+    const m = String(total % 60).padStart(2, '0');
+    slots.push(`${h}:${m}`);
+    total += 90;
+  }
+  return slots;
+}
+
+function SlotCell({ reserva }) {
+  if (!reserva) {
+    return (
+      <div className="slot slot--libre">
+        <span>Turno Libre</span>
+        <span className="slot-sub">Click para reservar</span>
+      </div>
+    );
+  }
+  const cls =
+    reserva.estado === 'confirmada' ? 'slot--confirmado'
+    : reserva.estado === 'pendiente' ? 'slot--pendiente'
+    : 'slot--libre';
+
+  const nombre = reserva.jugador
+    ? `${reserva.jugador.nombre || ''} ${(reserva.jugador.apellido || '')[0] || ''}.`.trim()
+    : '—';
+
   return (
     <div className={`slot ${cls}`}>
-      <span className="slot-name">{slot.nombre}</span>
+      <span className="slot-name">{nombre}</span>
       <span className="slot-sub">
-        {slot.estado === 'confirmado' ? 'Confirmado'
-         : slot.estado === 'pendiente' ? 'Esperando Seña'
-         : slot.estado === 'vip'       ? 'Socio VIP'
-         : ''}
+        {reserva.estado === 'confirmada' ? 'Confirmado' : 'Esperando confirmación'}
       </span>
     </div>
   );
 }
 
 export default function GeneralPanel() {
-  const [pending, setPending] = useState(MOCK_PENDING);
+  const [pending, setPending] = useState([]);
+  const [canchas, setCanchas] = useState([]);
+  const [agenda,  setAgenda]  = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const confirm = (id) => setPending(p => p.filter(t => t.id !== id));
-  const reject  = (id) => setPending(p => p.filter(t => t.id !== id));
+  const hoy = new Date().toISOString().split('T')[0];
+  const todayLabel = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-  const today = new Date().toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const cargarDatos = useCallback(async () => {
+    try {
+      const [canchasRes, pendientesRes, agendaRes] = await Promise.all([
+        getMyCourts(),
+        getReservasOwner({ estado: 'pendiente' }),
+        getReservasOwner({ fecha: hoy }),
+      ]);
+
+      const courts      = canchasRes.data   || [];
+      const pendientes  = pendientesRes.data || [];
+      const reservasHoy = agendaRes.data    || [];
+
+      setCanchas(courts);
+      setPending(pendientes);
+
+      const slots = generarSlots();
+      const matriz = slots.map(slot => {
+        const fila = { horario: slot };
+        courts.forEach(c => {
+          fila[c._id] = reservasHoy.find(
+            r => r.cancha?._id === c._id &&
+                 r.horaInicio === slot &&
+                 !['cancelada', 'rechazada'].includes(r.estado)
+          ) || null;
+        });
+        return fila;
+      });
+
+      setAgenda(matriz);
+    } catch (err) {
+      console.error('Error cargando panel:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [hoy]);
+
+  useEffect(() => { cargarDatos(); }, [cargarDatos]);
+
+  const handleConfirmar = async (reserva) => {
+    const result = await Swal.fire({
+      title: '¿Confirmar turno?',
+      text: `${reserva.jugador?.nombre} — ${reserva.cancha?.nombre} ${reserva.horaInicio}`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, confirmar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#84CC16',
+    });
+    if (!result.isConfirmed) return;
+    try {
+      await confirmarReserva(reserva._id);
+      Swal.fire({ icon: 'success', title: 'Turno confirmado', timer: 1500, showConfirmButton: false });
+      cargarDatos();
+    } catch {
+      Swal.fire({ icon: 'error', title: 'Error al confirmar' });
+    }
+  };
+
+  const handleRechazar = async (reserva) => {
+    const { value: nota, isConfirmed } = await Swal.fire({
+      title: 'Rechazar turno',
+      input: 'text',
+      inputLabel: 'Motivo (opcional)',
+      inputPlaceholder: 'Ej: Cancha en mantenimiento',
+      showCancelButton: true,
+      confirmButtonText: 'Rechazar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#EF4444',
+    });
+    if (!isConfirmed) return;
+    try {
+      await rechazarReserva(reserva._id, nota || '');
+      Swal.fire({ icon: 'success', title: 'Turno rechazado', timer: 1500, showConfirmButton: false });
+      cargarDatos();
+    } catch {
+      Swal.fire({ icon: 'error', title: 'Error al rechazar' });
+    }
+  };
+
+  if (loading) return <div className="panel-wrap"><p style={{ color: 'var(--color-text-muted)' }}>Cargando...</p></div>;
 
   return (
     <div className="panel-wrap">
@@ -54,7 +151,7 @@ export default function GeneralPanel() {
       <div className="pg-header">
         <div>
           <h2>Gestión de Turnos</h2>
-          <p className="panel-subtitle" style={{ textTransform: 'capitalize' }}>{today}</p>
+          <p className="panel-subtitle" style={{ textTransform: 'capitalize' }}>{todayLabel}</p>
         </div>
         <div className="pg-header-actions">
           <span className="mp-status"><span className="mp-dot" />Mercado Pago: Conectado</span>
@@ -64,13 +161,13 @@ export default function GeneralPanel() {
 
       {/* Stats row */}
       <div className="stats-row">
-        {STATS.map(({ label, value, Icon, color }) => (
+        {STATS.map(({ label, Icon, color }) => (
           <div key={label} className="stat-card">
             <div className="stat-icon" style={{ background: `${color}18`, color }}>
               <Icon size={20} />
             </div>
             <div>
-              <div className="stat-value">{value}</div>
+              <div className="stat-value">—</div>
               <div className="stat-label">{label}</div>
             </div>
           </div>
@@ -79,7 +176,7 @@ export default function GeneralPanel() {
 
       {/* Mid row */}
       <div className="pg-mid">
-        {/* Seña config summary */}
+        {/* Seña config */}
         <div className="pg-card pg-card--sena">
           <h3 className="pg-card-title">Porcentaje de Seña</h3>
           <p className="pg-card-desc">Define el porcentaje que los jugadores deben abonar para confirmar su reserva vía Mercado Pago.</p>
@@ -100,20 +197,18 @@ export default function GeneralPanel() {
                 No hay turnos pendientes
               </p>
             ) : pending.map(t => (
-              <div key={t.id} className="turno-row">
+              <div key={t._id} className="turno-row">
                 <div className="turno-icon"><Users size={18} /></div>
                 <div className="turno-info">
-                  <span className="turno-nombre">{t.nombre}</span>
-                  <span className="turno-detalle">{t.cancha} • {t.horario}</span>
+                  <span className="turno-nombre">{t.jugador?.nombre} {t.jugador?.apellido}</span>
+                  <span className="turno-detalle">{t.cancha?.nombre} • {t.horaInicio} - {t.horaFin}</span>
                 </div>
-                <span className={`turno-estado ${t.estado === 'pagado' ? 'estado-pagado' : 'estado-pendiente'}`}>
-                  {t.estado === 'pagado' ? `${t.monto} (Pagado)` : 'Seña pendiente'}
-                </span>
+                <span className="turno-estado estado-pendiente">${t.montoTotal}</span>
                 <div className="turno-actions">
-                  <button className="action-btn action-btn--reject"  onClick={() => reject(t.id)}>
+                  <button className="action-btn action-btn--reject"  onClick={() => handleRechazar(t)}>
                     <XCircle size={18} />
                   </button>
-                  <button className="action-btn action-btn--confirm" onClick={() => confirm(t.id)}>
+                  <button className="action-btn action-btn--confirm" onClick={() => handleConfirmar(t)}>
                     <CheckCircle2 size={18} />
                   </button>
                 </div>
@@ -137,18 +232,23 @@ export default function GeneralPanel() {
             <thead>
               <tr>
                 <th>Horario</th>
-                <th><span className="cancha-name">CANCHA 1</span><span className="cancha-sub">Cristal Pro</span></th>
-                <th><span className="cancha-name">CANCHA 2</span><span className="cancha-sub">Panoramic</span></th>
-                <th><span className="cancha-name">CANCHA 3</span><span className="cancha-sub">Outdoor</span></th>
+                {canchas.map(c => (
+                  <th key={c._id}>
+                    <span className="cancha-name">{c.nombre?.toUpperCase()}</span>
+                    <span className="cancha-sub">{c.tipo}</span>
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {MOCK_AGENDA.map(row => (
-                <tr key={row.horario}>
-                  <td className="horario-cell">{row.horario}</td>
-                  <td><SlotCell slot={row.c1} /></td>
-                  <td><SlotCell slot={row.c2} /></td>
-                  <td><SlotCell slot={row.c3} /></td>
+              {agenda.map(fila => (
+                <tr key={fila.horario}>
+                  <td className="horario-cell">{fila.horario}</td>
+                  {canchas.map(c => (
+                    <td key={c._id}>
+                      <SlotCell reserva={fila[c._id]} />
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
