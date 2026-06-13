@@ -2,17 +2,23 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { Upload, X, ImagePlus } from 'lucide-react';
 import { getMyComplex, createComplex, updateComplex, uploadComplexPhotos } from '../../api/complexApi';
+import { confirmSave, successAlert, errorAlert } from '../../utils/alerts';
 import './MyComplex.css';
 
+const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+
 const schema = z.object({
-  nombre:      z.string().min(2, 'Mínimo 2 caracteres'),
-  direccion:   z.string().min(5, 'Ingresá la dirección completa'),
-  ciudad:      z.string().min(2, 'Ingresá la ciudad'),
-  whatsapp:    z.string().min(8, 'Número inválido').regex(/^\+?[\d\s\-()+]+$/, 'Solo números y +'),
-  descripcion: z.string().optional(),
+  name:              z.string().min(2, 'Mínimo 2 caracteres'),
+  location:          z.string().min(5, 'Ingresá la dirección completa'),
+  city:              z.string().min(2, 'Ingresá la ciudad'),
+  price:             z.coerce.number({ invalid_type_error: 'Ingresá un precio' }).positive('Debe ser mayor a 0'),
+  openTime:          z.string().regex(TIME_RE, 'Formato HH:MM'),
+  closeTime:         z.string().regex(TIME_RE, 'Formato HH:MM'),
+  whatsapp:          z.string().optional(),
+  description:       z.string().optional(),
+  depositPercentage: z.coerce.number().optional(),
 });
 
 export default function MyComplex() {
@@ -38,11 +44,15 @@ export default function MyComplex() {
         setComplejo(data);
         setImages(data.photos || data.imagenes || []);
         reset({
-          nombre:      data.name || data.nombre,
-          direccion:   data.address || data.direccion,
-          ciudad:      data.city || data.ciudad,
-          whatsapp:    data.whatsapp,
-          descripcion: data.description || data.descripcion || '',
+          name:              data.name,
+          location:          data.location,
+          city:              data.city,
+          price:             data.price,
+          openTime:          data.openTime,
+          closeTime:         data.closeTime,
+          whatsapp:          data.whatsapp || '',
+          description:       data.description || '',
+          depositPercentage: data.depositPercentage,
         });
       })
       .catch(err => {
@@ -66,6 +76,9 @@ export default function MyComplex() {
   const removeNewFile = (idx) => setNewFiles(prev => prev.filter((_, i) => i !== idx));
 
   const onSubmit = async (data) => {
+    const confirm = await confirmSave();
+    if (!confirm.isConfirmed) return;
+
     setSaving(true);
     try {
       let saved;
@@ -86,9 +99,9 @@ export default function MyComplex() {
 
       setComplejo(saved);
       setImages(saved.photos || saved.imagenes || []);
-      toast.success(complejo ? 'Complejo actualizado correctamente' : 'Complejo creado — pendiente de aprobación');
+      await successAlert(complejo ? 'Complejo actualizado correctamente.' : 'Complejo creado — pendiente de aprobación.');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al guardar los cambios');
+      await errorAlert(err.response?.data?.message || 'Error al guardar los cambios.');
     } finally {
       setSaving(false);
       setUploadingImg(false);
@@ -170,15 +183,48 @@ export default function MyComplex() {
             <div className="form-group">
               <label className="form-label">Nombre del complejo</label>
               <input
-                className={`form-input${errors.nombre ? ' input-error' : ''}`}
+                className={`form-input${errors.name ? ' input-error' : ''}`}
                 placeholder="Ej: Club Central Padel"
-                {...register('nombre')}
+                {...register('name')}
               />
-              {errors.nombre && <span className="error-msg">{errors.nombre.message}</span>}
+              {errors.name && <span className="error-msg">{errors.name.message}</span>}
             </div>
 
             <div className="form-group">
-              <label className="form-label">WhatsApp de contacto</label>
+              <label className="form-label">Ciudad</label>
+              <input
+                className={`form-input${errors.city ? ' input-error' : ''}`}
+                placeholder="Buenos Aires"
+                {...register('city')}
+              />
+              {errors.city && <span className="error-msg">{errors.city.message}</span>}
+            </div>
+
+            <div className="form-group form-group--full">
+              <label className="form-label">Dirección</label>
+              <input
+                className={`form-input${errors.location ? ' input-error' : ''}`}
+                placeholder="Av. Corrientes 1234"
+                {...register('location')}
+              />
+              {errors.location && <span className="error-msg">{errors.location.message}</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Precio por hora ($)</label>
+              <input
+                type="number"
+                min="0"
+                step="100"
+                className={`form-input${errors.price ? ' input-error' : ''}`}
+                placeholder="Ej: 3000"
+                {...register('price')}
+              />
+              {errors.price && <span className="error-msg">{errors.price.message}</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">WhatsApp <span className="label-optional">(opcional)</span></label>
               <input
                 className={`form-input${errors.whatsapp ? ' input-error' : ''}`}
                 placeholder="+54 9 11 1234-5678"
@@ -188,23 +234,23 @@ export default function MyComplex() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Dirección</label>
+              <label className="form-label">Horario apertura</label>
               <input
-                className={`form-input${errors.direccion ? ' input-error' : ''}`}
-                placeholder="Av. Corrientes 1234"
-                {...register('direccion')}
+                type="time"
+                className={`form-input${errors.openTime ? ' input-error' : ''}`}
+                {...register('openTime')}
               />
-              {errors.direccion && <span className="error-msg">{errors.direccion.message}</span>}
+              {errors.openTime && <span className="error-msg">{errors.openTime.message}</span>}
             </div>
 
             <div className="form-group">
-              <label className="form-label">Ciudad</label>
+              <label className="form-label">Horario cierre</label>
               <input
-                className={`form-input${errors.ciudad ? ' input-error' : ''}`}
-                placeholder="Buenos Aires"
-                {...register('ciudad')}
+                type="time"
+                className={`form-input${errors.closeTime ? ' input-error' : ''}`}
+                {...register('closeTime')}
               />
-              {errors.ciudad && <span className="error-msg">{errors.ciudad.message}</span>}
+              {errors.closeTime && <span className="error-msg">{errors.closeTime.message}</span>}
             </div>
 
             <div className="form-group form-group--full">
@@ -213,7 +259,7 @@ export default function MyComplex() {
                 className="form-input form-textarea"
                 rows={3}
                 placeholder="Contale a los jugadores sobre tu complejo, instalaciones, estacionamiento, vestuarios..."
-                {...register('descripcion')}
+                {...register('description')}
               />
             </div>
           </div>
