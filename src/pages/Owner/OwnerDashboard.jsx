@@ -5,6 +5,7 @@ import {
   CreditCard, Clock, LogOut,
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
+import { confirmLogout } from '../../utils/alerts';
 import GeneralPanel   from './GeneralPanel';
 import MyComplex      from './MyComplex';
 import MyCourts       from './MyCourts';
@@ -32,7 +33,12 @@ export default function OwnerDashboard() {
   const { user, logout }    = useAuthStore();
   const navigate            = useNavigate();
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = async () => {
+    const result = await confirmLogout();
+    if (!result.isConfirmed) return;
+    logout();
+    navigate('/login');
+  };
 
   const initials = user?.nombre
     ? user.nombre.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()

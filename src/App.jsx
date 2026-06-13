@@ -8,6 +8,7 @@ import ClubDetail from './pages/ClubDetail/ClubDetail';
 import Complexes from './pages/Complexes/Complexes';
 import BookingConfirmation from './pages/BookingConfirmation/BookingConfirmation';
 import OwnerDashboard from './pages/Owner/OwnerDashboard';
+import VerifyEmail from './pages/VerifyEmail';
 import SuperAdminDashboard from './pages/SuperAdmin/SuperAdminDashboard';
 import useAuthStore from './store/authStore';
 import AboutPage from './pages/About/About';
@@ -45,6 +46,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/nosotros" element={<AboutPage />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
@@ -60,9 +62,9 @@ function App() {
         />
         <Route path="/panelcliente" element={<ClientPanel/>}/>
         <Route
-          path="/owner/*"
+          path="/admin/*"
           element={
-            <ProtectedRoute role="owner">
+            <ProtectedRoute role="admin">
               <OwnerDashboard />
             </ProtectedRoute>
           }
@@ -70,7 +72,7 @@ function App() {
         <Route
           path="/superadmin/*"
           element={
-            <ProtectedRoute role="SUPER_ADMIN">
+            <ProtectedRoute role="superadmin">
               <SuperAdminDashboard />
             </ProtectedRoute>
           }
