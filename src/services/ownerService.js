@@ -1,4 +1,4 @@
-import api from './api';
+import api from '../api/axios';
 
 export const getMyComplejo = () => api.get('/owner/complejo').then(r => r.data);
 export const createComplejo = (data) => api.post('/owner/complejo', data).then(r => r.data);
