@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import { getConfigPagos, updateConfigPagos } from '../../services/ownerService';
+import { getConfigPagos, updateConfigPagos } from '../../../services/ownerService';
 import './PaymentConfig.css';
 
 const SENA_OPTIONS = [

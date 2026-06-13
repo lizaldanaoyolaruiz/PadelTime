@@ -5,10 +5,11 @@ import {
   CreditCard, Clock, LogOut,
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import GeneralPanel   from './GeneralPanel';
-import MyComplex      from './MyComplex';
-import MyCourts       from './MyCourts';
-import PaymentConfig  from './PaymentConfig';
+import { confirmLogout } from '../../utils/alerts';
+import GeneralPanel  from './components/GeneralPanel';
+import MyComplex     from './components/MyComplex';
+import MyCourts      from './components/MyCourts';
+import PaymentConfig from './components/PaymentConfig';
 import './OwnerDashboard.css';
 
 const NAV = [
@@ -32,7 +33,12 @@ export default function OwnerDashboard() {
   const { user, logout }    = useAuthStore();
   const navigate            = useNavigate();
 
-  const handleLogout = () => { logout(); navigate('/login'); };
+  const handleLogout = async () => {
+    const result = await confirmLogout();
+    if (!result.isConfirmed) return;
+    logout();
+    navigate('/login');
+  };
 
   const initials = user?.nombre
     ? user.nombre.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
