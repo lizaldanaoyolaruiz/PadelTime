@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Upload, X, ImagePlus } from 'lucide-react';
-import { getMyComplejo, createComplejo, updateComplejo, uploadImage } from '../../services/ownerService';
+import { getMyComplex, createComplex, updateComplex, uploadComplexPhotos } from '../../api/complexApi';
 import './MyComplex.css';
 
 const schema = z.object({
@@ -19,7 +19,8 @@ export default function MyComplex() {
   const [complejo,     setComplejo]     = useState(null);
   const [loading,      setLoading]      = useState(true);
   const [saving,       setSaving]       = useState(false);
-  const [images,       setImages]       = useState([]);
+  const [images,       setImages]       = useState([]); // strings (URLs ya subidas)
+  const [newFiles,     setNewFiles]     = useState([]); // File objects pendientes
   const [uploadingImg, setUploadingImg] = useState(false);
   const fileRef = useRef(null);
 
@@ -31,16 +32,17 @@ export default function MyComplex() {
   } = useForm({ resolver: zodResolver(schema) });
 
   useEffect(() => {
-    getMyComplejo()
-      .then(data => {
+    getMyComplex()
+      .then(res => {
+        const data = res.data.complex;
         setComplejo(data);
-        setImages(data.imagenes || []);
+        setImages(data.photos || data.imagenes || []);
         reset({
-          nombre:      data.nombre,
-          direccion:   data.direccion,
-          ciudad:      data.ciudad,
+          nombre:      data.name || data.nombre,
+          direccion:   data.address || data.direccion,
+          ciudad:      data.city || data.ciudad,
           whatsapp:    data.whatsapp,
-          descripcion: data.descripcion || '',
+          descripcion: data.description || data.descripcion || '',
         });
       })
       .catch(err => {
@@ -49,45 +51,47 @@ export default function MyComplex() {
       .finally(() => setLoading(false));
   }, [reset]);
 
-  const handleFiles = async (e) => {
+  const handleFiles = (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-    if (images.length + files.length > 5) {
+    if (images.length + newFiles.length + files.length > 5) {
       toast.error('Máximo 5 imágenes permitidas');
       return;
     }
-    setUploadingImg(true);
-    try {
-      const urls = await Promise.all(files.map(uploadImage));
-      setImages(prev => [...prev, ...urls]);
-      toast.success(`${urls.length} imagen${urls.length > 1 ? 'es subidas' : ' subida'}`);
-    } catch {
-      toast.error('Error subiendo imágenes. Verificá la configuración de Cloudinary.');
-    } finally {
-      setUploadingImg(false);
-      if (fileRef.current) fileRef.current.value = '';
-    }
+    setNewFiles(prev => [...prev, ...files]);
+    if (fileRef.current) fileRef.current.value = '';
   };
 
   const removeImage = (idx) => setImages(prev => prev.filter((_, i) => i !== idx));
+  const removeNewFile = (idx) => setNewFiles(prev => prev.filter((_, i) => i !== idx));
 
   const onSubmit = async (data) => {
     setSaving(true);
     try {
-      const payload = { ...data, imagenes: images };
+      let saved;
       if (complejo) {
-        const updated = await updateComplejo(payload);
-        setComplejo(updated);
-        toast.success('Complejo actualizado correctamente');
+        const res = await updateComplex(complejo._id, data);
+        saved = res.data.complex || res.data;
       } else {
-        const created = await createComplejo(payload);
-        setComplejo(created);
-        toast.success('Complejo creado — quedó pendiente de aprobación');
+        const res = await createComplex(data);
+        saved = res.data.complex || res.data;
       }
+
+      if (newFiles.length) {
+        setUploadingImg(true);
+        const res = await uploadComplexPhotos(saved._id, newFiles);
+        saved = res.data.complex || saved;
+        setNewFiles([]);
+      }
+
+      setComplejo(saved);
+      setImages(saved.photos || saved.imagenes || []);
+      toast.success(complejo ? 'Complejo actualizado correctamente' : 'Complejo creado — pendiente de aprobación');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error al guardar los cambios');
     } finally {
       setSaving(false);
+      setUploadingImg(false);
     }
   };
 
@@ -117,7 +121,7 @@ export default function MyComplex() {
           <p className="section-desc">Subí hasta 5 fotos. Serán visibles en el portal público de reservas.</p>
           <div className="images-grid">
             {images.map((url, i) => (
-              <div key={i} className="img-thumb">
+              <div key={`saved-${i}`} className="img-thumb">
                 <img src={url} alt={`Foto ${i + 1}`} />
                 <button type="button" className="img-remove" onClick={() => removeImage(i)} title="Eliminar">
                   <X size={14} />
@@ -125,7 +129,16 @@ export default function MyComplex() {
                 {i === 0 && <span className="img-badge">Principal</span>}
               </div>
             ))}
-            {images.length < 5 && (
+            {newFiles.map((file, i) => (
+              <div key={`new-${i}`} className="img-thumb img-thumb--pending">
+                <img src={URL.createObjectURL(file)} alt={file.name} />
+                <button type="button" className="img-remove" onClick={() => removeNewFile(i)} title="Quitar">
+                  <X size={14} />
+                </button>
+                <span className="img-badge img-badge--pending">Pendiente</span>
+              </div>
+            ))}
+            {images.length + newFiles.length < 5 && (
               <button
                 type="button"
                 className="img-add"
