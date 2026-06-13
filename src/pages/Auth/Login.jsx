@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { loginSchema } from '../../utils/authValidations';
 import { EyeIcon, EyeOffIcon } from '../../components/ui/EyeIcons';
 import useAuthStore from '../../store/authStore';
-import { loginUser } from '../../services/authService';
 import './Auth.css';
 
 const DEV_USERS = [
@@ -17,7 +16,7 @@ const DEV_USERS = [
 
 export default function Login() {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { login, setAuth } = useAuthStore();
   const [showPw, setShowPw] = useState(false);
 
   const {
@@ -28,12 +27,11 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await loginUser(data);
-      setAuth(res.user, res.token);
+      const user = await login(data.email, data.password);
       toast.success('¡Bienvenido de nuevo!');
-      const role = res.user?.role;
-      if (role === 'admin') navigate('/admin');
-      else if (role === 'owner') navigate('/owner');
+      if (user.role === 'SUPER_ADMIN') navigate('/superadmin');
+      else if (user.role === 'admin') navigate('/admin');
+      else if (user.role === 'owner') navigate('/owner');
       else navigate('/');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Credenciales incorrectas. Intenta de nuevo.');
