@@ -19,10 +19,10 @@ const Navbar = () => {
         <li><NavLink to="/contact">Contacto</NavLink></li>
       </ul>
       <div className="navbar-actions">
-        <button className="btn-login" onClick={() => navigate('/login')}>
+        <button className="btn-login" onClick={() => navigate("/login")}>
           Iniciar Sesión
         </button>
-        <button className="btn-register" onClick={() => navigate('/register')}>
+        <button className="btn-register" onClick={() => navigate("/register")}>
           Registrarse
         </button>
       </div>

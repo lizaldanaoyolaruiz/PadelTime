@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
-import { getMisCanchas, createCancha, updateCancha, deleteCancha } from '../../services/ownerService';
+import { getMyCourts, createCourt, updateCourt, deleteCourt } from '../../api/courtApi';
 import './MyCourts.css';
 
 const schema = z.object({
@@ -23,7 +23,7 @@ const SUPERFICIES = [
 ];
 
 function CanchaModal({ cancha, onClose, onSave }) {
-  const isEdit = Boolean(cancha?.id);
+  const isEdit = Boolean(cancha?._id);
   const {
     register,
     handleSubmit,
@@ -109,20 +109,22 @@ export default function MyCourts() {
   const [deletingId,  setDeletingId]  = useState(null);
 
   useEffect(() => {
-    getMisCanchas()
-      .then(setCanchas)
+    getMyCourts()
+      .then(res => setCanchas(res.data.courts || res.data))
       .catch(() => toast.error('Error cargando las canchas'))
       .finally(() => setLoading(false));
   }, []);
 
   const handleSave = async (data) => {
     try {
-      if (modal?.cancha?.id) {
-        const updated = await updateCancha(modal.cancha.id, data);
-        setCanchas(prev => prev.map(c => c.id === updated.id ? updated : c));
+      if (modal?.cancha?._id) {
+        const res = await updateCourt(modal.cancha._id, data, null);
+        const updated = res.data.court || res.data;
+        setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
         toast.success('Cancha actualizada');
       } else {
-        const created = await createCancha(data);
+        const res = await createCourt(data, null);
+        const created = res.data.court || res.data;
         setCanchas(prev => [...prev, created]);
         toast.success('Cancha creada');
       }
@@ -134,8 +136,9 @@ export default function MyCourts() {
 
   const toggleHabilitada = async (cancha) => {
     try {
-      const updated = await updateCancha(cancha.id, { habilitada: !cancha.habilitada });
-      setCanchas(prev => prev.map(c => c.id === updated.id ? updated : c));
+      const res = await updateCourt(cancha._id, { habilitada: !cancha.habilitada }, null);
+      const updated = res.data.court || res.data;
+      setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
     } catch {
       toast.error('Error actualizando estado');
     }
@@ -144,8 +147,8 @@ export default function MyCourts() {
   const handleDelete = async (id) => {
     setDeletingId(id);
     try {
-      await deleteCancha(id);
-      setCanchas(prev => prev.filter(c => c.id !== id));
+      await deleteCourt(id);
+      setCanchas(prev => prev.filter(c => c._id !== id));
       toast.success('Cancha eliminada');
     } catch {
       toast.error('Error eliminando la cancha');
@@ -179,7 +182,7 @@ export default function MyCourts() {
       ) : (
         <div className="canchas-list">
           {canchas.map(cancha => (
-            <div key={cancha.id} className={`cancha-card${!cancha.habilitada ? ' cancha-card--disabled' : ''}`}>
+            <div key={cancha._id} className={`cancha-card${!cancha.habilitada ? ' cancha-card--disabled' : ''}`}>
               <div className="cancha-info">
                 <div className="cancha-name-row">
                   <span className="cancha-name">{cancha.nombre}</span>
@@ -210,8 +213,8 @@ export default function MyCourts() {
                 </button>
                 <button
                   className="icon-btn icon-btn--delete"
-                  onClick={() => handleDelete(cancha.id)}
-                  disabled={deletingId === cancha.id}
+                  onClick={() => handleDelete(cancha._id)}
+                  disabled={deletingId === cancha._id}
                   title="Eliminar"
                 >
                   <Trash2 size={15} />
