@@ -6,12 +6,11 @@ import { toast } from 'sonner';
 import { registerSchema } from '../../utils/authValidations';
 import { EyeIcon, EyeOffIcon } from '../../components/ui/EyeIcons';
 import useAuthStore from '../../store/authStore';
-import { registerUser } from '../../services/authService';
 import './Auth.css';
 
 export default function Register() {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { register: registerInStore } = useAuthStore();
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -23,10 +22,9 @@ export default function Register() {
 
   const onSubmit = async ({ nombre, apellido, email, password }) => {
     try {
-      const res = await registerUser({ nombre, apellido, email, password });
-      setAuth(res.user, res.token);
-      toast.success('¡Registro exitoso! Bienvenido a PadelTime 🎾');
-      navigate('/');
+      const res = await registerInStore({ nombre, apellido, email, password, role: 'player' });
+      toast.success(res.message || '¡Registro exitoso! Revisá tu email para verificar la cuenta.');
+      navigate('/login');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error al registrarse. Intenta de nuevo.');
     }
