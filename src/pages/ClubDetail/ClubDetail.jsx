@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import ClubReviews from './ClubReviews';
 import './ClubDetail.css';
 
 const ClubDetail = () => {
@@ -247,6 +248,9 @@ const ClubDetail = () => {
             </div>
           </aside>
         </div>
+
+        <ClubReviews />
+
       </main>
       <Footer />
     </div>
