@@ -5,7 +5,7 @@ export const SUPERFICIES = [
 
 export const SLOTS_INICIO  = '08:00';
 export const SLOTS_FIN     = '22:00';
-export const SLOT_DURACION = 90;
+export const SLOT_DURACION = 60;
 
 export function generarSlots(inicio = SLOTS_INICIO, fin = SLOTS_FIN) {
   const slots = [];
