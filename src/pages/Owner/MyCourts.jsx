@@ -2,24 +2,22 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'sonner';
 import { Plus, Pencil, Trash2, X } from 'lucide-react';
 import { getMyCourts, createCourt, updateCourt, deleteCourt } from '../../api/courtApi';
+import { getMyComplex } from '../../api/complexApi';
+import { confirmDelete, confirmDisable, successAlert, errorAlert } from '../../utils/alerts';
 import './MyCourts.css';
 
 const schema = z.object({
-  nombre:           z.string().min(2, 'Mínimo 2 caracteres'),
-  tipo_superficie:  z.string().min(1, 'Seleccioná una superficie'),
-  precio_hora:      z.coerce.number({ invalid_type_error: 'Ingresá un precio' }).positive('Debe ser mayor a 0'),
-  descripcion:      z.string().optional(),
+  name:         z.string().min(2, 'Mínimo 2 caracteres'),
+  type:         z.string().min(1, 'Seleccioná una superficie'),
+  pricePerHour: z.coerce.number({ invalid_type_error: 'Ingresá un precio' }).positive('Debe ser mayor a 0'),
+  description:  z.string().optional(),
 });
 
 const SUPERFICIES = [
-  { value: 'cristal',  label: 'Cristal Pro' },
-  { value: 'cesped',   label: 'Césped Sintético' },
-  { value: 'hormigon', label: 'Hormigón' },
-  { value: 'outdoor',  label: 'Outdoor' },
-  { value: 'otro',     label: 'Otro' },
+  { value: 'crystal',   label: 'Cristal' },
+  { value: 'panoramic', label: 'Panorámica' },
 ];
 
 function CanchaModal({ cancha, onClose, onSave }) {
@@ -31,7 +29,7 @@ function CanchaModal({ cancha, onClose, onSave }) {
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues: cancha
-      ? { nombre: cancha.nombre, tipo_superficie: cancha.tipo_superficie, precio_hora: cancha.precio_hora, descripcion: cancha.descripcion || '' }
+      ? { name: cancha.name, type: cancha.type, pricePerHour: cancha.pricePerHour, description: cancha.description || '' }
       : {},
   });
 
@@ -47,23 +45,23 @@ function CanchaModal({ cancha, onClose, onSave }) {
           <div className="form-group">
             <label className="form-label">Nombre de la cancha</label>
             <input
-              className={`form-input${errors.nombre ? ' input-error' : ''}`}
-              placeholder="Ej: Cancha 1 — Cristal Pro"
-              {...register('nombre')}
+              className={`form-input${errors.name ? ' input-error' : ''}`}
+              placeholder="Ej: Cancha 1"
+              {...register('name')}
             />
-            {errors.nombre && <span className="error-msg">{errors.nombre.message}</span>}
+            {errors.name && <span className="error-msg">{errors.name.message}</span>}
           </div>
 
           <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
             <div className="form-group">
               <label className="form-label">Superficie</label>
-              <select className={`form-input form-select${errors.tipo_superficie ? ' input-error' : ''}`} {...register('tipo_superficie')}>
+              <select className={`form-input form-select${errors.type ? ' input-error' : ''}`} {...register('type')}>
                 <option value="">Seleccioná...</option>
                 {SUPERFICIES.map(s => (
                   <option key={s.value} value={s.value}>{s.label}</option>
                 ))}
               </select>
-              {errors.tipo_superficie && <span className="error-msg">{errors.tipo_superficie.message}</span>}
+              {errors.type && <span className="error-msg">{errors.type.message}</span>}
             </div>
 
             <div className="form-group">
@@ -72,11 +70,11 @@ function CanchaModal({ cancha, onClose, onSave }) {
                 type="number"
                 min="0"
                 step="100"
-                className={`form-input${errors.precio_hora ? ' input-error' : ''}`}
+                className={`form-input${errors.pricePerHour ? ' input-error' : ''}`}
                 placeholder="Ej: 3000"
-                {...register('precio_hora')}
+                {...register('pricePerHour')}
               />
-              {errors.precio_hora && <span className="error-msg">{errors.precio_hora.message}</span>}
+              {errors.pricePerHour && <span className="error-msg">{errors.pricePerHour.message}</span>}
             </div>
           </div>
 
@@ -86,7 +84,7 @@ function CanchaModal({ cancha, onClose, onSave }) {
               className="form-input form-textarea"
               rows={2}
               placeholder="Ej: Cancha techada con iluminación LED..."
-              {...register('descripcion')}
+              {...register('description')}
             />
           </div>
 
@@ -103,13 +101,19 @@ function CanchaModal({ cancha, onClose, onSave }) {
 }
 
 export default function MyCourts() {
-  const [canchas,     setCanchas]     = useState([]);
-  const [loading,     setLoading]     = useState(true);
-  const [modal,       setModal]       = useState(null); // null | { cancha? }
-  const [deletingId,  setDeletingId]  = useState(null);
+  const [canchas,    setCanchas]    = useState([]);
+  const [complexId,  setComplexId]  = useState(null);
+  const [loading,    setLoading]    = useState(true);
+  const [modal,      setModal]      = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
-    getMyCourts()
+    getMyComplex()
+      .then(res => {
+        const id = res.data.complex?._id || res.data._id;
+        setComplexId(id);
+        return getMyCourts(id);
+      })
       .then(res => setCanchas(res.data.courts || res.data))
       .catch(() => toast.error('Error cargando las canchas'))
       .finally(() => setLoading(false));
@@ -118,40 +122,47 @@ export default function MyCourts() {
   const handleSave = async (data) => {
     try {
       if (modal?.cancha?._id) {
-        const res = await updateCourt(modal.cancha._id, data, null);
+        const res = await updateCourt(modal.cancha._id, { ...data, complexId }, null);
         const updated = res.data.court || res.data;
         setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
-        toast.success('Cancha actualizada');
+        setModal(null);
+        await successAlert('Cancha actualizada correctamente.');
       } else {
-        const res = await createCourt(data, null);
+        const res = await createCourt({ ...data, complexId }, null);
         const created = res.data.court || res.data;
         setCanchas(prev => [...prev, created]);
-        toast.success('Cancha creada');
+        setModal(null);
+        await successAlert('Cancha creada correctamente.');
       }
-      setModal(null);
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al guardar');
+      await errorAlert(err.response?.data?.message || 'Error al guardar la cancha.');
     }
   };
 
   const toggleHabilitada = async (cancha) => {
+    if (!cancha.isActive) {
+      const result = await confirmDisable();
+      if (!result.isConfirmed) return;
+    }
     try {
-      const res = await updateCourt(cancha._id, { habilitada: !cancha.habilitada }, null);
+      const res = await updateCourt(cancha._id, { isActive: !cancha.isActive }, null);
       const updated = res.data.court || res.data;
       setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
     } catch {
-      toast.error('Error actualizando estado');
+      await errorAlert('Error actualizando el estado de la cancha.');
     }
   };
 
   const handleDelete = async (id) => {
+    const result = await confirmDelete('La cancha se eliminará permanentemente.');
+    if (!result.isConfirmed) return;
     setDeletingId(id);
     try {
       await deleteCourt(id);
       setCanchas(prev => prev.filter(c => c._id !== id));
-      toast.success('Cancha eliminada');
+      await successAlert('Cancha eliminada.');
     } catch {
-      toast.error('Error eliminando la cancha');
+      await errorAlert('Error eliminando la cancha.');
     } finally {
       setDeletingId(null);
     }
@@ -182,33 +193,27 @@ export default function MyCourts() {
       ) : (
         <div className="canchas-list">
           {canchas.map(cancha => (
-            <div key={cancha._id} className={`cancha-card${!cancha.habilitada ? ' cancha-card--disabled' : ''}`}>
+            <div key={cancha._id} className={`cancha-card${!cancha.isActive ? ' cancha-card--disabled' : ''}`}>
               <div className="cancha-info">
                 <div className="cancha-name-row">
-                  <span className="cancha-name">{cancha.nombre}</span>
-                  <span className="cancha-superficie">{superficieLabel(cancha.tipo_superficie)}</span>
-                  {!cancha.habilitada && <span className="status-badge status-inactivo" style={{ marginLeft: 8 }}>Deshabilitada</span>}
+                  <span className="cancha-name">{cancha.name}</span>
+                  <span className="cancha-superficie">{superficieLabel(cancha.type)}</span>
+                  {!cancha.isActive && <span className="status-badge status-inactivo" style={{ marginLeft: 8 }}>Deshabilitada</span>}
                 </div>
-                {cancha.descripcion && (
-                  <p className="cancha-desc">{cancha.descripcion}</p>
-                )}
-                <span className="cancha-precio">${cancha.precio_hora?.toLocaleString('es-AR')} / hora</span>
+                {cancha.description && <p className="cancha-desc">{cancha.description}</p>}
+                <span className="cancha-precio">${cancha.pricePerHour?.toLocaleString('es-AR')} / hora</span>
               </div>
 
               <div className="cancha-actions">
-                <label className="toggle-switch" title={cancha.habilitada ? 'Deshabilitar' : 'Habilitar'}>
+                <label className="toggle-switch" title={cancha.isActive ? 'Deshabilitar' : 'Habilitar'}>
                   <input
                     type="checkbox"
-                    checked={cancha.habilitada ?? true}
+                    checked={cancha.isActive ?? true}
                     onChange={() => toggleHabilitada(cancha)}
                   />
                   <span className="toggle-track" />
                 </label>
-                <button
-                  className="icon-btn icon-btn--edit"
-                  onClick={() => setModal({ cancha })}
-                  title="Editar"
-                >
+                <button className="icon-btn icon-btn--edit" onClick={() => setModal({ cancha })} title="Editar">
                   <Pencil size={15} />
                 </button>
                 <button
