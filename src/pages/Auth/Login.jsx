@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
+import { toastSuccess, toastError, toastWarning } from '../../utils/toasts';
 import { loginSchema } from '../../utils/authValidations';
 import { EyeIcon, EyeOffIcon } from '../../components/ui/EyeIcons';
 import useAuthStore from '../../store/authStore';
 import './Auth.css';
 
 const DEV_USERS = [
-  { label: 'Admin',       user: { id: 1, nombre: 'Marcos Padel',  role: 'owner',       club: 'Club Central' }, token: 'dev-owner-token'  },
-  { label: 'Jugador',     user: { id: 3, nombre: 'Juan Pérez',    role: 'user'         },                       token: 'dev-user-token'   },
-  { label: 'Super Admin', user: { id: 9, nombre: 'Juan Delgado',  role: 'SUPER_ADMIN'  },                       token: 'dev-superadmin-token' },
+  { label: 'Admin',       user: { id: '1', name: 'Marcos Padel', role: 'admin',      isVerified: true }, token: 'dev-admin-token'      },
+  { label: 'Jugador',     user: { id: '3', name: 'Juan Pérez',   role: 'player',     isVerified: true }, token: 'dev-player-token'     },
+  { label: 'Super Admin', user: { id: '9', name: 'Juan Delgado', role: 'superadmin', isVerified: true }, token: 'dev-superadmin-token' },
 ];
 
 export default function Login() {
@@ -28,26 +28,30 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const user = await login(data.email, data.password);
-      toast.success('¡Bienvenido de nuevo!');
-      if (user.role === 'SUPER_ADMIN') navigate('/superadmin');
-      else if (user.role === 'admin') navigate('/admin');
-      else if (user.role === 'owner') navigate('/owner');
+      await toastSuccess('¡Bienvenido de nuevo!');
+      const role = user?.role;
+      if (role === 'superadmin') navigate('/superadmin');
+      else if (role === 'admin') navigate('/admin');
       else navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Credenciales incorrectas. Intenta de nuevo.');
+      const msg = err.response?.data?.message || '';
+      if (msg.toLowerCase().includes('pendiente') || msg.toLowerCase().includes('aprobaci')) {
+        await toastWarning('Tu cuenta está pendiente de aprobación.');
+      } else {
+        await toastError('Email o contraseña incorrectos.');
+      }
     }
   };
 
   const onInvalid = () => {
-    toast.error('Completá todos los campos correctamente.');
+    toastWarning('Completá todos los campos.');
   };
 
   const devLogin = ({ user, token, label }) => {
     setAuth(user, token);
     toast.success(`Acceso dev: ${label}`);
-    if (user.role === 'SUPER_ADMIN') navigate('/superadmin');
+    if (user.role === 'superadmin') navigate('/superadmin');
     else if (user.role === 'admin') navigate('/admin');
-    else if (user.role === 'owner') navigate('/owner');
     else navigate('/');
   };
 
