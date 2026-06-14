@@ -135,7 +135,6 @@ const ClubReviews = () => {
                 onChange={(e) => setComment(e.target.value)}
                 rows="4"
               ></textarea>
-              
               <button type="submit" className="btn-submit-review">Enviar Valoración</button>
             </form>
           </div>
