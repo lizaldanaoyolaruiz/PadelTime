@@ -6,10 +6,10 @@ import {
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
-import GeneralPanel   from './GeneralPanel';
-import MyComplex      from './MyComplex';
-import MyCourts       from './MyCourts';
-import PaymentConfig  from './PaymentConfig';
+import GeneralPanel  from './components/GeneralPanel';
+import MyComplex     from './components/MyComplex';
+import MyCourts      from './components/MyCourts';
+import PaymentConfig from './components/PaymentConfig';
 import './OwnerDashboard.css';
 
 const NAV = [
@@ -46,13 +46,11 @@ export default function OwnerDashboard() {
 
   return (
     <div className="owner-layout">
-      {/* ── Sidebar ── */}
       <aside className="owner-sidebar">
         <div className="sidebar-brand">
           <span className="brand-name">PadelSaaS</span>
           <span className="brand-sub">Owner Dashboard</span>
         </div>
-
         <nav className="sidebar-nav">
           {NAV.map(({ id, label, Icon }) => (
             <button
@@ -65,7 +63,6 @@ export default function OwnerDashboard() {
             </button>
           ))}
         </nav>
-
         <div className="sidebar-footer">
           <div className="sidebar-user">
             <div className="sidebar-avatar">{initials}</div>
@@ -79,8 +76,6 @@ export default function OwnerDashboard() {
           </button>
         </div>
       </aside>
-
-      {/* ── Main ── */}
       <main className="owner-main">
         {PANELS[active] ?? (
           <div className="coming-soon">
