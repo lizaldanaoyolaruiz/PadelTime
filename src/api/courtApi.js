@@ -1,5 +1,7 @@
 import api from './axios';
 
+export const getPublicCourts = (complexId) => api.get('/courts/public', { params: { complexId } });
+
 export const getMyCourts = (complexId) => api.get('/courts', { params: { complexId } });
 
 export const createCourt = (data, photo) => {
