@@ -153,6 +153,7 @@ tbody tr {
   padding: 30px;
   border-radius: 16px;
   min-width: 400px;
+  width: 80px;
 }
 
 .close-btn {
