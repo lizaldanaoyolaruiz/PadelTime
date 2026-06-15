@@ -2,7 +2,25 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import ClubReviews from './ClubReviews';
+import { getPublicComplexById } from '../../api/complexApi';
+import { getPublicCourts } from '../../api/courtApi';
 import './ClubDetail.css';
+
+const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400';
+
+const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
+
+const mapCourt = (court) => ({
+  id: court._id,
+  name: court.name,
+  price: `$${court.pricePerHour}/h`,
+  precioNumerico: court.pricePerHour,
+  status: court.enabled ? 'Habilitada' : 'Deshabilitada',
+  description: court.description || '',
+  tags: [TYPE_LABELS[court.type] || court.type, ...(court.features || [])].filter(Boolean),
+  image: court.photo || PLACEHOLDER_IMAGE,
+});
 
 const ClubDetail = () => {
   const { id } = useParams();
@@ -17,71 +35,38 @@ const ClubDetail = () => {
   const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => {
-      setClub({
-        nombre: "Marcos Paz PADEL",
-        ubicacion: "San Miguel De Tucuman",
-        telefono: "+54 381 1234567",
-        horario: "Lun - Dom: 07:00 - 23:30",
-      });
-      
-      const canchasMock = [
-        {
-          id: 1,
-          name: "Cancha Central WPT",
-          price: "35€/h",
-          precioNumerico: 12000,
-          status: "Habilitada",
-          description: "Cancha panorámica oficial con césped Mondo STX y máxima visibilidad. Ideal para torneos.",
-          tags: ["Interior", "Panorámica", "Césped Azul"],
-          image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-          id: 2,
-          name: "Cancha 2 - Outdoor",
-          price: "28€/h",
-          precioNumerico: 9500,
-          status: "Habilitada",
-          description: "Cancha al aire libre con iluminación LED Pro de última generación. Perfecta para jugar de noche.",
-          tags: ["Exterior", "LED Pro", "Césped Verde"],
-          image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-          id: 3,
-          name: "Cancha 3 - Techada",
-          price: "30€/h",
-          precioNumerico: 10500,
-          status: "Habilitada",
-          description: "Cancha techada estándar, ideal para días de lluvia o mucho sol.",
-          tags: ["Interior", "Estándar", "Césped Verde"],
-          image: "https://images.unsplash.com/photo-1574629810360-7efbb1925536?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-          id: 4,
-          name: "Cancha 4 - Entrenamiento",
-          price: "25€/h",
-          precioNumerico: 8000,
-          status: "Habilitada",
-          description: "Pista adaptada para clases y entrenamiento intensivo con profesores.",
-          tags: ["Interior", "Entrenamiento", "Césped Azul"],
-          image: "https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-          id: 5,
-          name: "Cancha 5 - Premium",
-          price: "40€/h",
-          precioNumerico: 14000,
-          status: "Habilitada",
-          description: "La mejor experiencia con gradas y servicio al pie de pista.",
-          tags: ["Interior", "Premium", "Césped Azul"],
-          image: "https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400"
-        }
-      ];
+    const cargarComplejo = async () => {
+      setCargando(true);
+      try {
+        const [complexRes, courtsRes] = await Promise.all([
+          getPublicComplexById(id),
+          getPublicCourts(id),
+        ]);
 
-      setCanchas(canchasMock);
-      setCanchaSeleccionada(canchasMock[0]);
-      setCargando(false);
-    }, 1000);
+        const complex = complexRes.data?.complex;
+        setClub({
+          nombre: complex?.name || 'Complejo',
+          ubicacion: complex?.location || '',
+          telefono: complex?.whatsapp || 'No disponible',
+          horario: complex?.openTime && complex?.closeTime
+            ? `${complex.openTime} - ${complex.closeTime}`
+            : 'No disponible',
+        });
+
+        const canchas = (courtsRes.data?.courts || []).map(mapCourt);
+        setCanchas(canchas);
+        setCanchaSeleccionada(canchas[0] || null);
+      } catch (err) {
+        console.error('Error cargando el complejo:', err);
+        setClub({ nombre: 'Complejo no encontrado', ubicacion: '', telefono: '', horario: '' });
+        setCanchas([]);
+        setCanchaSeleccionada(null);
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    cargarComplejo();
   }, [id]);
 
   const handleReserva = () => {
@@ -247,6 +232,9 @@ const ClubDetail = () => {
             </div>
           </aside>
         </div>
+
+        <ClubReviews complexId={id} />
+
       </main>
       <Footer />
     </div>
