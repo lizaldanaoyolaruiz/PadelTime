@@ -1,5 +1,9 @@
 import api from './axios';
 
+// Público — catálogo de complejos
+export const getPublicComplexes = () => api.get('/complexes/public');
+export const getPublicComplexById = (id) => api.get(`/complexes/public/${id}`);
+
 // Admin — su propio complejo
 export const getMyComplex = () => api.get('/complexes/me');
 export const createComplex = (data) => api.post('/complexes', data);
