@@ -164,7 +164,32 @@ tbody tr {
   border-radius: 10px;
   cursor: pointer;
 }
+.add-btn {
+  background: #bef264;
+  color: #08152e;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
+.modal-content input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #24395f;
+  background: #0f1c38;
+  color: white;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
 @media (max-width: 768px) {
   .super-admin {
     padding: 15px;
