@@ -49,7 +49,7 @@ export default function Login() {
 
   const devLogin = ({ user, token, label }) => {
     setAuth(user, token);
-    toast.success(`Acceso dev: ${label}`);
+    toastSuccess(`Acceso dev: ${label}`);
     if (user.role === 'superadmin') navigate('/superadmin');
     else if (user.role === 'admin') navigate('/admin');
     else navigate('/');
