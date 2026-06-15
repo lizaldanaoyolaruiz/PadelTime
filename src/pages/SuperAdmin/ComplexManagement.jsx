@@ -5,7 +5,6 @@ import { FILTERS, STATUS_MAP } from './utils/constants';
 import { StatCards }         from './components/StatCards';
 import { ComplexTable }      from './components/ComplexTable';
 import { ComplexMobileList } from './components/ComplexMobileList';
-import { ChartSection }      from './components/ChartSection';
 import { DetailDrawer }      from './components/DetailDrawer';
 import { NewComplexModal }   from './components/NewComplexModal';
 import { ActionModals }      from './components/ActionModals';
@@ -23,7 +22,7 @@ export default function ComplexManagement() {
 
   useEffect(() => {
     getAllComplexes().then(res => {
-      setComplexes(res.data);
+      setComplexes(res.data.data);
       setLoading(false);
     });
   }, []);
@@ -59,6 +58,9 @@ export default function ComplexManagement() {
 
   const handleComplexCreated = (newComplex) =>
     setComplexes(prev => [newComplex, ...prev]);
+
+  const handleComplexDeleted = (id) =>
+    setComplexes(prev => prev.filter(c => c.id !== id));
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
@@ -162,9 +164,6 @@ export default function ComplexManagement() {
         )}
       </div>
 
-      {/* Chart + Activity */}
-      <ChartSection />
-
       {/* Overlays */}
       {showDetail && selectedComplex && (
         <DetailDrawer
@@ -185,6 +184,7 @@ export default function ComplexManagement() {
         modal={actionModal}
         onClose={closeAction}
         onStatusUpdate={handleStatusUpdate}
+        onDelete={handleComplexDeleted}
       />
 
     </div>
