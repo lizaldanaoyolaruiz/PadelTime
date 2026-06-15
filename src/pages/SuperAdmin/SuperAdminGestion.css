@@ -173,6 +173,8 @@ tbody tr {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
+  height: 100%;
+  margin-top: 20px;
 }
 
 .modal-content input {
