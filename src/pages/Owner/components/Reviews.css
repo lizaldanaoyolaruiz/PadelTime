@@ -1,0 +1,88 @@
+.val-card {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.val-card--summary {
+  max-width: 320px;
+}
+
+.val-average {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.val-average-number {
+  font-size: 42px;
+  font-weight: var(--fw-bold);
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.val-average-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.val-average-meta {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.val-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.val-item {
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 16px;
+}
+
+.val-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.val-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.val-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.val-item-name {
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-base);
+  font-size: var(--text-sm);
+}
+
+.val-item-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.val-item-date {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.val-item-comment {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  line-height: 1.5;
+  margin: 0;
+}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Building2, Layers, CalendarDays,
-  CreditCard, Clock, LogOut,
+  CreditCard, Clock, LogOut, Star,
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
@@ -10,22 +10,25 @@ import GeneralPanel  from './components/GeneralPanel';
 import MyComplex     from './components/MyComplex';
 import MyCourts      from './components/MyCourts';
 import PaymentConfig from './components/PaymentConfig';
+import Reviews       from './components/Reviews';
 import './OwnerDashboard.css';
 
 const NAV = [
-  { id: 'panel',    label: 'Panel General',         Icon: LayoutDashboard },
-  { id: 'complejo', label: 'Mi Complejo',            Icon: Building2 },
-  { id: 'canchas',  label: 'Mis Canchas',            Icon: Layers },
-  { id: 'reservas', label: 'Reservas Hoy',           Icon: CalendarDays },
-  { id: 'pagos',    label: 'Configuración de Pagos', Icon: CreditCard },
-  { id: 'horarios', label: 'Horarios',               Icon: Clock },
+  { id: 'panel',       label: 'Panel General',         Icon: LayoutDashboard },
+  { id: 'complejo',    label: 'Mi Complejo',            Icon: Building2 },
+  { id: 'canchas',     label: 'Mis Canchas',            Icon: Layers },
+  { id: 'reservas',    label: 'Reservas Hoy',           Icon: CalendarDays },
+  { id: 'pagos',       label: 'Configuración de Pagos', Icon: CreditCard },
+  { id: 'horarios',    label: 'Horarios',               Icon: Clock },
+  { id: 'valoraciones', label: 'Valoraciones',          Icon: Star },
 ];
 
 const PANELS = {
-  panel:    <GeneralPanel />,
-  complejo: <MyComplex />,
-  canchas:  <MyCourts />,
-  pagos:    <PaymentConfig />,
+  panel:        <GeneralPanel />,
+  complejo:     <MyComplex />,
+  canchas:      <MyCourts />,
+  pagos:        <PaymentConfig />,
+  valoraciones: <Reviews />,
 };
 
 export default function OwnerDashboard() {
