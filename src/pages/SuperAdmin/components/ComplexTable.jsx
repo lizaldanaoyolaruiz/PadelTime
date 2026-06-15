@@ -1,4 +1,4 @@
-import { Eye, CheckCircle, XCircle, PauseCircle } from 'lucide-react';
+import { Eye, CheckCircle, XCircle, PauseCircle, Pencil, Trash2 } from 'lucide-react';
 import { StatusBadge }   from './StatusBadge';
 import { ComplexAvatar } from './ComplexAvatar';
 import { SkeletonRow }   from './Skeletons';
@@ -98,6 +98,22 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                           <PauseCircle size={14} />
                         </button>
                       )}
+                      <button
+                        className="gc-action-btn gc-action-btn--edit"
+                        onClick={() => onAction('edit', complex)}
+                        title="Editar"
+                        aria-label="Editar"
+                      >
+                        <Pencil size={14} />
+                      </button>
+                      <button
+                        className="gc-action-btn gc-action-btn--delete"
+                        onClick={() => onAction('delete', complex)}
+                        title="Eliminar"
+                        aria-label="Eliminar"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   </td>
                 </tr>
