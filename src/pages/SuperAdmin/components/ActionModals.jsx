@@ -29,8 +29,8 @@ function EditComplexForm({ complex, onClose, onStatusUpdate, loading, setLoading
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const res = await updateComplex(complex.id, { ...data, courts: parseInt(data.courts) });
-      onStatusUpdate(complex.id, res.data.complex.status, res.data.complex);
+      const res = await updateComplex(complex._id, { ...data, courts: parseInt(data.courts) });
+      onStatusUpdate(complex._id, res.data.complex.status, res.data.complex);
       toast.success('Complejo actualizado correctamente.');
       onClose();
     } catch {
@@ -234,9 +234,9 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   const handleApprove = async () => {
     setLoading(true);
     try {
-      await approveComplex(complex.id);
-      await sendApprovalEmail(complex.id);
-      onStatusUpdate(complex.id, 'approved');
+      await approveComplex(complex._id);
+      await sendApprovalEmail(complex._id);
+      onStatusUpdate(complex._id, 'approved');
       toast.success('Complejo aprobado correctamente.');
       toast.success('Email enviado al owner notificando aprobación.');
       onClose();
@@ -250,9 +250,9 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   const handleReject = async () => {
     setLoading(true);
     try {
-      await rejectComplex(complex.id, rejectReason);
-      await sendRejectionEmail(complex.id);
-      onStatusUpdate(complex.id, 'rejected', { observations: rejectReason });
+      await rejectComplex(complex._id, rejectReason);
+      await sendRejectionEmail(complex._id);
+      onStatusUpdate(complex._id, 'rejected', { observations: rejectReason });
       toast.success('Complejo rechazado.');
       toast.success('Email enviado al owner notificando rechazo.');
       onClose();
@@ -266,8 +266,8 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   const handleSuspend = async () => {
     setLoading(true);
     try {
-      await suspendComplex(complex.id);
-      onStatusUpdate(complex.id, 'suspended');
+      await suspendComplex(complex._id);
+      onStatusUpdate(complex._id, 'suspended');
       toast.success('Complejo suspendido correctamente.');
       onClose();
     } catch {
@@ -280,8 +280,8 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   const handleDelete = async () => {
     setLoading(true);
     try {
-      await deleteComplex(complex.id);
-      onDelete(complex.id);
+      await deleteComplex(complex._id);
+      onDelete(complex._id);
       toast.success('Complejo eliminado correctamente.');
       onClose();
     } catch {
