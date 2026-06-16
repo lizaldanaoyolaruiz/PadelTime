@@ -72,9 +72,17 @@ const ClubDetail = () => {
   const handleReserva = () => {
     if (!canchaSeleccionada) return;
 
+    const [startHour, startMinute] = horarioSeleccionado.split(':').map(Number);
+    const endTime = `${String(startHour + 1).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
+    const date = `2024-05-${String(diaSeleccionado).padStart(2, '0')}`;
+
     navigate('/confirmacion', {
       state: {
-        complejo_id: id,
+        courtId: canchaSeleccionada.id,
+        complexId: id,
+        date,
+        startTime: horarioSeleccionado,
+        endTime,
         clubNombre: club?.nombre || "Premium Padel Club",
         ubicacion: club?.ubicacion || "Buenos Aires, Argentina",
         canchaNombre: canchaSeleccionada.name,
