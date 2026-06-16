@@ -7,9 +7,9 @@ const DEFAULT_VALUES = {
   address: '', city: '', province: '', courts: '', observations: '',
 };
 
-export function useComplexForm() {
+export function useComplexForm(initialValues = {}) {
   return useForm({
     resolver: zodResolver(complexSchema),
-    defaultValues: DEFAULT_VALUES,
+    defaultValues: { ...DEFAULT_VALUES, ...initialValues, courts: String(initialValues.courts || '') },
   });
 }
