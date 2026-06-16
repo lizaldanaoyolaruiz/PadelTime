@@ -32,7 +32,7 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
               )
               : filtered.map(complex => (
                 <tr
-                  key={complex.id}
+                  key={complex._id}
                   className="gc-table-row"
                   style={{ cursor: 'pointer' }}
                   onClick={() => onDetail(complex)}
