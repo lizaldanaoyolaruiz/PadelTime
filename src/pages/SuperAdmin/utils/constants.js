@@ -1,16 +1,16 @@
 export const FILTERS = [
   { key: 'ALL',       label: 'Todos'       },
-  { key: 'PENDING',   label: 'Pendientes'  },
-  { key: 'APPROVED',  label: 'Aprobados'   },
-  { key: 'REJECTED',  label: 'Rechazados'  },
-  { key: 'SUSPENDED', label: 'Suspendidos' },
+  { key: 'pending',   label: 'Pendientes'  },
+  { key: 'approved',  label: 'Aprobados'   },
+  { key: 'rejected',  label: 'Rechazados'  },
+  { key: 'suspended', label: 'Suspendidos' },
 ];
 
 export const STATUS_MAP = {
-  PENDING:   { label: 'Pendiente',  cls: 'badge--pending'   },
-  APPROVED:  { label: 'Aprobado',   cls: 'badge--approved'  },
-  REJECTED:  { label: 'Rechazado',  cls: 'badge--rejected'  },
-  SUSPENDED: { label: 'Suspendido', cls: 'badge--suspended' },
+  pending:   { label: 'Pendiente',  cls: 'badge--pending'   },
+  approved:  { label: 'Aprobado',   cls: 'badge--approved'  },
+  rejected:  { label: 'Rechazado',  cls: 'badge--rejected'  },
+  suspended: { label: 'Suspendido', cls: 'badge--suspended' },
 };
 
 export const AVATAR_COLORS = [
