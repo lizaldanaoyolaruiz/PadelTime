@@ -40,12 +40,21 @@ const Navbar = () => {
       <div className="navbar-actions">
         {isAuthenticated ? (
           <div className="user-menu">
-            <div className="user-info">
-              <div className="user-avatar">
-                {user?.name ? user.name.charAt(0).toUpperCase() : 'O'}
+            {user?.role === 'player' ? (
+              <Link to="/panelcliente" className="user-info">
+                <div className="user-avatar">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <span className="user-name">Hola, {user?.name || 'Usuario'}</span>
+              </Link>
+            ) : (
+              <div className="user-info">
+                <div className="user-avatar">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <span className="user-name">Hola, {user?.name || 'Usuario'}</span>
               </div>
-              <span className="user-name">Hola, {user?.name || 'Octavio'}</span>
-            </div>
+            )}
             <button className="btn-logout" onClick={handleLogout}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>

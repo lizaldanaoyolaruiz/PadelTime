@@ -22,7 +22,7 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
     <div className="gc-mobile-list">
       {filtered.map(complex => (
         <div
-          key={complex.id}
+          key={complex._id}
           className="gc-mobile-card"
           onClick={() => onDetail(complex)}
         >
