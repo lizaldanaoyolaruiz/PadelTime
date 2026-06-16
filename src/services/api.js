@@ -6,8 +6,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const stored = localStorage.getItem('padeltime-auth');
-  const token = stored ? JSON.parse(stored)?.state?.token : null;
+  const token = localStorage.getItem('token');
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
