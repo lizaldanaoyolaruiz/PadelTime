@@ -64,11 +64,11 @@ export function DetailDrawer({ complex, onClose, onAction }) {
             <div className="gc-drawer-grid">
               <div className="gc-drawer-field">
                 <span className="gc-drawer-field-label"><Users size={12} /> Nombre</span>
-                <span className="gc-drawer-field-value">{complex.owner}</span>
+                <span className="gc-drawer-field-value">{complex.owner?.name}</span>
               </div>
               <div className="gc-drawer-field">
                 <span className="gc-drawer-field-label"><Mail size={12} /> Email</span>
-                <span className="gc-drawer-field-value">{complex.email}</span>
+                <span className="gc-drawer-field-value">{complex.owner?.email}</span>
               </div>
               <div className="gc-drawer-field">
                 <span className="gc-drawer-field-label"><Phone size={12} /> Teléfono</span>
@@ -94,7 +94,7 @@ export function DetailDrawer({ complex, onClose, onAction }) {
         </div>
 
         <div className="gc-drawer-footer">
-          {complex.status === 'PENDING' && (
+          {complex.status === 'pending' && (
             <>
               <button
                 className="gc-drawer-action-btn gc-drawer-action-btn--approve"
@@ -110,7 +110,7 @@ export function DetailDrawer({ complex, onClose, onAction }) {
               </button>
             </>
           )}
-          {complex.status === 'APPROVED' && (
+          {complex.status === 'approved' && (
             <button
               className="gc-drawer-action-btn gc-drawer-action-btn--suspend"
               onClick={() => onAction('suspend', complex)}
