@@ -10,4 +10,18 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      const isAuthRoute = error.config?.url?.includes('/auth/');
+      if (!isAuthRoute) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

@@ -52,8 +52,9 @@
   cursor: pointer;
   text-decoration: none;
   color: var(--color-text-muted);
+  background: transparent;
   display: block;
-  transition: color 0.2s;
+  transition: color 0.2s, background 0.2s;
 }
 
 .auth-tab.active {
@@ -190,6 +191,14 @@
 
 .input-wrapper input::placeholder {
   color: var(--color-text-muted);
+}
+
+.input-wrapper input:-webkit-autofill,
+.input-wrapper input:-webkit-autofill:hover,
+.input-wrapper input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #334155 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 .input-wrapper input[type="password"]::-ms-reveal,

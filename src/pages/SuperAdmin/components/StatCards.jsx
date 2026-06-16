@@ -2,9 +2,9 @@ import { Building2, CheckCircle, Clock, PauseCircle, TrendingUp } from 'lucide-r
 import { SkeletonStatCard } from './Skeletons';
 
 export function StatCards({ complexes, loading }) {
-  const approved  = complexes.filter(c => c.status === 'APPROVED').length;
-  const pending   = complexes.filter(c => c.status === 'PENDING').length;
-  const suspended = complexes.filter(c => c.status === 'SUSPENDED').length;
+  const approved  = complexes.filter(c => c.status === 'approved').length;
+  const pending   = complexes.filter(c => c.status === 'pending').length;
+  const suspended = complexes.filter(c => c.status === 'suspended').length;
 
   const cards = [
     { label: 'Total Complejos', value: complexes.length, color: '#60A5FA', Icon: Building2,   trend: '+12% vs mes anterior', up: true  },

@@ -22,7 +22,7 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
     <div className="gc-mobile-list">
       {filtered.map(complex => (
         <div
-          key={complex.id}
+          key={complex._id}
           className="gc-mobile-card"
           onClick={() => onDetail(complex)}
         >
@@ -37,14 +37,14 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
             <StatusBadge status={complex.status} />
           </div>
           <div className="gc-mobile-card-meta">
-            <span><Users size={11} /> {complex.owner}</span>
+            <span><Users size={11} /> {complex.owner?.name}</span>
             <span><Calendar size={11} /> {formatDate(complex.registeredAt)}</span>
           </div>
           <div className="gc-mobile-card-actions" onClick={e => e.stopPropagation()}>
             <button className="gc-action-btn gc-action-btn--view" onClick={() => onDetail(complex)}>
               <Eye size={13} /> Ver
             </button>
-            {complex.status === 'PENDING' && (
+            {complex.status === 'pending' && (
               <>
                 <button className="gc-action-btn gc-action-btn--approve" onClick={() => onAction('approve', complex)}>
                   <CheckCircle size={13} /> Aprobar
@@ -54,7 +54,7 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
                 </button>
               </>
             )}
-            {complex.status === 'APPROVED' && (
+            {complex.status === 'approved' && (
               <button className="gc-action-btn gc-action-btn--suspend" onClick={() => onAction('suspend', complex)}>
                 <PauseCircle size={13} /> Suspender
               </button>
