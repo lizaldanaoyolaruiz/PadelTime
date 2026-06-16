@@ -60,7 +60,7 @@ body {
   flex-direction: column;
 }
 
-.dashboard {
+.panel {
   flex: 1;
   display: grid;
   grid-template-columns: minmax(300px, 370px) 1fr;
@@ -80,6 +80,7 @@ body {
 .profile-card {
   padding: var(--space-md);
   height: 22em;
+  width: 100%;
 }
 
 .profile-header {
@@ -87,7 +88,7 @@ body {
   align-items: center;
   gap: var(--space-md);
   margin-top: 15px;
-  width: 50%;
+  
 }
 
 .profile-header img {
@@ -199,16 +200,19 @@ body {
   margin-top: var(--space-md);
   padding: var(--space-md);
   height: 17em;
+  width: 100%;
 }
 
 .settings-card h3 {
   font-size: var(--text-lg);
   font-weight: var(--fw-semibold);
+  color: #ffffff;
 }
 
 .settings-card ul {
   list-style: none;
   margin-top: var(--space-md);
+  color: #ffffff;
 }
 
 .settings-card li {
@@ -240,8 +244,19 @@ body {
   padding-bottom: 8px;
 }
 
-
-
+.right-column{
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px;
+  align-items: flex-start;
+}
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .right-column h2 {
   margin-bottom: var(--space-md);
   font-size: var(--text-xl);
