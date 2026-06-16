@@ -92,6 +92,8 @@
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .user-avatar {
