@@ -15,6 +15,7 @@ import AboutPage from './pages/About/About';
 import Error404 from './pages/Error404/Error404';
 import CourtDetail from './pages/CourtDetail/CourtDetail';
 import ClientPanel from './pages/ClientPanel/ClientPanel';
+import SuperAdminGestion from './pages/SuperAdmin/SuperAdminGestion'
 import './App.css';
 
 function ProtectedRoute({ children, role }) {
@@ -76,6 +77,14 @@ function App() {
               <SuperAdminDashboard />
             </ProtectedRoute>
           }
+        />
+        <Route
+         path="/superadmingestion"
+         element={
+          <ProtectedRoute role="superadmin">
+            <SuperAdminGestion />
+          </ProtectedRoute>
+         }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
