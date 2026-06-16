@@ -45,8 +45,8 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                   </td>
                   <td>
                     <div className="gc-owner-cell">
-                      <span className="gc-owner-name">{complex.owner}</span>
-                      <span className="gc-owner-email">{complex.email}</span>
+                      <span className="gc-owner-name">{complex.owner?.name}</span>
+                      <span className="gc-owner-email">{complex.owner?.email}</span>
                     </div>
                   </td>
                   <td>
@@ -68,7 +68,7 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                       >
                         <Eye size={14} />
                       </button>
-                      {complex.status === 'PENDING' && (
+                      {complex.status === 'pending' && (
                         <>
                           <button
                             className="gc-action-btn gc-action-btn--approve"
@@ -88,7 +88,7 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                           </button>
                         </>
                       )}
-                      {complex.status === 'APPROVED' && (
+                      {complex.status === 'approved' && (
                         <button
                           className="gc-action-btn gc-action-btn--suspend"
                           onClick={() => onAction('suspend', complex)}
