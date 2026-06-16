@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, BarChart2, Users, Settings, LogOut, ShieldAlert } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import ComplexManagement from './ComplexManagement';
+import SuperAdminGestion from './SuperAdminGestion';
 import './SuperAdminDashboard.css';
 
 const NAV = [
@@ -74,9 +75,9 @@ export default function SuperAdminDashboard() {
 
       {/* ── Main ── */}
       <main className="sa-main">
-        {active === 'complejos' ? (
-          <ComplexManagement />
-        ) : (
+        {active === 'complejos'    && <ComplexManagement />}
+        {active === 'usuarios'     && <SuperAdminGestion />}
+        {(active === 'estadisticas' || active === 'configuracion') && (
           <div className="sa-coming-soon">
             <h3>Próximamente</h3>
             <p>Esta sección estará disponible pronto.</p>
