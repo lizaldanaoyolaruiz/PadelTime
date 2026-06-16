@@ -20,8 +20,8 @@ export function NewComplexModal({ onClose, onCreated }) {
   const onSubmit = async (data) => {
     try {
       const res = await createComplex({ ...data, courts: parseInt(data.courts) });
-      toast.success(`Complejo "${res.data.name}" creado correctamente.`);
-      onCreated(res.data);
+      toast.success(`Complejo "${res.data.data.name}" creado correctamente.`);
+      onCreated(res.data.data);
       onClose();
     } catch {
       toast.error('Error al crear el complejo.');

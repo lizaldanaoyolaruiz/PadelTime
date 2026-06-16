@@ -1,4 +1,4 @@
-import { Eye, CheckCircle, XCircle, PauseCircle, Users, Calendar, MapPin } from 'lucide-react';
+import { Eye, CheckCircle, XCircle, PauseCircle, Pencil, Trash2, Users, Calendar, MapPin } from 'lucide-react';
 import { StatusBadge }       from './StatusBadge';
 import { ComplexAvatar }     from './ComplexAvatar';
 import { SkeletonMobileCard } from './Skeletons';
@@ -59,6 +59,12 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
                 <PauseCircle size={13} /> Suspender
               </button>
             )}
+            <button className="gc-action-btn gc-action-btn--edit" onClick={() => onAction('edit', complex)}>
+              <Pencil size={13} /> Editar
+            </button>
+            <button className="gc-action-btn gc-action-btn--delete" onClick={() => onAction('delete', complex)}>
+              <Trash2 size={13} /> Eliminar
+            </button>
           </div>
         </div>
       ))}
