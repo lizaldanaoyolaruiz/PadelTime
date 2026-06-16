@@ -42,7 +42,7 @@ function App() {
           error:   { iconTheme: { primary: '#EF4444', secondary: '#F8FAFC' } },
         }}
       />
-      <Routes></Routes>
+      <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
@@ -78,15 +78,16 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
         <Route
          path="/superadmingestion"
          element={
           <ProtectedRoute role="superadmin">
-          <SuperAdminGestion />
+            <SuperAdminGestion />
           </ProtectedRoute>
          }
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </BrowserRouter>
   );
 }
