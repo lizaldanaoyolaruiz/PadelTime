@@ -11,13 +11,13 @@ const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1622279457486-62dcc
 const mapComplex = (c) => ({
   id: c._id,
   name: c.name,
-  image: c.image || c.photos?.[0] || PLACEHOLDER_IMAGE,
+  image: c.photos?.[0] || c.image || PLACEHOLDER_IMAGE,
   location: c.location,
   city: c.city,
   surface: '',
   rating: c.ratingAverage || 0,
   isFeatured: (c.ratingAverage || 0) >= 4.5 && (c.ratingCount || 0) > 0,
-  status: 'aprobado',
+  status: c.status || c.estado || 'pendiente',
   features: [],
 });
 
@@ -67,7 +67,7 @@ const Complexes = () => {
     const cargarComplejos = async () => {
       try {
         const res = await getPublicComplexes();
-        const data = res.data?.complexes || [];
+        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
         setComplexes(data.map(mapComplex));
       } catch (err) {
         console.error('Error cargando complejos:', err);
@@ -78,23 +78,18 @@ const Complexes = () => {
     cargarComplejos();
   }, []);
 
-  const approvedComplexes = useMemo(
-    () => complexes.filter((c) => c.status === 'aprobado'),
-    [complexes]
-  );
-
   const filteredComplexes = useMemo(() => {
-    return approvedComplexes.filter((c) => {
+    return complexes.filter((c) => {
       const matchesName = c.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCity = selectedCity === 'Todas las ciudades' || c.city === selectedCity;
       const matchesSurface = selectedSurface === 'Cualquier superficie' || c.surface === selectedSurface;
       return matchesName && matchesCity && matchesSurface;
     });
-  }, [approvedComplexes, searchQuery, selectedCity, selectedSurface]);
+  }, [complexes, searchQuery, selectedCity, selectedSurface]);
 
   const featuredComplexes = useMemo(
-    () => approvedComplexes.filter((c) => c.isFeatured),
-    [approvedComplexes]
+    () => complexes.filter((c) => c.isFeatured),
+    [complexes]
   );
 
   const handleSearch = (e) => {

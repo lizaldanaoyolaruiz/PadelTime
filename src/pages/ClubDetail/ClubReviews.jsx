@@ -45,7 +45,7 @@ const ClubReviews = ({ complexId }) => {
   }, [complexId]);
 
   const cargarCanReview = useCallback(async () => {
-    if (!complexId || !isAuthenticated) return;
+    if (!complexId || !isAuthenticated || user?.role !== 'player') return;
     try {
       const res = await canReviewComplex(complexId);
       const data = res.data || {};
@@ -54,7 +54,7 @@ const ClubReviews = ({ complexId }) => {
     } catch {
       // si falla, se asume que el usuario puede valorar
     }
-  }, [complexId, isAuthenticated]);
+  }, [complexId, isAuthenticated, user]);
 
   useEffect(() => { cargarReviews(); }, [cargarReviews]);
   useEffect(() => { cargarCanReview(); }, [cargarCanReview]);
