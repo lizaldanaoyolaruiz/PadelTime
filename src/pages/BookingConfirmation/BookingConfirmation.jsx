@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import api from '../../api/axios';
 import './BookingConfirmation.css';
 
 const BookingConfirmation = () => {
@@ -10,6 +11,7 @@ const BookingConfirmation = () => {
   
   const datosReserva = location.state;
   const [procesandoPago, setProcesandoPago] = useState(false);
+  const [procesandoWA, setProcesandoWA] = useState(false);
 
   if (!datosReserva) {
     return (
@@ -29,8 +31,31 @@ const BookingConfirmation = () => {
     }, 1500);
   };
 
-  const handleWhatsApp = () => {
-    alert("¡Simulación: Abriendo WhatsApp del club!");
+  const handleWhatsApp = async () => {
+    setProcesandoWA(true);
+    try {
+      const res = await api.post('/bookings', {
+        court: datosReserva.courtId,
+        complex: datosReserva.complexId,
+        date: datosReserva.date,
+        startTime: datosReserva.startTime,
+        endTime: datosReserva.endTime,
+        totalAmount: datosReserva.total,
+        depositAmount: datosReserva.senia,
+        confirmationMethod: 'whatsapp',
+      });
+
+      const whatsappNumber = res.data.complex?.whatsapp;
+      const text = encodeURIComponent(
+        `Hola! Quiero confirmar mi reserva de ${datosReserva.canchaNombre} el día ${datosReserva.dia} a las ${datosReserva.horario}.`
+      );
+      window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
+    } catch (err) {
+      const message = err.response?.data?.message || 'Error al crear la reserva. Por favor intentá de nuevo.';
+      alert(message);
+    } finally {
+      setProcesandoWA(false);
+    }
   };
 
   const formatearDinero = (monto) => {
@@ -163,8 +188,12 @@ const BookingConfirmation = () => {
                 </div>
                 <h3>WhatsApp</h3>
                 <p>Estado: Pendiente</p>
-                <button className="btn-wa" onClick={handleWhatsApp}>
-                  RESERVAR VÍA CHAT
+                <button
+                  className="btn-wa"
+                  onClick={handleWhatsApp}
+                  disabled={procesandoWA}
+                >
+                  {procesandoWA ? 'PROCESANDO...' : 'RESERVAR VÍA CHAT'}
                 </button>
               </div>
 
