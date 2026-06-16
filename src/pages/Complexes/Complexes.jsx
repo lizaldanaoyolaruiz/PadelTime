@@ -67,7 +67,7 @@ const Complexes = () => {
     const cargarComplejos = async () => {
       try {
         const res = await getPublicComplexes();
-        const data = res.data?.complexes || [];
+        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
         setComplexes(data.map(mapComplex));
       } catch (err) {
         console.error('Error cargando complejos:', err);
@@ -78,23 +78,18 @@ const Complexes = () => {
     cargarComplejos();
   }, []);
 
-  const approvedComplexes = useMemo(
-    () => complexes.filter((c) => ['activo', 'aprobado'].includes(c.status)),
-    [complexes]
-  );
-
   const filteredComplexes = useMemo(() => {
-    return approvedComplexes.filter((c) => {
+    return complexes.filter((c) => {
       const matchesName = c.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCity = selectedCity === 'Todas las ciudades' || c.city === selectedCity;
       const matchesSurface = selectedSurface === 'Cualquier superficie' || c.surface === selectedSurface;
       return matchesName && matchesCity && matchesSurface;
     });
-  }, [approvedComplexes, searchQuery, selectedCity, selectedSurface]);
+  }, [complexes, searchQuery, selectedCity, selectedSurface]);
 
   const featuredComplexes = useMemo(
-    () => approvedComplexes.filter((c) => c.isFeatured),
-    [approvedComplexes]
+    () => complexes.filter((c) => c.isFeatured),
+    [complexes]
   );
 
   const handleSearch = (e) => {
