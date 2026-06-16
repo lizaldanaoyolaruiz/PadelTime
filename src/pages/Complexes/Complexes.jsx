@@ -11,13 +11,13 @@ const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1622279457486-62dcc
 const mapComplex = (c) => ({
   id: c._id,
   name: c.name,
-  image: c.image || c.photos?.[0] || PLACEHOLDER_IMAGE,
+  image: c.photos?.[0] || c.image || PLACEHOLDER_IMAGE,
   location: c.location,
   city: c.city,
   surface: '',
   rating: c.ratingAverage || 0,
   isFeatured: (c.ratingAverage || 0) >= 4.5 && (c.ratingCount || 0) > 0,
-  status: 'aprobado',
+  status: c.status || c.estado || 'pendiente',
   features: [],
 });
 
@@ -79,7 +79,7 @@ const Complexes = () => {
   }, []);
 
   const approvedComplexes = useMemo(
-    () => complexes.filter((c) => c.status === 'aprobado'),
+    () => complexes.filter((c) => ['activo', 'aprobado'].includes(c.status)),
     [complexes]
   );
 
