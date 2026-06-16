@@ -21,23 +21,23 @@ export default function ComplexManagement() {
   const [actionModal,  setActionModal]  = useState({ open: false, type: null, complex: null });
 
   useEffect(() => {
-    getAllComplexes().then(res => {
-      setComplexes(res.data.data);
-      setLoading(false);
-    });
+    getAllComplexes()
+      .then(res => setComplexes(res.data.data || []))
+      .catch(err => console.error('Error cargando complejos:', err))
+      .finally(() => setLoading(false));
   }, []);
 
   // ── Derived ──────────────────────────────────────────────────────────────────
 
-  const pendingCount = complexes.filter(c => c.status === 'PENDING').length;
+  const pendingCount = complexes.filter(c => c.status === 'pending').length;
 
   const filtered = complexes.filter(c => {
     const term = searchTerm.toLowerCase().trim();
     const matchesSearch = !term ||
-      c.name.toLowerCase().includes(term)  ||
-      c.email.toLowerCase().includes(term) ||
-      c.owner.toLowerCase().includes(term) ||
-      c.city.toLowerCase().includes(term)  ||
+      (c.name || '').toLowerCase().includes(term)              ||
+      (c.owner?.email || '').toLowerCase().includes(term)      ||
+      (c.owner?.name || '').toLowerCase().includes(term)       ||
+      (c.city || '').toLowerCase().includes(term)              ||
       (STATUS_MAP[c.status]?.label || '').toLowerCase().includes(term);
     const matchesFilter = activeFilter === 'ALL' || c.status === activeFilter;
     return matchesSearch && matchesFilter;
