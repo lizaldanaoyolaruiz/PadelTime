@@ -51,6 +51,11 @@ export default function SuperAdminGestion() {
       return;
     }
 
+    if (Number(newComplex.courts) <= 0) {
+      alert("La cantidad de canchas debe ser mayor a 0");
+      return;
+    }
+
     const complex = {
       id: Date.now(),
       ...newComplex,
@@ -248,6 +253,7 @@ export default function SuperAdminGestion() {
 
             <input
               type="text"
+              maxLength={30}
               placeholder="Nombre"
               value={newComplex.name}
               onChange={(e) =>
@@ -260,6 +266,7 @@ export default function SuperAdminGestion() {
 
             <input
               type="text"
+              maxLength={30}
               placeholder="Owner"
               value={newComplex.owner}
               onChange={(e) =>
@@ -272,18 +279,30 @@ export default function SuperAdminGestion() {
 
             <input
               type="number"
+              min="1"
+              maxLength={30}
               placeholder="Cantidad de canchas"
               value={newComplex.courts}
-              onChange={(e) =>
-                setNewComplex({
-                  ...newComplex,
-                  courts: e.target.value,
-                })
-              }
+              onKeyDown={(e) => {
+                if (e.key === "-" || e.key === "+" || e.key === "e") {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const value = e.target.value;
+
+                if (value === "" || Number(value) > 0) {
+                  setNewComplex({
+                    ...newComplex,
+                    courts: value,
+                  });
+                }
+              }}
             />
 
             <input
               type="text"
+              list="cities"
               placeholder="Ciudad"
               value={newComplex.city}
               onChange={(e) =>
@@ -294,6 +313,13 @@ export default function SuperAdminGestion() {
               }
             />
 
+            <datalist id="cities">
+              <option value="Buenos Aires" />
+              <option value="Córdoba" />
+              <option value="Rosario" />
+              <option value="Mendoza" />
+              <option value="San Miguel de Tucumán" />
+            </datalist>
             <div className="modal-actions">
               <button className="add-btn" onClick={handleAddComplex}>
                 Guardar
