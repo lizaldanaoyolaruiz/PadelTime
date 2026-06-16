@@ -327,7 +327,20 @@ grid-template-columns: 1fr;
 width: 100%;
 }
 }
+.pendiente {
+  background: #facc15;
+  color: #000;
+}
 
+.confirmada {
+  background: #9cf42f;
+  color: #08152e;
+}
+
+.rechazada {
+  background: #ef4444;
+  color: white;
+}
 /* MÓVILES */
 
 @media (max-width: 768px) {
