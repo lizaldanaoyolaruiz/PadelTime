@@ -61,7 +61,14 @@ function App() {
             </ProtectedRoute>
           } 
         />
-        <Route path="/panelcliente" element={<ClientPanel/>}/>
+        <Route
+          path="/panelcliente"
+          element={
+            <ProtectedRoute role="player">
+              <ClientPanel />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/admin/*"
           element={

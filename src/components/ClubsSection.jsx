@@ -1,46 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock } from 'lucide-react';
+import { getPublicComplexes } from '../api/complexApi';
 
-// TODO: Conectar con useEffect y fetch al endpoint GET /api/complexes?isFeatured=true
-// useEffect(() => {
-//   fetch('/api/complexes?isFeatured=true')
-//     .then(res => res.json())
-//     .then(data => setClubs(data));
-// }, []);
+const PLACEHOLDER = 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400&h=200';
 
-const MOCK_CLUBS = [
-  {
-    id: 1,
-    name: 'Madrid Padel Center',
-    image: 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400&h=200',
-    price: '$$$',
-    location: 'Madrid, Zona Norte',
-    time: '07:00 – 23:30',
-    rating: '4.9 (120 reseñas)',
-  },
-  {
-    id: 2,
-    name: 'Sky Padel Club',
-    image: 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400&h=200',
-    price: '$$',
-    location: 'Barcelona, Diagonal',
-    time: '08:00 – 23:00',
-    rating: '4.7 (85 reseñas)',
-  },
-  {
-    id: 3,
-    name: 'Elite Padel Valencia',
-    image: 'https://images.unsplash.com/photo-1574629810360-7efbb1925536?auto=format&fit=crop&q=80&w=400&h=200',
-    price: '$$',
-    location: 'Valencia, Marina',
-    time: '06:00 – 00:00',
-    rating: '4.8 (210 reseñas)',
-  },
-];
+const mapClub = (c) => ({
+  id: c._id,
+  name: c.name,
+  image: c.photos?.[0] || c.image || PLACEHOLDER,
+  price: c.price ? `$${Number(c.price).toLocaleString('es-AR')}/h` : null,
+  location: [c.city, c.location].filter(Boolean).join(' — '),
+  time: c.openTime && c.closeTime ? `${c.openTime} – ${c.closeTime}` : 'Consultar horarios',
+  rating: c.ratingAverage ? `${c.ratingAverage} (${c.ratingCount || 0} reseñas)` : null,
+});
 
 const ClubsSection = () => {
-  const [clubs] = useState(MOCK_CLUBS);
+  const [clubs, setClubs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getPublicComplexes()
+      .then(res => {
+        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
+        setClubs(data.slice(0, 3).map(mapClub));
+      })
+      .catch(() => setClubs([]))
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading || !clubs.length) return null;
 
   return (
     <section className="featured-clubs" id="clubes">
@@ -58,12 +47,12 @@ const ClubsSection = () => {
             <div className="club-image-container">
               <img src={club.image} alt={club.name} className="club-image" loading="lazy" />
               <span className="badge-admin">✓ APROBADO POR ADMIN</span>
-              <span className="badge-rating">☆ {club.rating}</span>
+              {club.rating && <span className="badge-rating">☆ {club.rating}</span>}
             </div>
             <div className="club-info">
               <div className="club-title-row">
                 <h3>{club.name}</h3>
-                <span className="club-price">{club.price}</span>
+                {club.price && <span className="club-price">{club.price}</span>}
               </div>
               <div className="club-details">
                 <p><MapPin size={13} /> {club.location}</p>

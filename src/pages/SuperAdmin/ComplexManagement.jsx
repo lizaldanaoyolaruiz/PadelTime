@@ -54,13 +54,13 @@ export default function ComplexManagement() {
   const handleDrawerAction = (type, complex) => { closeDetail(); openAction(type, complex); };
 
   const handleStatusUpdate = (id, status, extra = {}) =>
-    setComplexes(prev => prev.map(c => c.id === id ? { ...c, status, ...extra } : c));
+    setComplexes(prev => prev.map(c => String(c._id) === String(id) ? { ...c, status, ...extra } : c));
 
   const handleComplexCreated = (newComplex) =>
     setComplexes(prev => [newComplex, ...prev]);
 
   const handleComplexDeleted = (id) =>
-    setComplexes(prev => prev.filter(c => c.id !== id));
+    setComplexes(prev => prev.filter(c => String(c._id) !== String(id)));
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
