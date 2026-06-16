@@ -133,17 +133,21 @@ const Reports = () => {
             ) : (
               data.map((row) => (
                 <tr key={row.id}>
-                  <td className="client-info">
-                    <div className="avatar placeholder-avatar"></div>
-                    <div>
-                      <strong>{row.name}</strong>
-                      <span>{row.email}</span>
+                  <td>
+                    <div className="client-info">
+                      <div className="avatar placeholder-avatar"></div>
+                      <div>
+                        <strong>{row.name}</strong>
+                        <span>{row.email}</span>
+                      </div>
                     </div>
                   </td>
                   <td>{row.court}</td>
-                  <td className="date-time-info">
-                    <strong>{row.date}</strong>
-                    <span className="time-accent">{row.time}</span>
+                  <td>
+                    <div className="date-time-info">
+                      <strong>{row.date}</strong>
+                      <span className="time-accent">{row.time}</span>
+                    </div>
                   </td>
                   <td>
                     <span className={`status-badge ${row.status.toLowerCase()}`}>
