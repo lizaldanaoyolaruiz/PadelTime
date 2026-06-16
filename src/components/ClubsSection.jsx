@@ -1,27 +1,35 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Clock } from 'lucide-react';
+import { getPublicComplexes } from '../api/complexApi';
+
+const PLACEHOLDER = 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400&h=200';
+
+const mapClub = (c) => ({
+  id: c._id,
+  name: c.name,
+  image: c.photos?.[0] || c.image || PLACEHOLDER,
+  price: c.price ? `$${Number(c.price).toLocaleString('es-AR')}/h` : null,
+  location: [c.city, c.location].filter(Boolean).join(' — '),
+  time: c.openTime && c.closeTime ? `${c.openTime} – ${c.closeTime}` : 'Consultar horarios',
+  rating: c.ratingAverage ? `${c.ratingAverage} (${c.ratingCount || 0} reseñas)` : null,
+});
 
 const ClubsSection = () => {
-  // 1. Agregamos setClubs y empezamos con un arreglo vacío (o podés dejar el MOCK mientras tanto)
   const [clubs, setClubs] = useState([]);
-  // Opcional pero recomendado: un estado para mostrar que está cargando
   const [loading, setLoading] = useState(true);
 
-  // 2. El useEffect activo que va a golpear tu base de datos
   useEffect(() => {
-    fetch('/api/complexes?isFeatured=true')
-      .then(res => res.json())
-      .then(data => {
-        setClubs(data);
-        setLoading(false);
+    getPublicComplexes()
+      .then(res => {
+        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
+        setClubs(data.slice(0, 3).map(mapClub));
       })
-      .catch(error => {
-        console.error("Error trayendo los clubes:", error);
-        setLoading(false);
-      });
+      .catch(() => setClubs([]))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading || !clubs.length) return null;
 
   return (
     <section className="featured-clubs" id="clubes">
@@ -33,35 +41,30 @@ const ClubsSection = () => {
         <Link to="/complejos" className="view-all">Ver todos los clubes →</Link>
       </div>
 
-      {/* 3. Un pequeño mensaje de carga mientras el fetch hace su trabajo */}
-      {loading ? (
-        <p style={{ color: '#94a3b8', textAlign: 'center', padding: '2rem' }}>Cargando clubes...</p>
-      ) : (
-        <div className="clubs-grid">
-          {clubs.map((club) => (
-            <div className="club-card" key={club.id}>
-              <div className="club-image-container">
-                <img src={club.image} alt={club.name} className="club-image" loading="lazy" />
-                <span className="badge-admin">✓ APROBADO POR ADMIN</span>
-                <span className="badge-rating">☆ {club.rating}</span>
-              </div>
-              <div className="club-info">
-                <div className="club-title-row">
-                  <h3>{club.name}</h3>
-                  <span className="club-price">{club.price}</span>
-                </div>
-                <div className="club-details">
-                  <p><MapPin size={13} /> {club.location}</p>
-                  <p><Clock size={13} /> {club.time}</p>
-                </div>
-                <Link to={`/complejo/${club.id}`} className="btn-detail">
-                  VER DETALLE
-                </Link>
-              </div>
+      <div className="clubs-grid">
+        {clubs.map((club) => (
+          <div className="club-card" key={club.id}>
+            <div className="club-image-container">
+              <img src={club.image} alt={club.name} className="club-image" loading="lazy" />
+              <span className="badge-admin">✓ APROBADO POR ADMIN</span>
+              {club.rating && <span className="badge-rating">☆ {club.rating}</span>}
             </div>
-          ))}
-        </div>
-      )}
+            <div className="club-info">
+              <div className="club-title-row">
+                <h3>{club.name}</h3>
+                {club.price && <span className="club-price">{club.price}</span>}
+              </div>
+              <div className="club-details">
+                <p><MapPin size={13} /> {club.location}</p>
+                <p><Clock size={13} /> {club.time}</p>
+              </div>
+              <Link to={`/complejo/${club.id}`} className="btn-detail">
+                VER DETALLE
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 };
