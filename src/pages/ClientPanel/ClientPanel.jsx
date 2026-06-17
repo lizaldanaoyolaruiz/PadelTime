@@ -6,7 +6,7 @@ function PanelCliente() {
   const reservas = [
     {
       complejo: "La Caldera Padel",
-      cancha: "Cancha 1",
+      cancha: "Pista 1",
       fecha: "15 julio, 2026",
       hora: "18:30 - 20:00",
       estado: "Confirmada",
@@ -14,19 +14,35 @@ function PanelCliente() {
     },
     {
       complejo: "Tucuman Padel",
-      cancha: "Cancha 3",
-      fecha: "10 julio, 2024",
+      cancha: "Pista 3",
+      fecha: "10 julio, 2025",
       hora: "10:00 - 11:30",
       estado: "Pendiente",
-      fechaCompleta: "2024-07-10",
+      fechaCompleta: "2025-07-10",
     },
     {
       complejo: "Alpha Padel",
-      cancha: "Cancha 2",
-      fecha: "04 julio, 2024",
+      cancha: "Pista 2",
+      fecha: "04 marzo, 2025",
       hora: "20:00 - 21:30",
-      estado: "Rechazada",
-      fechaCompleta: "2024-07-04",
+      estado: "Finalizado",
+      fechaCompleta: "2025-03-04",
+    },
+    {
+      complejo: "Bullnes Padel",
+      cancha: "Pista 4",
+      fecha: "20 enero, 2025",
+      hora: "16:00 - 17:30",
+      estado: "Cancelado",
+      fechaCompleta: "2025-01-20",
+    },
+    {
+      complejo: "City Padel",
+      cancha: "Pista 1",
+      fecha: "05 noviembre, 2024",
+      hora: "09:00 - 10:30",
+      estado: "Finalizado",
+      fechaCompleta: "2024-11-05",
     },
   ];
   const reservasOrdenadas = [...reservas].sort(
