@@ -40,7 +40,7 @@ const Navbar = () => {
       <div className="navbar-actions">
         {isAuthenticated ? (
           <div className="user-menu">
-            {user?.role === 'player' ? (
+            {(user?.role === 'client' || user?.role === 'player') ? (
               <Link to="/panelcliente" className="user-info">
                 <div className="user-avatar">
                   {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
