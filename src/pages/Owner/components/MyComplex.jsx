@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { Upload, X, ImagePlus } from 'lucide-react';
-import { getMyComplex, createComplex, updateComplex, uploadComplexPhotos } from '../../../api/complexApi';
+import { getMyComplex, createComplex, updateComplex, uploadComplexPhotos } from '../../../services/complexService';
 import { confirmSave, successAlert, errorAlert } from '../../../utils/alerts';
 import { useComplexForm } from '../utils/hooks/useComplexForm';
 import { blockNonLetters, blockNonPhone, blockNonDigits } from '../utils/validations';
@@ -26,7 +26,7 @@ export default function MyComplex() {
       .then(res => {
         const data = res.data.complex || res.data;
         setComplejo(data);
-        setImages(data.photos || data.imagenes || []);
+        setImages(data.photos || []);
         reset({
           name:              data.name              || '',
           location:          data.location          || '',
@@ -83,7 +83,7 @@ export default function MyComplex() {
       }
 
       setComplejo(saved);
-      setImages(saved.photos || saved.imagenes || []);
+      setImages(saved.photos || []);
       await successAlert(
         complejo ? 'Complejo actualizado correctamente.' : 'Complejo creado — pendiente de aprobación.'
       );
@@ -105,11 +105,12 @@ export default function MyComplex() {
           <p className="panel-subtitle">Configurá tu espacio para que los jugadores puedan encontrarte y reservar online.</p>
         </div>
         {complejo && (
-          <span className={`status-badge status-${complejo.status || complejo.estado}`}>
-            {(complejo.status || complejo.estado) === 'pendiente_aprobacion' ? 'Pendiente de aprobación'
-              : (complejo.status || complejo.estado) === 'activo'   ? 'Activo'
-              : (complejo.status || complejo.estado) === 'inactivo' ? 'Inactivo'
-              : (complejo.status || complejo.estado)}
+          <span className={`status-badge status-${complejo.status}`}>
+            {complejo.status === 'pending'    ? 'Pendiente de aprobación'
+              : complejo.status === 'approved'  ? 'Aprobado'
+              : complejo.status === 'rejected'  ? 'Rechazado'
+              : complejo.status === 'suspended' ? 'Suspendido'
+              : complejo.status}
           </span>
         )}
       </div>
