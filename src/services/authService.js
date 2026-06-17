@@ -1,4 +1,4 @@
-import api from './api';
+import api from './axios';
 
 export const registerUser = (userData) =>
   api.post('/auth/register', userData).then((r) => r.data);
