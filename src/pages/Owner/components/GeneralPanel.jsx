@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getMyComplex } from '../../../api/complexApi';
-import { getMyCourts } from '../../../api/courtApi';
-import { getReservasOwner } from '../../../api/reservasApi';
+﻿import { useState, useEffect, useCallback } from 'react';
+import { getMyComplex } from '../../../services/complexService';
+import { getMyCourts } from '../../../services/courtService';
+import { getReservasOwner } from '../../../services/reservationService';
 import { generarSlots } from '../utils/constants';
 import StatCards from './StatCards';
 import PendingList from './PendingList';
@@ -10,6 +10,7 @@ import NewReservationModal from './NewReservationModal';
 import './GeneralPanel.css';
 
 export default function GeneralPanel() {
+  const [complejo,  setComplejo]  = useState(null);
   const [pending,   setPending]   = useState([]);
   const [canchas,   setCanchas]   = useState([]);
   const [agenda,    setAgenda]    = useState([]);
@@ -26,20 +27,22 @@ export default function GeneralPanel() {
       let complexId;
       try {
         const complexRes = await getMyComplex();
-        complexId = complexRes.data.complex?._id || complexRes.data._id;
+        const complex = complexRes.data.complex || complexRes.data;
+        complexId = complex?._id;
+        setComplejo(complex ?? null);
       } catch {
-        // si falla el complejo, intentamos igual sin complexId
+        // continúa sin complejo
       }
 
       const [canchasRes, pendientesRes, agendaRes] = await Promise.all([
         getMyCourts(complexId),
-        getReservasOwner({ estado: 'pendiente' }),
-        getReservasOwner({ fecha: hoy }),
+        getReservasOwner({ status: 'pending' }),
+        getReservasOwner({ date: hoy }),
       ]);
 
-      const courts      = canchasRes.data.courts       || canchasRes.data       || [];
-      const pendientes  = pendientesRes.data.reservas  || pendientesRes.data    || [];
-      const reservasHoy = agendaRes.data.reservas      || agendaRes.data        || [];
+      const courts      = canchasRes.data.courts      || canchasRes.data   || [];
+      const pendientes  = pendientesRes.data.bookings || pendientesRes.data || [];
+      const reservasHoy = agendaRes.data.bookings     || agendaRes.data    || [];
 
       setCanchas(Array.isArray(courts) ? courts : []);
       setPending(Array.isArray(pendientes) ? pendientes : []);
@@ -49,9 +52,9 @@ export default function GeneralPanel() {
         const fila = { horario: slot };
         (Array.isArray(courts) ? courts : []).forEach(c => {
           fila[c._id] = reservasHoy.find(
-            r => r.cancha?._id === c._id &&
-                 r.horaInicio === slot &&
-                 !['cancelada', 'rechazada'].includes(r.estado)
+            r => r.court?._id === c._id &&
+                 r.startTime === slot &&
+                 r.status !== 'cancelled'
           ) || null;
         });
         return fila;
@@ -80,7 +83,10 @@ export default function GeneralPanel() {
           <p className="panel-subtitle" style={{ textTransform: 'capitalize' }}>{todayLabel}</p>
         </div>
         <div className="pg-header-actions">
-          <span className="mp-status"><span className="mp-dot" />Mercado Pago: Conectado</span>
+          <span className="mp-status">
+            <span className="mp-dot" />
+            Mercado Pago: {complejo?.mercadopagoActive ? 'Conectado' : 'No conectado'}
+          </span>
           <button className="btn-primary" onClick={() => setShowModal(true)}>+ Nueva Reserva</button>
         </div>
       </div>
@@ -93,8 +99,7 @@ export default function GeneralPanel() {
           <p className="pg-card-desc">
             Define el porcentaje que los jugadores deben abonar para confirmar su reserva vía Mercado Pago.
           </p>
-          <div className="sena-value">30%</div>
-          <p className="sena-meta">Último cambio: 12 Oct</p>
+          <div className="sena-value">{complejo?.depositPercentage ?? '—'}%</div>
           <button className="btn-secondary" style={{ marginTop: 12 }}>Modificar en Config. Pagos</button>
         </div>
 

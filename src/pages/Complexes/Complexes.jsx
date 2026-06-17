@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect } from 'react';
+﻿import { useState, useMemo, useEffect } from 'react';
 import { MapPin, Star, Search, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { getPublicComplexes } from '../../api/complexApi';
+import { getPublicComplexes } from '../../services/complexService';
 import './complexes.css';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=600&h=320';
