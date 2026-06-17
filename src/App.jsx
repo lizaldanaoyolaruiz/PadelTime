@@ -21,7 +21,10 @@ import "./App.css";
 function ProtectedRoute({ children, role }) {
   const { isAuthenticated, user } = useAuthStore();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
-  if (role && user?.role !== role) return <Navigate to="/" replace />;
+  if (role) {
+    const allowed = Array.isArray(role) ? role : [role];
+    if (!allowed.includes(user?.role)) return <Navigate to="/" replace />;
+  }
   return children;
 }
 
@@ -62,9 +65,9 @@ function App() {
           }
         />
         <Route
-          path="/PanelCliente"
+          path="/panelcliente"
           element={
-            <ProtectedRoute role="client">
+            <ProtectedRoute role={['client', 'player']}>
               <ClientPanel />
             </ProtectedRoute>
           }
