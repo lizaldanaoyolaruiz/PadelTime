@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { getMyCourts, createCourt, updateCourt, deleteCourt } from '../../../api/courtApi';
-import { getMyComplex } from '../../../api/complexApi';
+import { getMyCourts, createCourt, updateCourt, deleteCourt } from '../../../services/courtService';
+import { getMyComplex } from '../../../services/complexService';
 import { confirmDelete, confirmDisable, successAlert, errorAlert } from '../../../utils/alerts';
 import { SUPERFICIES } from '../utils/constants';
 import CourtModal from './CourtModal';
@@ -50,12 +50,12 @@ export default function MyCourts() {
   };
 
   const toggleHabilitada = async (cancha) => {
-    if (cancha.isActive) {
+    if (cancha.enabled) {
       const result = await confirmDisable();
       if (!result.isConfirmed) return;
     }
     try {
-      const res = await updateCourt(cancha._id, { isActive: !cancha.isActive }, null);
+      const res = await updateCourt(cancha._id, { enabled: !cancha.enabled }, null);
       const updated = res.data.court || res.data;
       setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
     } catch {
@@ -103,12 +103,12 @@ export default function MyCourts() {
       ) : (
         <div className="canchas-list">
           {canchas.map(cancha => (
-            <div key={cancha._id} className={`cancha-card${!cancha.isActive ? ' cancha-card--disabled' : ''}`}>
+            <div key={cancha._id} className={`cancha-card${!cancha.enabled ? ' cancha-card--disabled' : ''}`}>
               <div className="cancha-info">
                 <div className="cancha-name-row">
                   <span className="cancha-name">{cancha.name}</span>
                   <span className="cancha-superficie">{superficieLabel(cancha.type)}</span>
-                  {!cancha.isActive && (
+                  {!cancha.enabled && (
                     <span className="status-badge status-inactivo" style={{ marginLeft: 4 }}>Deshabilitada</span>
                   )}
                 </div>
@@ -117,10 +117,10 @@ export default function MyCourts() {
               </div>
 
               <div className="cancha-actions">
-                <label className="toggle-switch" title={cancha.isActive ? 'Deshabilitar' : 'Habilitar'}>
+                <label className="toggle-switch" title={cancha.enabled ? 'Deshabilitar' : 'Habilitar'}>
                   <input
                     type="checkbox"
-                    checked={cancha.isActive ?? true}
+                    checked={cancha.enabled ?? true}
                     onChange={() => toggleHabilitada(cancha)}
                   />
                   <span className="toggle-track" />
