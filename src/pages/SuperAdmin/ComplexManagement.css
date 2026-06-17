@@ -802,6 +802,7 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  overflow-x: hidden;
   animation: gc-fade-in 0.15s ease-out;
 }
 .gc-modal {
@@ -902,12 +903,19 @@
 
 .gc-new-modal-header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  position: relative;
   padding: 24px 28px;
   border-bottom: 1px solid var(--color-border-subtle);
   flex-shrink: 0;
   gap: 12px;
+}
+.gc-new-modal-header .gc-drawer-close {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .gc-new-modal-title-row {
   display: flex;
@@ -940,6 +948,7 @@
 .gc-new-modal-body {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 24px 28px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -994,12 +1003,12 @@
 .gc-new-modal-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: column;
   padding: 16px 28px;
   border-top: 1px solid var(--color-border-subtle);
   flex-shrink: 0;
   gap: 12px;
-  flex-wrap: wrap;
 }
 .gc-new-footer-note {
   font-size: 12px;
