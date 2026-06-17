@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./SuperAdminGestion.css";
 import { Building2, MapPin, Users, Calendar, Search } from "lucide-react";
+import { EditComplexModal } from "./components/EditComplexModal";
 
 export default function SuperAdminGestion() {
   const [complexList, setComplexList] = useState([
@@ -8,30 +9,46 @@ export default function SuperAdminGestion() {
       id: 1,
       name: "Padel Center Madrid",
       owner: "Alejandro Garrido",
+      email: "alejandro@padelcenter.com",
+      phone: "+34 911 234 567",
       courts: 8,
+      address: "Av. de la Paz 45",
       city: "Madrid",
+      province: "Madrid",
       status: "Activo",
+      observations: "",
     },
     {
       id: 2,
       name: "Club Smash",
       owner: "Beatriz Luna",
+      email: "beatriz@clubsmash.com",
+      phone: "+34 932 111 222",
       courts: 4,
+      address: "Calle Aragón 200",
       city: "Barcelona",
+      province: "Cataluña",
       status: "Suspendido",
+      observations: "Suspendido por falta de pago",
     },
     {
       id: 3,
       name: "Padel Pro",
-      owner: "Club Social",
+      owner: "Carlos Social",
+      email: "carlos@padelpro.com",
+      phone: "+34 963 400 500",
       courts: 6,
+      address: "Calle Colón 12",
       city: "Valencia",
+      province: "Valencia",
       status: "Activo",
+      observations: "",
     },
   ]);
 
   const [search, setSearch] = useState("");
   const [selectedComplex, setSelectedComplex] = useState(null);
+  const [editingComplex, setEditingComplex] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
   const [newComplex, setNewComplex] = useState({
@@ -88,15 +105,15 @@ export default function SuperAdminGestion() {
   };
 
   const handleEdit = (id) => {
-    const newName = prompt("Ingrese el nuevo nombre del complejo");
+    const complex = complexList.find((c) => c.id === id);
+    if (complex) setEditingComplex(complex);
+  };
 
-    if (!newName) return;
-
+  const handleSaveEdit = (updated) => {
     setComplexList((prev) =>
-      prev.map((complex) =>
-        complex.id === id ? { ...complex, name: newName } : complex,
-      ),
+      prev.map((complex) => (complex.id === updated.id ? updated : complex)),
     );
+    setEditingComplex(null);
   };
 
   const filteredComplexes = complexList.filter(
@@ -245,6 +262,13 @@ export default function SuperAdminGestion() {
             </button>
           </div>
         </div>
+      )}
+      {editingComplex && (
+        <EditComplexModal
+          complex={editingComplex}
+          onClose={() => setEditingComplex(null)}
+          onSave={handleSaveEdit}
+        />
       )}
       {showAddModal && (
         <div className="modal-overlay">
