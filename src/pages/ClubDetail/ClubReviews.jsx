@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import useAuthStore from '../../store/authStore';
 import { confirmDelete } from '../../utils/alerts';
@@ -8,7 +8,7 @@ import {
   updateReview,
   deleteReview,
   getComplexReviews,
-} from '../../api/reviewsApi';
+} from '../../services/reviewService';
 import './ClubReviews.css';
 
 const AVAILABLE_TAGS = ['Buena iluminación', 'Vestuarios limpios', 'Césped en buen estado'];
