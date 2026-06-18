@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, BarChart2, Users, Settings, LogOut } from 'lucide-react';
+import { Building2, Users, Settings, LogOut } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import ComplexManagement from './ComplexManagement';
 import ManagementPanel from './ManagementPanel';
 import './SuperAdminDashboard.css';
 
 const NAV = [
-  { id: 'complejos',     label: 'Clubes Pendientes',     Icon: Building2 },
-  { id: 'estadisticas',  label: 'Estadísticas Globales', Icon: BarChart2 },
-  { id: 'usuarios',      label: 'Gestión de Usuarios',   Icon: Users     },
-  { id: 'configuracion', label: 'Configuración',          Icon: Settings  },
+  { id: 'complejos',     label: 'Clubes Pendientes',   Icon: Building2 },
+  { id: 'usuarios',      label: 'Gestión de Usuarios', Icon: Users     },
+  { id: 'configuracion', label: 'Configuración',        Icon: Settings  },
 ];
 
 export default function SuperAdminDashboard() {
@@ -64,7 +63,7 @@ export default function SuperAdminDashboard() {
       <main className="sa-main">
         {active === 'complejos'    && <ComplexManagement />}
         {active === 'usuarios'     && <ManagementPanel />}
-        {(active === 'estadisticas' || active === 'configuracion') && (
+        {active === 'configuracion' && (
           <div className="sa-coming-soon">
             <h3>Próximamente</h3>
             <p>Esta sección estará disponible pronto.</p>
