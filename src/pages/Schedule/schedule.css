@@ -1,0 +1,39 @@
+.bg-gradient-emerald {
+  background: linear-gradient(135deg, #065f46, #064e3b);
+}
+
+.text-emerald-100 {
+  color: #d1fae5;
+}
+
+.bg-emerald-700 {
+  background-color: #065f46;
+}
+
+.bg-emerald-soft {
+  background-color: #ecfdf5;
+}
+
+.text-emerald {
+  color: #065f46;
+}
+
+.border-dashed {
+  border-style: dashed !important;
+}
+
+.bg-warning-subtle {
+  background-color: #fef3c7;
+}
+
+.text-warning-emphasis {
+  color: #92400e;
+}
+
+.bg-secondary-subtle {
+  background-color: #f1f5f9;
+}
+
+.text-secondary-emphasis {
+  color: #1e293b;
+}
