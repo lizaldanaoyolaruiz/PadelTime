@@ -16,6 +16,7 @@ import Error404 from "./pages/Error404/Error404";
 import CourtDetail from "./pages/CourtDetail/CourtDetail";
 import ClientPanel from "./pages/ClientPanel/ClientPanel";
 import ManagementPanel from "./pages/SuperAdmin/ManagementPanel";
+import Metrics  from "./pages/Metrics/Metrics"
 import "./App.css";
 
 function ProtectedRoute({ children, role }) {
@@ -77,6 +78,7 @@ function App() {
           element={
             <ProtectedRoute role="admin">
               <OwnerDashboard />
+              <Metrics/>
             </ProtectedRoute>
           }
         />
@@ -96,6 +98,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

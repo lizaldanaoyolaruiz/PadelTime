@@ -1,4 +1,4 @@
-import "./OwnerStats.css";
+import "./Metrics.css";
 
 function OwnerStats() {
   return (
