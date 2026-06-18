@@ -81,8 +81,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/Matrics" element={<Metrics />} />
-        
+        <Route path="/Metrics" element={<Metrics />} />
+
         <Route
           path="/superadmin/*"
           element={
@@ -90,7 +90,7 @@ function App() {
               <SuperAdminDashboard />
             </ProtectedRoute>
           }
-        />*
+        />
         <Route
           path="/superadmin/management"
           element={
