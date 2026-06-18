@@ -1,10 +1,9 @@
-// src/store/scheduleStore.js
 import { create } from 'zustand';
 
-// Días de la semana (Lunes a Domingo)
+
 const daysOfWeek = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
-// Configuración por defecto para cada cancha
+
 const defaultCourts = [
   {
     id: '1',
@@ -42,7 +41,7 @@ const defaultCourts = [
       day,
       openTime: '08:00 AM',
       closeTime: '11:00 PM',
-      active: day !== 'domingo' // Domingo inactivo
+      active: day !== 'domingo' 
     })),
     blocks: []
   },
@@ -65,7 +64,7 @@ export const useScheduleStore = create((set) => ({
   hasUnsavedChanges: false,
   savedSnapshot: null,
 
-  // Actualizar un campo de un día específico de una cancha
+  
   updateCourtDay: (courtId, dayIndex, field, value) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -76,7 +75,7 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  // Actualizar estado activo de la cancha
+
   toggleCourtActive: (courtId) => set((state) => ({
     courts: state.courts.map(c =>
       c.id === courtId ? { ...c, active: !c.active } : c
@@ -84,7 +83,6 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  // Agregar bloqueo a una cancha
   addBlockToCourt: (courtId, block) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -93,7 +91,7 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  // Actualizar bloqueo
+  
   updateBlockInCourt: (courtId, blockId, data) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -105,7 +103,6 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  // Eliminar bloqueo
   deleteBlockFromCourt: (courtId, blockId) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -114,13 +111,13 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  // Guardar cambios
+  
   saveChanges: () => set((state) => ({
     savedSnapshot: JSON.stringify(state.courts),
     hasUnsavedChanges: false
   })),
 
-  // Descartar cambios
+  
   discardChanges: () => set((state) => {
     if (!state.savedSnapshot) return state;
     return {

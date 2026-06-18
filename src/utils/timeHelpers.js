@@ -1,5 +1,3 @@
-
-
 export const parseTimeToMinutes = (timeStr) => {
   const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
   if (!match) return 0;
