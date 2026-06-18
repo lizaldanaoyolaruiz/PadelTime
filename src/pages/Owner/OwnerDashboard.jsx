@@ -13,7 +13,8 @@ import MyCourts      from './components/MyCourts';
 import PaymentConfig from './components/PaymentConfig';
 import Reviews       from './components/Reviews';
 import Reports       from './components/Reports';
-import MetricsPanel  from '../Metrics/Metrics';
+import MetricsPanel    from '../Metrics/Metrics';
+import WeeklyCalendar  from '../../components/WeeklyCalendar/WeeklyCalendar';
 import './OwnerDashboard.css';
 
 const NAV = [
@@ -32,6 +33,7 @@ const PANELS = {
   panel:        <GeneralPanel />,
   complejo:     <MyComplex />,
   canchas:      <MyCourts />,
+  reservas:     <div className="panel-wrap"><WeeklyCalendar /></div>,
   reportes:     <Reports />,
   metricas:     <MetricsPanel />,
   pagos:        <PaymentConfig />,
