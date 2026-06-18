@@ -9,7 +9,6 @@ export const parseTimeToMinutes = (timeStr) => {
   return hours * 60 + minutes;
 };
 
-// Calcula horas semanales para una cancha (basado en sus días activos)
 export const getWeeklyHoursForCourt = (court) => {
   if (!court.days || court.days.length === 0) return 0;
   const totalMinutes = court.days.reduce((acc, day) => {
@@ -22,7 +21,7 @@ export const getWeeklyHoursForCourt = (court) => {
   return totalMinutes / 60;
 };
 
-// Calcula horas bloqueadas por semana para una cancha
+
 export const getBlockedHoursForCourt = (court) => {
   if (!court.blocks || court.blocks.length === 0) return 0;
   const activeDays = court.days.filter(d => d.active).map(d => d.day);
