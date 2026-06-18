@@ -18,6 +18,7 @@ import ClientPanel from "./pages/ClientPanel/ClientPanel";
 import ManagementPanel from "./pages/SuperAdmin/ManagementPanel";
 import Metrics from "./pages/Metrics/Metrics";
 import "./App.css";
+import { ScheduleManager } from "./pages/Schedule/ScheduleManager";
 
 function ProtectedRoute({ children, role }) {
   const { isAuthenticated, user } = useAuthStore();
@@ -55,6 +56,7 @@ function App() {
         <Route path="/nosotros" element={<AboutPage />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
+        <Route path="/schedule" element={<ScheduleManager />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/cancha/:id" element={<CourtDetail />} />
         <Route

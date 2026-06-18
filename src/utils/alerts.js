@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 const baseConfig = {
   background: '#1f2937',
