@@ -24,11 +24,30 @@ const BookingConfirmation = () => {
 
   const handleMercadoPago = async () => {
     setProcesandoPago(true);
-    
-    setTimeout(() => {
-      alert("¡Simulación: Redirigiendo a Mercado Pago!");
+    try {
+      const res = await api.post('/bookings', {
+        court: datosReserva.courtId,
+        complex: datosReserva.complexId,
+        date: datosReserva.date,
+        startTime: datosReserva.startTime,
+        endTime: datosReserva.endTime,
+        totalAmount: datosReserva.total,
+        depositAmount: datosReserva.senia,
+        confirmationMethod: 'mercadopago',
+      });
+
+      const initPoint = res.data.payment?.initPoint;
+      if (initPoint) {
+        window.location.href = initPoint;
+      } else {
+        alert("¡Simulación: Redirigiendo a Mercado Pago!");
+        setProcesandoPago(false);
+      }
+    } catch (err) {
+      const message = err.response?.data?.message || 'Error al crear la reserva. Por favor intentá de nuevo.';
+      alert(message);
       setProcesandoPago(false);
-    }, 1500);
+    }
   };
 
   const handleWhatsApp = async () => {
