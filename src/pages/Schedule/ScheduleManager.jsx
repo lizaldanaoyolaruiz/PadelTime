@@ -1,11 +1,10 @@
-// src/components/schedule/ScheduleManager.jsx
 import React, { useState } from "react";
 import { useScheduleStore } from "../../store/scheduleStore";
 import { BlockModal } from "./BlockModal";
 import { getGlobalMetrics } from "../../utils/timeHelpers";
 import "./schedule.css";
 
-// Opciones de hora (formato 12h)
+
 const timeOptions = [];
 for (let h = 0; h < 24; h++) {
   const hour12 = h % 12 === 0 ? 12 : h % 12;
@@ -31,10 +30,10 @@ export const ScheduleManager = () => {
   const [editingBlock, setEditingBlock] = useState(null);
   const [currentCourtId, setCurrentCourtId] = useState(null);
 
-  // Métricas globales
+  
   const { totalHours, totalBlocked, efficiency } = getGlobalMetrics(courts);
 
-  // Abrir modal para nuevo bloqueo
+  
   const handleOpenNewBlock = (courtId) => {
     setCurrentCourtId(courtId);
     setEditingBlock(null);
@@ -57,7 +56,7 @@ export const ScheduleManager = () => {
     setShowModal(false);
   };
 
-  // Días de la semana
+  
   const daysOfWeek = [
     "lunes",
     "martes",
@@ -71,7 +70,7 @@ export const ScheduleManager = () => {
   return (
     <div className="schedule-manager">
       <div className="main-card">
-        {/* Header interno */}
+        
         <div className="card-header-custom d-flex flex-wrap justify-content-between align-items-center">
           <div>
             <h1 className="m-0">PadelPro Admin</h1>
@@ -85,7 +84,7 @@ export const ScheduleManager = () => {
         </div>
 
         <div className="p-4">
-          {/* Título */}
+          
           <div className="mb-4">
             <h2 className="h4 fw-semibold">Gestión de Horarios</h2>
             <p className="text-secondary small">
@@ -93,7 +92,7 @@ export const ScheduleManager = () => {
             </p>
           </div>
 
-          {/* TABLA DE DISPONIBILIDAD SEMANAL */}
+          
           <div className="table-responsive mb-4">
             <table className="table-schedule table table-bordered">
               <thead>
@@ -196,16 +195,19 @@ export const ScheduleManager = () => {
             </table>
           </div>
 
-          {/* BLOQUEOS POR CANCHA */}
-          <div className="mb-4">
+          
+          <div className="mb-4 ">
             <h3 className="h5 fw-semibold mb-3">Bloqueos &amp; Siestas</h3>
-            <p className="text-secondary small">
+            <p className="text-secondary small ">
               Define franjas donde la pista no puede ser reservada.
             </p>
             <div className="row g-4">
               {courts.map((court) => (
-                <div key={court.id} className="col-md-6 col-lg-6">
-                  <div className="court-blocks-card">
+                <div
+                  key={court.id}
+                  className="col-md-6 col-lg-6 mt-5 mx-auto mt-4"
+                >
+                  <div className="court-blocks-card ">
                     <div className="d-flex justify-content-between align-items-center mb-2">
                       <h6 className="fw-semibold mb-0">{court.name}</h6>
                       <button
@@ -216,7 +218,7 @@ export const ScheduleManager = () => {
                       </button>
                     </div>
                     {court.blocks.length === 0 ? (
-                      <div className="text-muted small">
+                      <div className="text-muted mx-auto">
                         Sin bloqueos definidos
                       </div>
                     ) : (
@@ -262,7 +264,7 @@ export const ScheduleManager = () => {
             </div>
           </div>
 
-          {/* ALERTA DE CAMBIOS */}
+          
           {hasUnsavedChanges ? (
             <div className="alert-changes mb-4">
               <div className="alert-text">
@@ -289,38 +291,38 @@ export const ScheduleManager = () => {
             </div>
           )}
 
-          {/* MÉTRICAS GLOBALES */}
+          
           <div className="metrics-container">
-            <div className="row g-3">
-              <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-label">Horas semanales</div>
+            <div className="row g-4 justify-content-center align-items-center">
+              <div className=" col-sm-6 col-lg-3 d-flex mx-auto">
+                <div className="metric-card w-100 text-center">
+                  <div className="metric-label">HORAS SEMANALES</div>
                   <div className="metric-value">{Math.round(totalHours)}h</div>
                 </div>
               </div>
-              <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-label">Tiempo bloqueado</div>
-                  <div className="metric-value highlight-danger">
-                    {Math.round(totalBlocked)}h
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-label">Horas disponibles</div>
+              <div className=" col-sm-6 col-lg-3 d-flex mx-auto">
+                <div className="metric-card w-100 text-center">
+                  <div className="metric-label">HORAS DISPONIBLES</div>
                   <div className="metric-value">
                     {Math.round(totalHours - totalBlocked)}h
                   </div>
                 </div>
               </div>
-              <div className="col-md-3">
-                <div className="metric-card">
-                  <div className="metric-label">Eficiencia global</div>
+              <div className=" col-sm-6 col-lg-3 d-flex mx-auto">
+                <div className="metric-card w-100 text-center">
+                  <div className="metric-label">TIEMPO BLOQUEADO</div>
+                  <div className="metric-value highlight-danger">
+                    {Math.round(totalBlocked)}h
+                  </div>
+                </div>
+              </div>
+              <div className=" col-sm-6 col-lg-3 d-flex mx-auto">
+                <div className="metric-card w-100 text-center">
+                  <div className="metric-label">EFICIENCIA GLOBAL</div>
                   <div className="metric-value highlight-success">
                     {Math.round(efficiency)}%
                   </div>
-                  <div className="progress-custom mt-1">
+                  <div className="progress-custom mt-2">
                     <div
                       className="progress-bar-custom"
                       style={{
@@ -333,14 +335,14 @@ export const ScheduleManager = () => {
             </div>
           </div>
 
-          {/* Footer de copyright */}
+          
           <div className="footer-copyright mt-4">
             © 2024 PadelPro SaaS. Todos los derechos reservados.
           </div>
         </div>
       </div>
 
-      {/* Modal de bloqueo */}
+      
       <BlockModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
