@@ -25,11 +25,12 @@ export default function Register() {
     try {
       await registerInStore({ nombre, apellido, email, password, role });
       if (role === 'admin') {
-        await toastSuccess('Cuenta creada. Esperá la aprobación del administrador.');
+        await toastSuccess('¡Cuenta creada! Ya podés gestionar tu complejo.');
+        navigate('/admin');
       } else {
-        await toastSuccess('¡Cuenta creada! Verificá tu email.');
+        await toastSuccess('¡Cuenta creada! Verificá tu email antes de ingresar.');
+        navigate('/login');
       }
-      navigate('/login');
     } catch (err) {
       const msg = err.response?.data?.message || '';
       if (msg.toLowerCase().includes('email') || msg.toLowerCase().includes('registrado') || msg.toLowerCase().includes('exist')) {
