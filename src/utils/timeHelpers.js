@@ -1,3 +1,5 @@
+
+
 export const parseTimeToMinutes = (timeStr) => {
   const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
   if (!match) return 0;
@@ -9,38 +11,49 @@ export const parseTimeToMinutes = (timeStr) => {
   return hours * 60 + minutes;
 };
 
+
 export const getWeeklyHoursForCourt = (court) => {
-  if (!court.days || court.days.length === 0) return 0;
-  const totalMinutes = court.days.reduce((acc, day) => {
-    if (!day.active) return acc;
+  if (!court.active || !court.days || court.days.length === 0) return 0;
+  let totalMinutes = 0;
+  court.days.forEach(day => {
+    if (!day.active) return;
     const openMin = parseTimeToMinutes(day.openTime);
     const closeMin = parseTimeToMinutes(day.closeTime);
     const dailyMinutes = closeMin - openMin;
-    return dailyMinutes > 0 ? acc + dailyMinutes : acc;
-  }, 0);
+    if (dailyMinutes > 0) totalMinutes += dailyMinutes;
+  });
   return totalMinutes / 60;
 };
 
-
 export const getBlockedHoursForCourt = (court) => {
-  if (!court.blocks || court.blocks.length === 0) return 0;
+  if (!court.active || !court.blocks || court.blocks.length === 0) return 0;
   const activeDays = court.days.filter(d => d.active).map(d => d.day);
   if (activeDays.length === 0) return 0;
-
-  const totalBlockedMinutes = court.blocks.reduce((acc, block) => {
+  let totalBlockedMinutes = 0;
+  court.blocks.forEach(block => {
     const start = parseTimeToMinutes(block.startTime);
     const end = parseTimeToMinutes(block.endTime);
-    const durationMinutes = end - start;
-    if (durationMinutes <= 0) return acc;
-
-    if (block.recurrence === 'daily') {
-      return acc + durationMinutes * activeDays.length;
-    } else if (block.recurrence === 'weekly' && block.day) {
+    const duration = end - start;
+    if (duration <= 0) return;
+    if (block.recurrence === 'Diario') {
+      totalBlockedMinutes += duration * activeDays.length;
+    } else if (block.recurrence === 'Semanal' && block.day) {
       if (activeDays.includes(block.day.toLowerCase())) {
-        return acc + durationMinutes;
+        totalBlockedMinutes += duration;
       }
     }
-    return acc;
-  }, 0);
+  });
   return totalBlockedMinutes / 60;
+};
+
+
+export const getGlobalMetrics = (courts) => {
+  let totalHours = 0;
+  let totalBlocked = 0;
+  courts.forEach(court => {
+    totalHours += getWeeklyHoursForCourt(court);
+    totalBlocked += getBlockedHoursForCourt(court);
+  });
+  const efficiency = totalHours > 0 ? ((totalHours - totalBlocked) / totalHours) * 100 : 0;
+  return { totalHours, totalBlocked, efficiency };
 };
