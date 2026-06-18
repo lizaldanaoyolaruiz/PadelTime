@@ -106,6 +106,10 @@
   display: block;
 }
 
+.cd-calendar-section {
+  margin-top: 3rem;
+}
+
 .content-split {
   display: grid;
   grid-template-columns: 1.6fr 1fr;
