@@ -1,0 +1,412 @@
+.stats-page {
+  background: #051226;
+  min-height: 100vh;
+  padding: 35px;
+  color: white;
+  max-width: 1400px;
+  margin: 0 auto;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.stats-header {
+  margin-bottom: 30px;
+}
+
+.stats-header h1 {
+  font-size: 34px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.stats-header p {
+  color: #94a3b8;
+  margin-top: 8px;
+}
+
+.period-selector {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.period-selector button {
+  background: #10213f;
+  border: none;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.period-selector button:hover {
+  opacity: .9;
+}
+
+.period-selector .active {
+  background: #9df22f;
+  color: #08111f;
+  font-weight: 700;
+}
+
+.date-filter {
+  background: #10213f;
+  border: 1px solid rgba(255,255,255,.08);
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.metric-card,
+.chart-card,
+.ranking-card,
+.heatmap-card,
+.analysis-card,
+.efficiency-card {
+  background: #0b1a35;
+  border: 1px solid rgba(255,255,255,.05);
+  border-radius: 22px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.metric-card {
+  min-height: 180px;
+}
+
+.metric-card:hover,
+.chart-card:hover,
+.ranking-card:hover,
+.heatmap-card:hover,
+.analysis-card:hover,
+.efficiency-card:hover {
+  transform: translateY(-3px);
+  transition: .3s;
+}
+
+.metric-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.icon-box {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: rgba(157,242,47,.08);
+  border: 1px solid rgba(157,242,47,.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9df22f;
+  font-size: 24px;
+}
+
+.success {
+  color: #9df22f;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.danger {
+  color: #ff8080;
+  font-weight: 600;
+}
+
+.metric-card h4 {
+  color: #94a3b8;
+  margin-bottom: 10px;
+}
+
+.metric-card h2 {
+  font-size: 42px;
+  margin: 0;
+  font-weight: 800;
+}
+
+.metric-card small {
+  color: #94a3b8;
+}
+
+.charts-section {
+  display: grid;
+  grid-template-columns: 3fr 1.2fr;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.large {
+  min-height: 450px;
+}
+
+.chart-card h2,
+.ranking-card h2,
+.heatmap-card h2 {
+  margin-bottom: 20px;
+}
+
+.pie-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pie-info {
+  margin-top: 20px;
+}
+
+.pie-info p {
+  color: #d1d5db;
+  margin: 8px 0;
+}
+
+
+/* ===========================
+   RANKING DE CANCHAS
+=========================== */
+
+.ranking-card {
+  margin-bottom: 25px;
+}
+
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.court-item {
+  margin-bottom: 10px;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 12px;
+  color: #e5e7eb;
+}
+
+
+.progress {
+  width: 100%;
+  height: 10px;
+  background: #223553;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress div {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #8eea20,
+    #9df22f
+  );
+  border-radius: 999px;
+}
+
+
+
+/* ===========================
+   HEATMAP
+=========================== */
+
+.heatmap-card {
+  margin-bottom: 25px;
+}
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7,1fr);
+  gap: 12px;
+}
+
+.heat-cell {
+  height: 42px;
+  border-radius: 10px;
+  transition: .3s;
+}
+
+.heat-cell:hover {
+  transform: scale(1.05);
+}
+
+
+.low {
+  background: #223452;
+}
+
+.medium {
+  background: #628d2b;
+}
+
+.high {
+  background: #9df22f;
+}
+
+
+
+/* ===========================
+   ANALISIS
+=========================== */
+
+.bottom-cards {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+
+.analysis-card h3 {
+  color: #9df22f;
+  margin-bottom: 20px;
+}
+
+
+.analysis-content {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+
+.analysis-content img {
+  width: 240px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+
+.analysis-text {
+  flex: 1;
+}
+
+
+.analysis-text p {
+  color: #d1d5db;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+
+.analysis-text strong {
+  color: white;
+}
+
+
+.analysis-text a {
+  color: #9df22f;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+
+
+/* ===========================
+   EFICIENCIA
+=========================== */
+
+
+.efficiency-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+
+.efficiency-card svg {
+  color: #9df22f;
+}
+
+
+.efficiency-card h3 {
+  color: white;
+  margin-top: 15px;
+}
+
+
+.efficiency-card h2 {
+  color: #9df22f;
+  font-size: 60px;
+  margin: 15px 0;
+}
+
+
+.efficiency-card p {
+  color: #94a3b8;
+}
+
+
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+
+@media (max-width:1100px){
+
+  .metrics-grid{
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .charts-section{
+    grid-template-columns:1fr;
+  }
+
+}
+
+
+@media (max-width:768px){
+
+  .stats-page{
+    padding:20px;
+  }
+
+
+  .metrics-grid{
+    grid-template-columns:1fr;
+  }
+
+
+  .ranking-grid{
+    grid-template-columns:1fr;
+  }
+
+
+  .bottom-cards{
+    grid-template-columns:1fr;
+  }
+
+
+  .analysis-content{
+    flex-direction:column;
+  }
+
+
+  .analysis-content img{
+    width:100%;
+  }
+
+
+  .heatmap-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
+
+}
