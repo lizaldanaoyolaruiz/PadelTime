@@ -1,4 +1,4 @@
-import Swal from 'sweetalert2';
+import Swal from '../utils/alerts.js';
 
 const baseToast = {
   background: '#1f2937',
