@@ -9,19 +9,17 @@ function SlotCell({ reserva }) {
   }
 
   const cls =
-    reserva.estado === 'confirmada' ? 'slot--confirmado'
-    : reserva.estado === 'pendiente' ? 'slot--pendiente'
+    reserva.status === 'confirmed' ? 'slot--confirmado'
+    : reserva.status === 'pending'  ? 'slot--pendiente'
     : 'slot--libre';
 
-  const nombre = reserva.jugador
-    ? `${reserva.jugador.nombre || ''} ${(reserva.jugador.apellido || '')[0] || ''}.`.trim()
-    : '—';
+  const nombre = reserva.player?.name ?? '—';
 
   return (
     <div className={`slot ${cls}`}>
       <span className="slot-name">{nombre}</span>
       <span className="slot-sub">
-        {reserva.estado === 'confirmada' ? 'Confirmado' : 'Esperando confirmación'}
+        {reserva.status === 'confirmed' ? 'Confirmado' : 'Esperando confirmación'}
       </span>
     </div>
   );

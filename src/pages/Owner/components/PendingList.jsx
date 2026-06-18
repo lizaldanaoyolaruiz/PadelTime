@@ -1,6 +1,6 @@
-import { Users, XCircle, CheckCircle2 } from 'lucide-react';
+﻿import { Users, XCircle, CheckCircle2 } from 'lucide-react';
 import Swal from 'sweetalert2';
-import { confirmarReserva, rechazarReserva } from '../../../api/reservasApi';
+import { confirmarReserva, rechazarReserva } from '../../../services/reservationService';
 
 const BASE = { background: '#1f2937', color: '#ffffff' };
 
@@ -9,7 +9,7 @@ export default function PendingList({ pending, onRefresh }) {
     const result = await Swal.fire({
       ...BASE,
       title: '¿Confirmar turno?',
-      text: `${reserva.jugador?.nombre} — ${reserva.cancha?.nombre} ${reserva.horaInicio}`,
+      text: `${reserva.player?.name} — ${reserva.court?.name} ${reserva.startTime}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí, confirmar',
@@ -65,10 +65,10 @@ export default function PendingList({ pending, onRefresh }) {
           <div key={t._id} className="turno-row">
             <div className="turno-icon"><Users size={18} /></div>
             <div className="turno-info">
-              <span className="turno-nombre">{t.jugador?.nombre} {t.jugador?.apellido}</span>
-              <span className="turno-detalle">{t.cancha?.nombre} • {t.horaInicio} - {t.horaFin}</span>
+              <span className="turno-nombre">{t.player?.name}</span>
+              <span className="turno-detalle">{t.court?.name} • {t.startTime} - {t.endTime}</span>
             </div>
-            <span className="turno-estado estado-pendiente">${t.montoTotal}</span>
+            <span className="turno-estado estado-pendiente">${t.totalAmount}</span>
             <div className="turno-actions">
               <button className="action-btn action-btn--reject" onClick={() => handleRechazar(t)}>
                 <XCircle size={18} />

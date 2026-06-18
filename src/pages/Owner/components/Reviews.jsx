@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { Star } from 'lucide-react';
-import { getOwnerReviews } from '../../../api/reviewsApi';
+import { getOwnerReviews } from '../../../services/reviewService';
 import './Reviews.css';
 
 export default function Reviews() {
