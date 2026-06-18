@@ -1,4 +1,4 @@
-import Swal from '../utils/toasts.js';
+import Swal from 'sweetalert2'
 
 const baseConfig = {
   background: '#1f2937',
