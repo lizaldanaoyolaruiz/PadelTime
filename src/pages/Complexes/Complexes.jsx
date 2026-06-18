@@ -10,81 +10,6 @@ import './complexes.css';
 const PLACEHOLDER_IMAGE =
   'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=600&h=320';
 
-// 5 complejos de demo (Tucumán, Argentina) — cubren todos los filtros:
-// precio ($1800–$4000), superficie (Cristal/Césped/Moqueta), franja (Mañana/Tarde/Noche/Madrugada)
-// En dev se mezclan con datos reales para poder testear.
-const COMPLEJOS_MOCK = [
-  {
-    id: 'mock-1',
-    name: 'Padel Club Norte',
-    location: 'Av. Mate de Luna 2500, San Miguel de Tucumán',
-    city: 'San Miguel de Tucumán',
-    surface: 'Cristal',
-    price: 2500,
-    rating: 4.8,
-    isFeatured: true,
-    image: PLACEHOLDER_IMAGE,
-    features: ['Cristal', 'Techada'],
-    availability: ['2026-06-20', '2026-06-22', '2026-06-25'],
-    franjas: ['Mañana', 'Tarde'],
-  },
-  {
-    id: 'mock-2',
-    name: 'Paddock Tucumán',
-    location: 'C. Álvarez 1200, San Miguel de Tucumán',
-    city: 'San Miguel de Tucumán',
-    surface: 'Cristal',
-    price: 4000,
-    rating: 4.9,
-    isFeatured: true,
-    image: PLACEHOLDER_IMAGE,
-    features: ['Cristal', 'Techada', 'Iluminación LED'],
-    availability: ['2026-06-21', '2026-06-22', '2026-06-26'],
-    franjas: ['Mañana', 'Tarde', 'Noche'],
-  },
-  {
-    id: 'mock-3',
-    name: 'Yerba Buena Padel',
-    location: 'Av. Aconquija 1800, Yerba Buena',
-    city: 'Yerba Buena',
-    surface: 'Césped artificial',
-    price: 3500,
-    rating: 4.6,
-    isFeatured: true,
-    image: PLACEHOLDER_IMAGE,
-    features: ['Césped artificial', 'Descubierta'],
-    availability: ['2026-06-19', '2026-06-20', '2026-06-26'],
-    franjas: ['Tarde', 'Noche'],
-  },
-  {
-    id: 'mock-4',
-    name: 'Sport Club Lomas',
-    location: 'San Lorenzo 890, Lomas de Tafí',
-    city: 'Lomas de Tafí',
-    surface: 'Moqueta',
-    price: 1800,
-    rating: 3.9,
-    isFeatured: false,
-    image: PLACEHOLDER_IMAGE,
-    features: ['Moqueta', 'Techada'],
-    availability: ['2026-06-20', '2026-06-23', '2026-06-25'],
-    franjas: ['Tarde', 'Madrugada'],
-  },
-  {
-    id: 'mock-5',
-    name: 'Club San Javier',
-    location: 'Av. Principal 100, San Javier',
-    city: 'San Javier',
-    surface: 'Césped artificial',
-    price: 2800,
-    rating: 4.3,
-    isFeatured: false,
-    image: PLACEHOLDER_IMAGE,
-    features: ['Césped artificial', 'Descubierta'],
-    availability: ['2026-06-19', '2026-06-21', '2026-06-28'],
-    franjas: ['Mañana', 'Madrugada'],
-  },
-];
 
 const mapComplex = (c) => ({
   id: c._id,
@@ -157,14 +82,9 @@ const Complexes = () => {
       try {
         const res = await getPublicComplexes();
         const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
-        const apiData = data.length > 0 ? data.map(mapComplex) : [];
-        // En desarrollo mezclamos reales + mock para poder probar los filtros
-        const todos = import.meta.env.DEV
-          ? [...apiData, ...COMPLEJOS_MOCK]
-          : (apiData.length > 0 ? apiData : COMPLEJOS_MOCK);
-        setComplexes(todos);
+        setComplexes(data.map(mapComplex));
       } catch {
-        setComplexes(COMPLEJOS_MOCK);
+        setComplexes([]);
       } finally {
         setLoading(false);
       }
