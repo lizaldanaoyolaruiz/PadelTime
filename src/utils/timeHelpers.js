@@ -9,26 +9,26 @@ export const parseTimeToMinutes = (timeStr) => {
   return hours * 60 + minutes;
 };
 
-export const getBaseWeeklyHours = (dayConfig) => {
-  const days = ['lunes', 'martes', 'domingo'];
-  const totalMinutes = days.reduce((acc, day) => {
-    const config = dayConfig[day];
-    if (!config || !config.active) return acc;
-    const openMin = parseTimeToMinutes(config.openTime);
-    const closeMin = parseTimeToMinutes(config.closeTime);
+// Calcula horas semanales para una cancha (basado en sus días activos)
+export const getWeeklyHoursForCourt = (court) => {
+  if (!court.days || court.days.length === 0) return 0;
+  const totalMinutes = court.days.reduce((acc, day) => {
+    if (!day.active) return acc;
+    const openMin = parseTimeToMinutes(day.openTime);
+    const closeMin = parseTimeToMinutes(day.closeTime);
     const dailyMinutes = closeMin - openMin;
     return dailyMinutes > 0 ? acc + dailyMinutes : acc;
   }, 0);
   return totalMinutes / 60;
 };
 
-export const getBlockedHoursPerWeek = (blockouts, dayConfig) => {
-  const activeDays = ['lunes', 'martes', 'domingo']
-    .filter(day => dayConfig[day]?.active === true);
-
+// Calcula horas bloqueadas por semana para una cancha
+export const getBlockedHoursForCourt = (court) => {
+  if (!court.blocks || court.blocks.length === 0) return 0;
+  const activeDays = court.days.filter(d => d.active).map(d => d.day);
   if (activeDays.length === 0) return 0;
 
-  const totalBlockedMinutes = blockouts.reduce((acc, block) => {
+  const totalBlockedMinutes = court.blocks.reduce((acc, block) => {
     const start = parseTimeToMinutes(block.startTime);
     const end = parseTimeToMinutes(block.endTime);
     const durationMinutes = end - start;
@@ -43,6 +43,5 @@ export const getBlockedHoursPerWeek = (blockouts, dayConfig) => {
     }
     return acc;
   }, 0);
-
   return totalBlockedMinutes / 60;
 };
