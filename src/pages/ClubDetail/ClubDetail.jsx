@@ -1,8 +1,9 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ClubReviews from './ClubReviews';
+import WeeklyCalendar from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { getPublicComplexById } from '../../services/complexService';
 import { getPublicCourts } from '../../services/courtService';
 import './ClubDetail.css';
@@ -25,7 +26,7 @@ const mapCourt = (court) => ({
 const ClubDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [club, setClub] = useState(null);
   const [canchas, setCanchas] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -68,6 +69,11 @@ const ClubDetail = () => {
 
     cargarComplejo();
   }, [id]);
+
+  const calendarCourts = useMemo(
+    () => canchas.map(c => ({ _id: c.id, name: c.name })),
+    [canchas]
+  );
 
   const handleReserva = () => {
     if (!canchaSeleccionada) return;
@@ -140,10 +146,10 @@ const ClubDetail = () => {
                 {canchas.length} canchas disponibles
               </span>
             </div>
-            
+
             {canchas.map((cancha) => (
-              <div 
-                className={`court-card ${canchaSeleccionada?.id === cancha.id ? 'selected' : ''}`} 
+              <div
+                className={`court-card ${canchaSeleccionada?.id === cancha.id ? 'selected' : ''}`}
                 key={cancha.id}
                 onClick={() => setCanchaSeleccionada(cancha)}
               >
@@ -155,8 +161,8 @@ const ClubDetail = () => {
                       <div className="selected-badge">✓</div>
                     )}
                   </div>
-                  <button 
-                    className="btn-secondary btn-detalle-cancha" 
+                  <button
+                    className="btn-secondary btn-detalle-cancha"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/cancha/${cancha.id}`);
@@ -165,7 +171,7 @@ const ClubDetail = () => {
                     Ver Cancha
                   </button>
                 </div>
-                
+
                 <div className="court-info">
                   <div className="court-title-row">
                     <h3>{cancha.name}</h3>
@@ -184,7 +190,7 @@ const ClubDetail = () => {
 
           <aside className="booking-widget">
             <h3>Reserva tu turno</h3>
-            
+
             <div className="calendar-section">
               <div className="calendar-header">
                 <span>Mayo 2024</span>
@@ -229,8 +235,8 @@ const ClubDetail = () => {
                 <span>Total</span>
                 <span>{canchaSeleccionada ? formatearDinero(canchaSeleccionada.precioNumerico + 1500) : '$0,00'}</span>
               </div>
-              <button 
-                className="btn-book" 
+              <button
+                className="btn-book"
                 onClick={handleReserva}
                 disabled={!canchaSeleccionada}
                 style={{ opacity: canchaSeleccionada ? 1 : 0.5, cursor: canchaSeleccionada ? 'pointer' : 'not-allowed' }}
@@ -239,6 +245,19 @@ const ClubDetail = () => {
               </button>
             </div>
           </aside>
+        </div>
+
+        <div className="cd-calendar-section">
+          <WeeklyCalendar
+            courts={calendarCourts}
+            showStats={false}
+            onSlotClick={(courtId, date, hour) => {
+              const cancha = canchas.find(c => c.id === courtId);
+              if (!cancha) return;
+              setCanchaSeleccionada(cancha);
+              setHorarioSeleccionado(`${String(hour).padStart(2, '0')}:00`);
+            }}
+          />
         </div>
 
         <ClubReviews complexId={id} />
