@@ -1,50 +1,61 @@
+// src/store/scheduleStore.js
 import { create } from 'zustand';
 
+// Días de la semana (Lunes a Domingo)
+const daysOfWeek = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
+
+// Configuración por defecto para cada cancha
 const defaultCourts = [
   {
     id: '1',
-    name: 'Caché 1 - Pro',
-    days: [
-      { day: 'lunes', openTime: '08:00 AM', closeTime: '11:00 PM', active: true },
-      { day: 'martes', openTime: '08:00 AM', closeTime: '11:00 PM', active: true },
-      { day: 'domingo', openTime: '08:00 AM', closeTime: '11:00 PM', active: false }
-    ],
+    name: 'Cantina 1 - Pro',
+    active: true,
+    days: daysOfWeek.map(day => ({
+      day,
+      openTime: '08:00 AM',
+      closeTime: '11:00 PM',
+      active: true
+    })),
     blocks: [
-      { id: 'b1', name: 'Siesta Técnica', recurrence: 'daily', day: null, startTime: '02:00 PM', endTime: '04:00 PM' }
+      { id: 'b1', name: 'Siesta Técnica', recurrence: 'Diario', day: null, startTime: '02:00 PM', endTime: '04:00 PM' }
     ]
   },
   {
     id: '2',
-    name: 'Caché 2 - VIP',
-    days: [
-      { day: 'lunes', openTime: '08:00 AM', closeTime: '11:00 PM', active: true },
-      { day: 'martes', openTime: '08:00 AM', closeTime: '11:00 PM', active: true },
-      { day: 'domingo', openTime: '08:00 AM', closeTime: '11:00 PM', active: true }
-    ],
+    name: 'Cantina 2 - VIP',
+    active: true,
+    days: daysOfWeek.map(day => ({
+      day,
+      openTime: '08:00 AM',
+      closeTime: '11:00 PM',
+      active: true
+    })),
     blocks: [
-      { id: 'b2', name: 'Siesta Técnica', recurrence: 'daily', day: null, startTime: '02:00 PM', endTime: '04:00 PM' }
+      { id: 'b2', name: 'Limpieza General', recurrence: 'Semanal', day: 'sábado', startTime: '07:00 AM', endTime: '08:30 AM' }
     ]
   },
   {
     id: '3',
-    name: 'Caché 3 - Panorámica',
-    days: [
-      { day: 'lunes', openTime: '08:00 AM', closeTime: '11:00 PM', active: true },
-      { day: 'martes', openTime: '08:00 AM', closeTime: '11:00 PM', active: false },
-      { day: 'domingo', openTime: '08:00 AM', closeTime: '11:00 PM', active: false }
-    ],
-    blocks: [
-      { id: 'b3', name: 'Limpieza General', recurrence: 'weekly', day: 'sábado', startTime: '07:00 AM', endTime: '08:30 AM' }
-    ]
+    name: 'Cantina 3 - Panorámica',
+    active: false,
+    days: daysOfWeek.map(day => ({
+      day,
+      openTime: '08:00 AM',
+      closeTime: '11:00 PM',
+      active: day !== 'domingo' // Domingo inactivo
+    })),
+    blocks: []
   },
   {
     id: '4',
-    name: 'Caché 4 - Standard',
-    days: [
-      { day: 'lunes', openTime: '10:00 AM', closeTime: '10:00 PM', active: true },
-      { day: 'martes', openTime: '10:00 AM', closeTime: '10:00 PM', active: true },
-      { day: 'domingo', openTime: '10:00 AM', closeTime: '08:00 PM', active: true }
-    ],
+    name: 'Cantina 4 - Standard',
+    active: true,
+    days: daysOfWeek.map(day => ({
+      day,
+      openTime: '10:00 AM',
+      closeTime: '10:00 PM',
+      active: true
+    })),
     blocks: []
   }
 ];
@@ -53,11 +64,8 @@ export const useScheduleStore = create((set) => ({
   courts: defaultCourts,
   hasUnsavedChanges: false,
   savedSnapshot: null,
-  updateCourt: (courtId, newData) => set((state) => ({
-    courts: state.courts.map(c => c.id === courtId ? { ...c, ...newData } : c),
-    hasUnsavedChanges: true
-  })),
 
+  // Actualizar un campo de un día específico de una cancha
   updateCourtDay: (courtId, dayIndex, field, value) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -68,6 +76,15 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
+  // Actualizar estado activo de la cancha
+  toggleCourtActive: (courtId) => set((state) => ({
+    courts: state.courts.map(c =>
+      c.id === courtId ? { ...c, active: !c.active } : c
+    ),
+    hasUnsavedChanges: true
+  })),
+
+  // Agregar bloqueo a una cancha
   addBlockToCourt: (courtId, block) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -76,6 +93,7 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
+  // Actualizar bloqueo
   updateBlockInCourt: (courtId, blockId, data) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -87,6 +105,7 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
+  // Eliminar bloqueo
   deleteBlockFromCourt: (courtId, blockId) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.id !== courtId) return c;
@@ -95,15 +114,18 @@ export const useScheduleStore = create((set) => ({
     hasUnsavedChanges: true
   })),
 
-  
+  // Guardar cambios
   saveChanges: () => set((state) => ({
     savedSnapshot: JSON.stringify(state.courts),
     hasUnsavedChanges: false
   })),
 
+  // Descartar cambios
   discardChanges: () => set((state) => {
     if (!state.savedSnapshot) return state;
-    const courts = JSON.parse(state.savedSnapshot);
-    return { courts, hasUnsavedChanges: false };
+    return {
+      courts: JSON.parse(state.savedSnapshot),
+      hasUnsavedChanges: false
+    };
   })
 }));
