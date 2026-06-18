@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import ClubReviews from './ClubReviews';
-import { getPublicComplexById } from '../../api/complexApi';
-import { getPublicCourts } from '../../api/courtApi';
+import { getPublicComplexById } from '../../services/complexService';
+import { getPublicCourts } from '../../services/courtService';
 import './ClubDetail.css';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400';

@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import { getConfigPagos, updateConfigPagos } from '../../../services/ownerService';
+import { getMyComplex, updateComplex } from '../../../services/complexService';
 import './PaymentConfig.css';
 
 const SENA_OPTIONS = [
@@ -11,18 +11,24 @@ const SENA_OPTIONS = [
 ];
 
 export default function PaymentConfig() {
-  const [sena,       setSena]       = useState(30);
-  const [mpKey,      setMpKey]      = useState('');
-  const [showKey,    setShowKey]    = useState(false);
-  const [loading,    setLoading]    = useState(true);
-  const [saving,     setSaving]     = useState(false);
-  const [connected,  setConnected]  = useState(false);
+  const [complexId, setComplexId] = useState(null);
+  const [sena,      setSena]      = useState(30);
+  const [mpKey,     setMpKey]     = useState('');
+  const [showKey,   setShowKey]   = useState(false);
+  const [loading,   setLoading]   = useState(true);
+  const [saving,    setSaving]    = useState(false);
+  const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    getConfigPagos()
-      .then(data => {
-        if (data.porcentaje_sena) setSena(data.porcentaje_sena);
-        if (data.mp_access_token) { setMpKey(data.mp_access_token); setConnected(true); }
+    getMyComplex()
+      .then(res => {
+        const complex = res.data.complex || res.data;
+        setComplexId(complex._id);
+        if (SENA_OPTIONS.some(o => o.value === complex.depositPercentage)) {
+          setSena(complex.depositPercentage);
+        }
+        if (complex.mercadopagoPublicKey) setMpKey(complex.mercadopagoPublicKey);
+        setConnected(!!complex.mercadopagoActive);
       })
       .catch(err => {
         if (err.response?.status !== 404) toast.error('Error cargando configuración');
@@ -32,14 +38,19 @@ export default function PaymentConfig() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!mpKey.trim()) {
-      toast.error('Ingresá el Access Token de Mercado Pago');
+    if (!complexId) {
+      toast.error('Primero debés crear un complejo');
       return;
     }
     setSaving(true);
     try {
-      await updateConfigPagos({ porcentaje_sena: sena, mp_access_token: mpKey.trim() });
-      setConnected(true);
+      const payload = { depositPercentage: sena };
+      if (mpKey.trim() && !mpKey.includes('•')) {
+        payload.mercadopagoPublicKey = mpKey.trim();
+        payload.mercadopagoActive    = true;
+      }
+      await updateComplex(complexId, payload);
+      if (payload.mercadopagoActive) setConnected(true);
       toast.success('Configuración guardada correctamente');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error al guardar');
@@ -58,7 +69,7 @@ export default function PaymentConfig() {
           <p className="panel-subtitle">Configurá el porcentaje de seña y vinculá tu cuenta de Mercado Pago.</p>
         </div>
         {connected && (
-          <span className="status-badge status-activo">
+          <span className="status-badge status-approved">
             <ShieldCheck size={13} style={{ marginRight: 4 }} />
             MP Conectado
           </span>
@@ -66,7 +77,6 @@ export default function PaymentConfig() {
       </div>
 
       <form onSubmit={handleSave} noValidate>
-        {/* Seña percentage */}
         <div className="form-section">
           <h3 className="section-title">Porcentaje de seña</h3>
           <p className="section-desc">
@@ -94,7 +104,6 @@ export default function PaymentConfig() {
           </div>
         </div>
 
-        {/* Mercado Pago key */}
         <div className="form-section">
           <h3 className="section-title">Mercado Pago — Access Token</h3>
           <p className="section-desc">
@@ -137,7 +146,7 @@ export default function PaymentConfig() {
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={saving}>
+          <button type="submit" className="btn-primary" disabled={saving || !complexId}>
             {saving ? 'Guardando...' : 'Guardar configuración'}
           </button>
         </div>

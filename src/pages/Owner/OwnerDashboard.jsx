@@ -47,8 +47,8 @@ export default function OwnerDashboard() {
     navigate('/login');
   };
 
-  const initials = user?.nombre
-    ? user.nombre.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+  const initials = user?.name
+    ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
     : 'OW';
 
   return (
@@ -74,8 +74,8 @@ export default function OwnerDashboard() {
           <div className="sidebar-user">
             <div className="sidebar-avatar">{initials}</div>
             <div className="sidebar-user-info">
-              <span className="sidebar-user-name">{user?.nombre || 'Owner'}</span>
-              <span className="sidebar-user-club">{user?.club || 'Mi Club'}</span>
+              <span className="sidebar-user-name">{user?.name || 'Owner'}</span>
+              <span className="sidebar-user-club">Administrador</span>
             </div>
           </div>
           <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión">

@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+﻿import { useState, useRef, useEffect } from 'react';
 import { Send, X, Bot, MessageCircle, Plus } from 'lucide-react';
-import api from '../api/axios';
+import api from '../services/axios';
 import './padelbot.css';
 
 function formatTime() {
