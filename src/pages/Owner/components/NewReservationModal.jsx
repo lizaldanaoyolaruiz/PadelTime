@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useReservationForm } from '../utils/hooks/useReservationForm';
 import { generarSlots } from '../utils/constants';
 import { blockNonLetters, blockNonPhone } from '../utils/validations';
-import { createReserva } from '../../../api/reservasApi';
-import { getMyCourts } from '../../../api/courtApi';
-import { getMyComplex } from '../../../api/complexApi';
+import { createReserva } from '../../../services/reservationService';
+import { getMyCourts } from '../../../services/courtService';
+import { getMyComplex } from '../../../services/complexService';
 import { successAlert, errorAlert } from '../../../utils/alerts';
 
 const SLOTS = generarSlots();

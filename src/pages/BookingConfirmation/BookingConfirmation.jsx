@@ -1,8 +1,8 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+﻿import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import api from '../../api/axios';
+import api from '../../services/axios';
 import './BookingConfirmation.css';
 
 const BookingConfirmation = () => {
