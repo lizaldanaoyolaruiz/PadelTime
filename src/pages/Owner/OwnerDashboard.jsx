@@ -14,8 +14,9 @@ import MyCourts       from './components/MyCourts';
 import PaymentConfig  from './components/PaymentConfig';
 import Reviews        from './components/Reviews';
 import Reports        from './components/Reports';
-import MetricsPanel   from '../Metrics/Metrics';
+import MetricsPanel    from '../Metrics/Metrics';
 import ReservasHoyPanel from './components/ReservasHoyPanel';
+import { ScheduleManager } from '../Schedule/ScheduleManager';
 import './OwnerDashboard.css';
 
 const NAV = [
@@ -67,6 +68,7 @@ export default function OwnerDashboard() {
     reportes:     <Reports />,
     metricas:     <MetricsPanel />,
     pagos:        <PaymentConfig />,
+    horarios:     <ScheduleManager />,
     valoraciones: <Reviews />,
   };
 
