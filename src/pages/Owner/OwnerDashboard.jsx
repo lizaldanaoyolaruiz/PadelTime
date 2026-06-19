@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Building2, Layers, CalendarDays,
@@ -7,43 +7,46 @@ import {
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
-import GeneralPanel  from './components/GeneralPanel';
-import MyComplex     from './components/MyComplex';
-import MyCourts      from './components/MyCourts';
-import PaymentConfig from './components/PaymentConfig';
-import Reviews       from './components/Reviews';
-import Reports       from './components/Reports';
-import MetricsPanel    from '../Metrics/Metrics';
-import WeeklyCalendar  from '../../components/WeeklyCalendar/WeeklyCalendar';
+import { getMyComplexes } from '../../services/complexService';
+import GeneralPanel   from './components/GeneralPanel';
+import MyComplex      from './components/MyComplex';
+import MyCourts       from './components/MyCourts';
+import PaymentConfig  from './components/PaymentConfig';
+import Reviews        from './components/Reviews';
+import Reports        from './components/Reports';
+import MetricsPanel   from '../Metrics/Metrics';
+import ReservasHoyPanel from './components/ReservasHoyPanel';
 import './OwnerDashboard.css';
 
 const NAV = [
-  { id: 'panel',       label: 'Panel General',          Icon: LayoutDashboard },
-  { id: 'complejo',    label: 'Mi Complejo',            Icon: Building2 },
-  { id: 'canchas',     label: 'Mis Canchas',            Icon: Layers },
-  { id: 'reservas',    label: 'Reservas Hoy',           Icon: CalendarDays },
-  { id: 'reportes',    label: 'Reportes',               Icon: BarChart2 },
-  { id: 'metricas',    label: 'Métricas',               Icon: LineChart },
-  { id: 'pagos',       label: 'Configuración de Pagos', Icon: CreditCard },
-  { id: 'horarios',    label: 'Horarios',               Icon: Clock },
-  { id: 'valoraciones', label: 'Valoraciones',          Icon: Star },
+  { id: 'panel',        label: 'Panel General',          Icon: LayoutDashboard },
+  { id: 'complejo',     label: 'Mi Complejo',            Icon: Building2 },
+  { id: 'canchas',      label: 'Mis Canchas',            Icon: Layers },
+  { id: 'reservas',     label: 'Reservas Hoy',           Icon: CalendarDays },
+  { id: 'reportes',     label: 'Reportes',               Icon: BarChart2 },
+  { id: 'metricas',     label: 'Métricas',               Icon: LineChart },
+  { id: 'pagos',        label: 'Configuración de Pagos', Icon: CreditCard },
+  { id: 'horarios',     label: 'Horarios',               Icon: Clock },
+  { id: 'valoraciones', label: 'Valoraciones',           Icon: Star },
 ];
 
-const PANELS = {
-  panel:        <GeneralPanel />,
-  complejo:     <MyComplex />,
-  canchas:      <MyCourts />,
-  reservas:     <div className="panel-wrap"><WeeklyCalendar /></div>,
-  reportes:     <Reports />,
-  metricas:     <MetricsPanel />,
-  pagos:        <PaymentConfig />,
-  valoraciones: <Reviews />,
-};
-
 export default function OwnerDashboard() {
-  const [active, setActive] = useState('panel');
-  const { user, logout }    = useAuthStore();
-  const navigate            = useNavigate();
+  const [active,     setActive]     = useState('panel');
+  const [complejos,  setComplejos]  = useState([]);
+  const [complexId,  setComplexId]  = useState(null);
+  const { user, logout } = useAuthStore();
+  const navigate         = useNavigate();
+
+  useEffect(() => {
+    getMyComplexes()
+      .then(res => {
+        const list = res.data.complexes || res.data || [];
+        const arr  = Array.isArray(list) ? list : [];
+        setComplejos(arr);
+        if (arr.length) setComplexId(arr[0]._id);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleLogout = async () => {
     const result = await confirmLogout();
@@ -56,6 +59,17 @@ export default function OwnerDashboard() {
     ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
     : 'OW';
 
+  const panels = {
+    panel:        <GeneralPanel    complexId={complexId} />,
+    complejo:     <MyComplex />,
+    canchas:      <MyCourts />,
+    reservas:     <ReservasHoyPanel complexId={complexId} />,
+    reportes:     <Reports />,
+    metricas:     <MetricsPanel />,
+    pagos:        <PaymentConfig />,
+    valoraciones: <Reviews />,
+  };
+
   return (
     <div className="owner-layout">
       <aside className="owner-sidebar">
@@ -63,6 +77,32 @@ export default function OwnerDashboard() {
           <span className="brand-name">PadelSaaS</span>
           <span className="brand-sub">Owner Dashboard</span>
         </div>
+
+        {complejos.length > 0 && (
+          <div style={{ padding: '0 16px 12px' }}>
+            <select
+              value={complexId ?? ''}
+              onChange={e => setComplexId(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '7px 10px',
+                borderRadius: '8px',
+                border: '1px solid var(--color-border)',
+                background: 'var(--color-surface-3)',
+                color: 'var(--color-text-base)',
+                fontSize: '13px',
+                fontFamily: 'var(--font-base)',
+                cursor: 'pointer',
+                outline: 'none',
+              }}
+            >
+              {complejos.map(c => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <nav className="sidebar-nav">
           {NAV.map(({ id, label, Icon, path }) => (
             <button
@@ -75,6 +115,7 @@ export default function OwnerDashboard() {
             </button>
           ))}
         </nav>
+
         <div className="sidebar-footer">
           <div className="sidebar-user">
             <div className="sidebar-avatar">{initials}</div>
@@ -88,8 +129,9 @@ export default function OwnerDashboard() {
           </button>
         </div>
       </aside>
+
       <main className="owner-main">
-        {PANELS[active] ?? (
+        {panels[active] ?? (
           <div className="coming-soon">
             <h3>Próximamente</h3>
             <p>Esta sección estará disponible pronto.</p>
