@@ -158,9 +158,10 @@
   flex-shrink: 0;
 }
 
-.wc-dot--libre   { background: #84CC16; }
-.wc-dot--ocupado { background: #EF4444; }
-.wc-dot--mant    { background: #475569; }
+.wc-dot--libre     { background: #84CC16; }
+.wc-dot--ocupado   { background: #EF4444; }
+.wc-dot--pendiente { background: #94a3b8; }
+.wc-dot--mant      { background: #475569; }
 
 /* ── Grid scroll wrapper ── */
 .wc-grid-scroll {
@@ -282,6 +283,14 @@
 .wc-slot--reservado {
   background: rgba(127, 17, 36, 0.45);
   cursor: not-allowed;
+}
+
+/* PENDIENTE */
+.wc-slot--pendiente {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  cursor: not-allowed;
+  border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
 /* MANTENIMIENTO */

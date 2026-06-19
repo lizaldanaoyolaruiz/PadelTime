@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
@@ -6,11 +6,27 @@ import ClubReviews from './ClubReviews';
 import WeeklyCalendar from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { getPublicComplexById } from '../../services/complexService';
 import { getPublicCourts } from '../../services/courtService';
+import { getSlotsCalendar } from '../../services/reservationService';
 import './ClubDetail.css';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400';
 
 const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
+
+const MESES_ES = [
+  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
+];
+const DIA_LABELS_WIDGET = ['L','M','X','J','V','S','D'];
+
+function getLunesDate(offset) {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const dow = hoy.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  hoy.setDate(hoy.getDate() + diff + offset * 7);
+  return hoy;
+}
 
 const mapCourt = (court) => ({
   id: court._id,
@@ -31,9 +47,28 @@ const ClubDetail = () => {
   const [canchas, setCanchas] = useState([]);
   const [cargando, setCargando] = useState(true);
 
-  const [diaSeleccionado, setDiaSeleccionado] = useState(13);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(() => new Date().toISOString().split('T')[0]);
+  const [semanaOffset, setSemanaOffset] = useState(0);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState('10:00');
   const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
+
+  const [calendarSlots,  setCalendarSlots]  = useState(null);
+  const [loadingSlots,   setLoadingSlots]   = useState(false);
+  const calCourtRef = useRef(null);
+  const calWeekRef  = useRef(null);
+
+  // Semana del widget de reserva
+  const lunesSemana = getLunesDate(semanaOffset);
+  const diasSemana = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(lunesSemana);
+    d.setDate(d.getDate() + i);
+    return {
+      label: DIA_LABELS_WIDGET[i],
+      num: d.getDate(),
+      fecha: d.toISOString().split('T')[0],
+    };
+  });
+  const headerMes = `${MESES_ES[lunesSemana.getMonth()]} ${lunesSemana.getFullYear()}`;
 
   useEffect(() => {
     const cargarComplejo = async () => {
@@ -75,25 +110,70 @@ const ClubDetail = () => {
     [canchas]
   );
 
+  const fetchSlots = useCallback(async (courtId, monday) => {
+    if (!courtId || !monday) return;
+    setLoadingSlots(true);
+    try {
+      const from = monday.toISOString().split('T')[0];
+      const toDate = new Date(monday);
+      toDate.setDate(toDate.getDate() + 6);
+      const to = toDate.toISOString().split('T')[0];
+      const res = await getSlotsCalendar({ courtId, from, to });
+      setCalendarSlots(Array.isArray(res.data) ? res.data : []);
+    } catch {
+      setCalendarSlots([]);
+    } finally {
+      setLoadingSlots(false);
+    }
+  }, []);
+
+  // Refrescar slots del widget cuando cambia la semana o la cancha seleccionada
+  useEffect(() => {
+    if (!canchaSeleccionada) return;
+    fetchSlots(canchaSeleccionada.id, getLunesDate(semanaOffset));
+  }, [semanaOffset, canchaSeleccionada, fetchSlots]);
+
+  const handleCalWeekChange = useCallback((monday) => {
+    calWeekRef.current = monday;
+    fetchSlots(calCourtRef.current, monday);
+  }, [fetchSlots]);
+
+  const handleCalCourtChange = useCallback((courtId) => {
+    calCourtRef.current = courtId;
+    fetchSlots(courtId, calWeekRef.current);
+  }, [fetchSlots]);
+
+  const isDisponible = (hora) => {
+    if (calendarSlots === null) return true;
+    const slot = calendarSlots.find(s => s.date === fechaSeleccionada && s.hour === hora);
+    return !slot || slot.status === 'disponible';
+  };
+
   const handleReserva = () => {
     if (!canchaSeleccionada) return;
 
     const [startHour, startMinute] = horarioSeleccionado.split(':').map(Number);
     const endTime = `${String(startHour + 1).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-    const date = `2024-05-${String(diaSeleccionado).padStart(2, '0')}`;
+
+    const fechaObj = new Date(fechaSeleccionada + 'T00:00:00');
+    const dia      = fechaObj.getDate();
+    const mesNombre = MESES_ES[fechaObj.getMonth()];
+    const anio     = fechaObj.getFullYear();
 
     navigate('/confirmacion', {
       state: {
         courtId: canchaSeleccionada.id,
         complexId: id,
-        date,
+        date: fechaSeleccionada,
         startTime: horarioSeleccionado,
         endTime,
         clubNombre: club?.nombre || "Premium Padel Club",
         ubicacion: club?.ubicacion || "Buenos Aires, Argentina",
         canchaNombre: canchaSeleccionada.name,
         canchaImagen: canchaSeleccionada.image,
-        dia: diaSeleccionado,
+        dia,
+        mesNombre,
+        anio,
         horario: horarioSeleccionado,
         precioAlquiler: canchaSeleccionada.precioNumerico,
         precioLuz: 1500,
@@ -193,32 +273,48 @@ const ClubDetail = () => {
 
             <div className="calendar-section">
               <div className="calendar-header">
-                <span>Mayo 2024</span>
+                <span>{headerMes}</span>
                 <div className="calendar-arrows">
-                  <span>&lt;</span>
-                  <span>&gt;</span>
+                  <span
+                    style={{ cursor: semanaOffset <= 0 ? 'not-allowed' : 'pointer', opacity: semanaOffset <= 0 ? 0.4 : 1 }}
+                    onClick={() => semanaOffset > 0 && setSemanaOffset(o => o - 1)}
+                  >&lt;</span>
+                  <span
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setSemanaOffset(o => o + 1)}
+                  >&gt;</span>
                 </div>
               </div>
               <div className="calendar-days">
-                <div className={`day ${diaSeleccionado === 12 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(12)}><span>L</span><span>12</span></div>
-                <div className={`day ${diaSeleccionado === 13 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(13)}><span>M</span><span>13</span></div>
-                <div className={`day ${diaSeleccionado === 14 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(14)}><span>X</span><span>14</span></div>
-                <div className={`day ${diaSeleccionado === 15 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(15)}><span>J</span><span>15</span></div>
-                <div className={`day ${diaSeleccionado === 16 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(16)}><span>V</span><span>16</span></div>
-                <div className={`day ${diaSeleccionado === 17 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(17)}><span>S</span><span>17</span></div>
-                <div className={`day ${diaSeleccionado === 18 ? 'active' : ''}`} onClick={() => setDiaSeleccionado(18)}><span>D</span><span>18</span></div>
+                {diasSemana.map(({ label, num, fecha }) => (
+                  <div
+                    key={fecha}
+                    className={`day ${fechaSeleccionada === fecha ? 'active' : ''}`}
+                    onClick={() => setFechaSeleccionada(fecha)}
+                  >
+                    <span>{label}</span>
+                    <span>{num}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="time-slots">
               <span>Horarios disponibles</span>
               <div className="slots-grid">
-                <button className={`slot ${horarioSeleccionado === '08:00' ? 'active' : ''}`} onClick={() => setHorarioSeleccionado('08:00')}>08:00</button>
-                <button className={`slot ${horarioSeleccionado === '09:00' ? 'active' : ''}`} onClick={() => setHorarioSeleccionado('09:00')}>09:00</button>
-                <button className={`slot ${horarioSeleccionado === '10:00' ? 'active' : ''}`} onClick={() => setHorarioSeleccionado('10:00')}>10:00</button>
-                <button className="slot disabled">11:00</button>
-                <button className={`slot ${horarioSeleccionado === '12:00' ? 'active' : ''}`} onClick={() => setHorarioSeleccionado('12:00')}>12:00</button>
-                <button className={`slot ${horarioSeleccionado === '13:00' ? 'active' : ''}`} onClick={() => setHorarioSeleccionado('13:00')}>13:00</button>
+                {[8, 9, 10, 11, 12, 13].map(h => {
+                  const label = `${String(h).padStart(2, '0')}:00`;
+                  const disponible = isDisponible(h);
+                  return (
+                    <button
+                      key={h}
+                      className={`slot${!disponible ? ' disabled' : horarioSeleccionado === label ? ' active' : ''}`}
+                      onClick={disponible ? () => setHorarioSeleccionado(label) : undefined}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -250,7 +346,11 @@ const ClubDetail = () => {
         <div className="cd-calendar-section">
           <WeeklyCalendar
             courts={calendarCourts}
+            slots={calendarSlots}
+            loading={loadingSlots}
             showStats={false}
+            onWeekChange={handleCalWeekChange}
+            onCourtChange={handleCalCourtChange}
             onSlotClick={(courtId, date, hour) => {
               const cancha = canchas.find(c => c.id === courtId);
               if (!cancha) return;

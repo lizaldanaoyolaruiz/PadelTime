@@ -9,7 +9,7 @@ import AgendaTable from './AgendaTable';
 import NewReservationModal from './NewReservationModal';
 import './GeneralPanel.css';
 
-export default function GeneralPanel() {
+export default function GeneralPanel({ complexId }) {
   const [complejo,  setComplejo]  = useState(null);
   const [pending,   setPending]   = useState([]);
   const [canchas,   setCanchas]   = useState([]);
@@ -24,11 +24,9 @@ export default function GeneralPanel() {
 
   const cargarDatos = useCallback(async () => {
     try {
-      let complexId;
       try {
-        const complexRes = await getMyComplex();
+        const complexRes = await getMyComplex(complexId);
         const complex = complexRes.data.complex || complexRes.data;
-        complexId = complex?._id;
         setComplejo(complex ?? null);
       } catch {
         // continúa sin complejo
@@ -67,7 +65,7 @@ export default function GeneralPanel() {
     } finally {
       setLoading(false);
     }
-  }, [hoy]);
+  }, [hoy, complexId]);
 
   useEffect(() => { cargarDatos(); }, [cargarDatos]);
 
