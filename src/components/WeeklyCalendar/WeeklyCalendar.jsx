@@ -1,5 +1,5 @@
-import { useState, useMemo, Fragment } from 'react';
-import { ChevronLeft, ChevronRight, Lock, Settings2, CalendarDays, BadgeDollarSign, Users } from 'lucide-react';
+import { useState, useMemo, useEffect, Fragment } from 'react';
+import { ChevronLeft, ChevronRight, Lock, Settings2, Clock, CalendarDays, BadgeDollarSign, Users } from 'lucide-react';
 import './WeeklyCalendar.css';
 
 /* ─────────────── Constants ─────────────── */
@@ -76,12 +76,14 @@ const FALLBACK_COURTS = [
   - loading:      boolean
 */
 export default function WeeklyCalendar({
-  courts      = [],
-  slots       = null,
-  onSlotClick = () => {},
-  stats       = null,
-  loading     = false,
-  showStats   = true,
+  courts        = [],
+  slots         = null,
+  onSlotClick   = () => {},
+  onWeekChange  = null,
+  onCourtChange = null,
+  stats         = null,
+  loading       = false,
+  showStats     = true,
 }) {
   const activeCourts = courts.length ? courts : FALLBACK_COURTS;
 
@@ -109,9 +111,22 @@ export default function WeeklyCalendar({
 
   const today = todayIso();
 
-  const prevWeek = () => setWeekStart(d => addDays(d, -7));
-  const nextWeek = () => setWeekStart(d => addDays(d, 7));
-  const goToday  = () => { setWeekStart(getMondayOf(new Date())); };
+  // Notificar al padre el estado inicial
+  useEffect(() => { onWeekChange?.(weekStart); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (activeCourt) onCourtChange?.(activeCourt); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Fix race condition: si courts cambia y el court seleccionado ya no existe, resetear al primero
+  useEffect(() => {
+    if (!courts.length) return;
+    if (courts.find(c => c._id === selectedCourt)) return;
+    const primerCourt = courts[0]._id;
+    setSelectedCourt(primerCourt);
+    onCourtChange?.(primerCourt);
+  }, [courts]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const prevWeek = () => setWeekStart(d => { const next = addDays(d, -7); onWeekChange?.(next); return next; });
+  const nextWeek = () => setWeekStart(d => { const next = addDays(d,  7); onWeekChange?.(next); return next; });
+  const goToday  = () => { const m = getMondayOf(new Date()); setWeekStart(m); onWeekChange?.(m); };
 
   const handleSlot = (date, hour) => {
     if ((slotMap[date]?.[hour] ?? 'disponible') !== 'disponible') return;
@@ -147,7 +162,7 @@ export default function WeeklyCalendar({
               role="tab"
               aria-selected={c._id === activeCourt}
               className={`wc-court-tab${c._id === activeCourt ? ' wc-court-tab--active' : ''}`}
-              onClick={() => setSelectedCourt(c._id)}
+              onClick={() => { setSelectedCourt(c._id); onCourtChange?.(c._id); }}
             >
               {c.name}
             </button>
@@ -172,6 +187,7 @@ export default function WeeklyCalendar({
           <div className="wc-legend" aria-label="Leyenda">
             <span className="wc-legend-item"><span className="wc-dot wc-dot--libre" />Libre</span>
             <span className="wc-legend-item"><span className="wc-dot wc-dot--ocupado" />Ocupado</span>
+            <span className="wc-legend-item"><span className="wc-dot wc-dot--pendiente" />Pendiente</span>
             <span className="wc-legend-item"><span className="wc-dot wc-dot--mant" />Mantenimiento</span>
           </div>
         </div>
@@ -224,11 +240,13 @@ export default function WeeklyCalendar({
                           onClick={() => handleSlot(date, hour)}
                           onKeyDown={e => e.key === 'Enter' && handleSlot(date, hour)}
                         >
-                          {status === 'reservado'     && <Lock     size={13} className="wc-slot-icon" aria-hidden="true" />}
+                          {status === 'reservado'     && <Lock      size={13} className="wc-slot-icon" aria-hidden="true" />}
                           {status === 'mantenimiento' && <Settings2 size={13} className="wc-slot-icon" aria-hidden="true" />}
+                          {status === 'pendiente'     && <Clock     size={13} className="wc-slot-icon" aria-hidden="true" />}
                           <span className="wc-slot-label">
-                            {status === 'disponible'     ? 'DISPONIBLE'
-                             : status === 'reservado'    ? 'RESERVADO'
+                            {status === 'disponible'  ? 'DISPONIBLE'
+                             : status === 'reservado' ? 'RESERVADO'
+                             : status === 'pendiente' ? 'PENDIENTE'
                              : ''}
                           </span>
                         </div>
