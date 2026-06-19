@@ -4,8 +4,10 @@ import api from "./api";
 export const getPublicComplexes   = ()   => api.get('/complexes/public');
 export const getPublicComplexById = (id) => api.get(`/complexes/public/${id}`);
 
-// Admin — su propio complejo
-export const getMyComplex = () => api.get('/complexes/me');
+// Admin — sus complejos
+export const getMyComplexes = ()            => api.get('/complexes/me/all');
+export const getMyComplex   = (complexId)   =>
+  api.get('/complexes/me', complexId ? { params: { complexId } } : undefined);
 
 export const createComplex = (data)     => api.post("/complexes", data);
 export const updateComplex = (id, data) => api.put(`/complexes/${id}`, data);
