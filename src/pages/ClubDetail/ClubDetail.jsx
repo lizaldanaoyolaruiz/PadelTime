@@ -6,27 +6,14 @@ import ClubReviews from './ClubReviews';
 import WeeklyCalendar from '../../components/WeeklyCalendar/WeeklyCalendar';
 import { getPublicComplexById } from '../../services/complexService';
 import { getPublicCourts } from '../../services/courtService';
-import { getSlotsCalendar } from '../../services/reservationService';
+import { getSlotsPublicos } from '../../services/reservationService';
+import { checkFavorito, agregarFavorito, quitarFavorito } from '../../services/favoriteService';
+import useAuthStore from '../../store/authStore';
 import './ClubDetail.css';
 
 const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400';
 
 const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
-
-const MESES_ES = [
-  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
-];
-const DIA_LABELS_WIDGET = ['L','M','X','J','V','S','D'];
-
-function getLunesDate(offset) {
-  const hoy = new Date();
-  hoy.setHours(0, 0, 0, 0);
-  const dow = hoy.getDay();
-  const diff = dow === 0 ? -6 : 1 - dow;
-  hoy.setDate(hoy.getDate() + diff + offset * 7);
-  return hoy;
-}
 
 const mapCourt = (court) => ({
   id: court._id,
@@ -43,32 +30,31 @@ const ClubDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [club, setClub] = useState(null);
-  const [canchas, setCanchas] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const { isAuthenticated } = useAuthStore();
 
-  const [fechaSeleccionada, setFechaSeleccionada] = useState(() => new Date().toISOString().split('T')[0]);
-  const [semanaOffset, setSemanaOffset] = useState(0);
-  const [horarioSeleccionado, setHorarioSeleccionado] = useState('10:00');
-  const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
+  const [club,               setClub]               = useState(null);
+  const [canchas,            setCanchas]             = useState([]);
+  const [cargando,           setCargando]            = useState(true);
+  const [canchaSeleccionada, setCanchaSeleccionada]  = useState(null);
+  const [slotSeleccionado,   setSlotSeleccionado]    = useState(null);
+  const [esFavorito,         setEsFavorito]          = useState(false);
+  const [cargandoFav,        setCargandoFav]         = useState(false);
 
-  const [calendarSlots,  setCalendarSlots]  = useState(null);
-  const [loadingSlots,   setLoadingSlots]   = useState(false);
-  const calCourtRef = useRef(null);
-  const calWeekRef  = useRef(null);
+  const [calendarSlots, setCalendarSlots] = useState(null);
+  const [loadingSlots,  setLoadingSlots]  = useState(false);
+  const calCourtRef    = useRef(null);
+  const calWeekRef     = useRef(null);
+  const reservaWrapRef = useRef(null);
 
-  // Semana del widget de reserva
-  const lunesSemana = getLunesDate(semanaOffset);
-  const diasSemana = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(lunesSemana);
-    d.setDate(d.getDate() + i);
-    return {
-      label: DIA_LABELS_WIDGET[i],
-      num: d.getDate(),
-      fecha: d.toISOString().split('T')[0],
+  useEffect(() => {
+    const handleClickFuera = (e) => {
+      if (reservaWrapRef.current && !reservaWrapRef.current.contains(e.target)) {
+        setSlotSeleccionado(null);
+      }
     };
-  });
-  const headerMes = `${MESES_ES[lunesSemana.getMonth()]} ${lunesSemana.getFullYear()}`;
+    document.addEventListener('mousedown', handleClickFuera);
+    return () => document.removeEventListener('mousedown', handleClickFuera);
+  }, []);
 
   useEffect(() => {
     const cargarComplejo = async () => {
@@ -89,9 +75,15 @@ const ClubDetail = () => {
             : 'No disponible',
         });
 
-        const canchas = (courtsRes.data?.courts || []).map(mapCourt);
-        setCanchas(canchas);
-        setCanchaSeleccionada(canchas[0] || null);
+        const lista = (courtsRes.data?.courts || []).map(mapCourt);
+        setCanchas(lista);
+        setCanchaSeleccionada(lista[0] || null);
+
+        if (isAuthenticated) {
+          checkFavorito(id)
+            .then(res => setEsFavorito(res.data.esFavorito))
+            .catch(() => {});
+        }
       } catch (err) {
         console.error('Error cargando el complejo:', err);
         setClub({ nombre: 'Complejo no encontrado', ubicacion: '', telefono: '', horario: '' });
@@ -118,7 +110,7 @@ const ClubDetail = () => {
       const toDate = new Date(monday);
       toDate.setDate(toDate.getDate() + 6);
       const to = toDate.toISOString().split('T')[0];
-      const res = await getSlotsCalendar({ courtId, from, to });
+      const res = await getSlotsPublicos({ courtId, from, to });
       setCalendarSlots(Array.isArray(res.data) ? res.data : []);
     } catch {
       setCalendarSlots([]);
@@ -126,12 +118,6 @@ const ClubDetail = () => {
       setLoadingSlots(false);
     }
   }, []);
-
-  // Refrescar slots del widget cuando cambia la semana o la cancha seleccionada
-  useEffect(() => {
-    if (!canchaSeleccionada) return;
-    fetchSlots(canchaSeleccionada.id, getLunesDate(semanaOffset));
-  }, [semanaOffset, canchaSeleccionada, fetchSlots]);
 
   const handleCalWeekChange = useCallback((monday) => {
     calWeekRef.current = monday;
@@ -143,56 +129,59 @@ const ClubDetail = () => {
     fetchSlots(courtId, calWeekRef.current);
   }, [fetchSlots]);
 
-  const isDisponible = (hora) => {
-    if (calendarSlots === null) return true;
-    const slot = calendarSlots.find(s => s.date === fechaSeleccionada && s.hour === hora);
-    return !slot || slot.status === 'disponible';
-  };
-
-  const handleReserva = () => {
-    if (!canchaSeleccionada) return;
-
-    const [startHour, startMinute] = horarioSeleccionado.split(':').map(Number);
-    const endTime = `${String(startHour + 1).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-
-    const fechaObj = new Date(fechaSeleccionada + 'T00:00:00');
-    const dia      = fechaObj.getDate();
-    const mesNombre = MESES_ES[fechaObj.getMonth()];
-    const anio     = fechaObj.getFullYear();
-
+  const irAConfirmacion = () => {
+    if (!slotSeleccionado || !canchaSeleccionada) return;
+    const { date, hour } = slotSeleccionado;
+    const startTime = String(hour).padStart(2, '0') + ':00';
+    const endTime   = String(hour + 1).padStart(2, '0') + ':00';
     navigate('/confirmacion', {
       state: {
-        courtId: canchaSeleccionada.id,
-        complexId: id,
-        date: fechaSeleccionada,
-        startTime: horarioSeleccionado,
+        courtId:        canchaSeleccionada.id,
+        complexId:      id,
+        date,
+        startTime,
         endTime,
-        clubNombre: club?.nombre || "Premium Padel Club",
-        ubicacion: club?.ubicacion || "Buenos Aires, Argentina",
-        canchaNombre: canchaSeleccionada.name,
-        canchaImagen: canchaSeleccionada.image,
-        dia,
-        mesNombre,
-        anio,
-        horario: horarioSeleccionado,
+        dia:            new Date(date + 'T12:00:00').getDate(),
+        mesNombre:      new Date(date + 'T12:00:00').toLocaleDateString('es-AR', { month: 'long' }),
+        anio:           new Date(date + 'T12:00:00').getFullYear(),
+        horario:        startTime,
+        clubNombre:     club?.nombre,
+        ubicacion:      club?.ubicacion,
+        canchaNombre:   canchaSeleccionada.name,
+        canchaImagen:   canchaSeleccionada.image,
         precioAlquiler: canchaSeleccionada.precioNumerico,
-        precioLuz: 1500,
-        total: canchaSeleccionada.precioNumerico + 1500,
-        senia: 5000
+        precioLuz:      1500,
+        total:          canchaSeleccionada.precioNumerico + 1500,
+        senia:          Math.round((canchaSeleccionada.precioNumerico + 1500) * 0.3),
       }
     });
   };
 
-  const formatearDinero = (monto) => {
-    return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
+  const handleFavorito = async () => {
+    if (!isAuthenticated) return;
+    setCargandoFav(true);
+    try {
+      if (esFavorito) {
+        await quitarFavorito(id);
+        setEsFavorito(false);
+      } else {
+        await agregarFavorito(id);
+        setEsFavorito(true);
+      }
+    } catch {}
+    finally { setCargandoFav(false); }
   };
 
-  if (cargando) return <div style={{textAlign: 'center', padding: '100px'}}>Cargando complejo...</div>;
+  const formatearDinero = (monto) =>
+    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
+
+  if (cargando) return <div style={{ textAlign: 'center', padding: '100px' }}>Cargando complejo...</div>;
 
   return (
     <div className="page-wrapper">
       <Navbar />
       <main className="club-detail-main">
+
         <div className="club-header-section">
           <span className="badge-premium">✓ Club Premium</span>
           <h1>{club.nombre}</h1>
@@ -203,8 +192,14 @@ const ClubDetail = () => {
               <span>🕒 {club.horario}</span>
             </div>
             <div className="club-action-buttons">
-              <button className="btn-secondary">🔗 Compartir</button>
-              <button className="btn-secondary">♡ Favorito</button>
+              <button
+                className={`btn-secondary${esFavorito ? ' btn-favorito--activo' : ''}`}
+                onClick={handleFavorito}
+                disabled={cargandoFav || !isAuthenticated}
+                title={!isAuthenticated ? 'Iniciá sesión para guardar favoritos' : ''}
+              >
+                {esFavorito ? '♥ Guardado' : '♡ Favorito'}
+              </button>
             </div>
           </div>
         </div>
@@ -267,82 +262,9 @@ const ClubDetail = () => {
               </div>
             ))}
           </section>
-
-          <aside className="booking-widget">
-            <h3>Reserva tu turno</h3>
-
-            <div className="calendar-section">
-              <div className="calendar-header">
-                <span>{headerMes}</span>
-                <div className="calendar-arrows">
-                  <span
-                    style={{ cursor: semanaOffset <= 0 ? 'not-allowed' : 'pointer', opacity: semanaOffset <= 0 ? 0.4 : 1 }}
-                    onClick={() => semanaOffset > 0 && setSemanaOffset(o => o - 1)}
-                  >&lt;</span>
-                  <span
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setSemanaOffset(o => o + 1)}
-                  >&gt;</span>
-                </div>
-              </div>
-              <div className="calendar-days">
-                {diasSemana.map(({ label, num, fecha }) => (
-                  <div
-                    key={fecha}
-                    className={`day ${fechaSeleccionada === fecha ? 'active' : ''}`}
-                    onClick={() => setFechaSeleccionada(fecha)}
-                  >
-                    <span>{label}</span>
-                    <span>{num}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="time-slots">
-              <span>Horarios disponibles</span>
-              <div className="slots-grid">
-                {[8, 9, 10, 11, 12, 13].map(h => {
-                  const label = `${String(h).padStart(2, '0')}:00`;
-                  const disponible = isDisponible(h);
-                  return (
-                    <button
-                      key={h}
-                      className={`slot${!disponible ? ' disabled' : horarioSeleccionado === label ? ' active' : ''}`}
-                      onClick={disponible ? () => setHorarioSeleccionado(label) : undefined}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="booking-summary">
-              <div className="summary-row">
-                <span>{canchaSeleccionada ? canchaSeleccionada.name : 'Seleccione una cancha'} x 1h</span>
-                <span>{canchaSeleccionada ? formatearDinero(canchaSeleccionada.precioNumerico) : '$0,00'}</span>
-              </div>
-              <div className="summary-row">
-                <span>Tasa de Servicio</span>
-                <span>$1.500,00</span>
-              </div>
-              <div className="summary-total">
-                <span>Total</span>
-                <span>{canchaSeleccionada ? formatearDinero(canchaSeleccionada.precioNumerico + 1500) : '$0,00'}</span>
-              </div>
-              <button
-                className="btn-book"
-                onClick={handleReserva}
-                disabled={!canchaSeleccionada}
-                style={{ opacity: canchaSeleccionada ? 1 : 0.5, cursor: canchaSeleccionada ? 'pointer' : 'not-allowed' }}
-              >
-                Realizar Reserva
-              </button>
-            </div>
-          </aside>
         </div>
 
+        <div ref={reservaWrapRef}>
         <div className="cd-calendar-section">
           <WeeklyCalendar
             courts={calendarCourts}
@@ -353,11 +275,33 @@ const ClubDetail = () => {
             onCourtChange={handleCalCourtChange}
             onSlotClick={(courtId, date, hour) => {
               const cancha = canchas.find(c => c.id === courtId);
-              if (!cancha) return;
-              setCanchaSeleccionada(cancha);
-              setHorarioSeleccionado(`${String(hour).padStart(2, '0')}:00`);
+              if (cancha) setCanchaSeleccionada(cancha);
+              setSlotSeleccionado({ courtId, date, hour });
             }}
           />
+        </div>
+
+        {canchaSeleccionada && (
+          <div className="cd-booking-summary">
+            <div className="cd-bs-row">
+              <span>{canchaSeleccionada.name} x 1h</span>
+              <span>{formatearDinero(canchaSeleccionada.precioNumerico)}</span>
+            </div>
+            <div className="cd-bs-row">
+              <span>Tasa de Servicio</span>
+              <span>{formatearDinero(1500)}</span>
+            </div>
+            <div className="cd-bs-total">
+              <span>Total</span>
+              <span>{formatearDinero(canchaSeleccionada.precioNumerico + 1500)}</span>
+            </div>
+            {slotSeleccionado && (
+              <button className="btn-book" onClick={irAConfirmacion}>
+                Realizar Reserva
+              </button>
+            )}
+          </div>
+        )}
         </div>
 
         <ClubReviews complexId={id} />
