@@ -65,6 +65,17 @@
   color: var(--color-primary);
 }
 
+.btn-favorito--activo {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-favorito--activo:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  opacity: 0.85;
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -110,11 +121,36 @@
   margin-top: 3rem;
 }
 
+.cd-booking-summary {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  overflow: hidden;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.cd-bs-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.cd-bs-total {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-text-base);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: 12px;
+  margin-bottom: 20px;
+}
+
 .content-split {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr;
-  gap: 3rem;
-  align-items: start;
+  display: block;
 }
 
 .courts-header {
