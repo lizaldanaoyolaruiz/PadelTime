@@ -7,6 +7,7 @@ import ContactPage from "./pages/Contact/Contact";
 import ClubDetail from "./pages/ClubDetail/ClubDetail";
 import Complexes from "./pages/Complexes/Complexes";
 import BookingConfirmation from "./pages/BookingConfirmation/BookingConfirmation";
+import BookingSuccess from "./pages/BookingSuccess/BookingSuccess";
 import OwnerDashboard from "./pages/Owner/OwnerDashboard";
 import VerifyEmail from "./pages/VerifyEmail";
 import SuperAdminDashboard from "./pages/SuperAdmin/SuperAdminDashboard";
@@ -102,6 +103,7 @@ function App() {
           }
         />
 
+        <Route path="/booking/success" element={<BookingSuccess />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
