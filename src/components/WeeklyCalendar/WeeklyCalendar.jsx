@@ -78,9 +78,10 @@ const FALLBACK_COURTS = [
 export default function WeeklyCalendar({
   courts        = [],
   slots         = null,
-  onSlotClick   = () => {},
-  onWeekChange  = null,
-  onCourtChange = null,
+  onSlotClick          = () => {},
+  onOccupiedSlotClick  = null,
+  onWeekChange         = null,
+  onCourtChange        = null,
   stats         = null,
   loading       = false,
   showStats     = true,
@@ -111,6 +112,12 @@ export default function WeeklyCalendar({
 
   const today = todayIso();
 
+  const isPast = (date, hour) => {
+    if (date < today) return true;
+    if (date === today) return hour <= new Date().getHours();
+    return false;
+  };
+
   // Notificar al padre el estado inicial
   useEffect(() => { onWeekChange?.(weekStart); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (activeCourt) onCourtChange?.(activeCourt); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -129,8 +136,12 @@ export default function WeeklyCalendar({
   const goToday  = () => { const m = getMondayOf(new Date()); setWeekStart(m); onWeekChange?.(m); };
 
   const handleSlot = (date, hour) => {
-    if ((slotMap[date]?.[hour] ?? 'disponible') !== 'disponible') return;
-    onSlotClick(activeCourt, date, hour);
+    const status = slotMap[date]?.[hour] ?? 'disponible';
+    if (status === 'disponible') {
+      onSlotClick(activeCourt, date, hour);
+    } else if (status === 'reservado' || status === 'pendiente') {
+      onOccupiedSlotClick?.(activeCourt, date, hour, status);
+    }
   };
 
   // Compute display stats from slot map if not provided via prop
@@ -228,7 +239,11 @@ export default function WeeklyCalendar({
                     </div>
                     {weekDays.map(({ date }) => {
                       const status = slotMap[date]?.[hour] ?? 'disponible';
-                      const isClickable = status === 'disponible';
+                      const pasado = isPast(date, hour);
+                      const isClickable = !pasado && (
+                        status === 'disponible' ||
+                        ((status === 'reservado' || status === 'pendiente') && !!onOccupiedSlotClick)
+                      );
                       return (
                         <div
                           key={`${date}-${hour}`}
@@ -236,9 +251,9 @@ export default function WeeklyCalendar({
                           tabIndex={isClickable ? 0 : undefined}
                           aria-label={`${date} ${hour}:00 — ${status}`}
                           aria-disabled={!isClickable}
-                          className={`wc-slot wc-slot--${status}`}
-                          onClick={() => handleSlot(date, hour)}
-                          onKeyDown={e => e.key === 'Enter' && handleSlot(date, hour)}
+                          className={`wc-slot wc-slot--${status}${pasado ? ' wc-slot--pasado' : ''}`}
+                          onClick={isClickable ? () => handleSlot(date, hour) : undefined}
+                          onKeyDown={isClickable ? e => e.key === 'Enter' && handleSlot(date, hour) : undefined}
                         >
                           {status === 'reservado'     && <Lock      size={13} className="wc-slot-icon" aria-hidden="true" />}
                           {status === 'mantenimiento' && <Settings2 size={13} className="wc-slot-icon" aria-hidden="true" />}
@@ -273,7 +288,7 @@ export default function WeeklyCalendar({
             <div className="wc-stat-icon"><BadgeDollarSign size={20} /></div>
             <div className="wc-stat-body">
               <span className="wc-stat-label">Ingresos Estimados</span>
-              <span className="wc-stat-value">{displayStats.estimatedRevenue.toLocaleString('es-ES')} €</span>
+              <span className="wc-stat-value">{new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(displayStats.estimatedRevenue)}</span>
             </div>
           </div>
           <div className="wc-stat-card">
