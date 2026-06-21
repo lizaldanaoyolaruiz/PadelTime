@@ -23,7 +23,7 @@ const NAV = [
   { id: 'panel',        label: 'Panel General',          Icon: LayoutDashboard },
   { id: 'complejo',     label: 'Mi Complejo',            Icon: Building2 },
   { id: 'canchas',      label: 'Mis Canchas',            Icon: Layers },
-  { id: 'reservas',     label: 'Reservas Hoy',           Icon: CalendarDays },
+  { id: 'reservas',     label: 'Reservas',               Icon: CalendarDays },
   { id: 'reportes',     label: 'Reportes',               Icon: BarChart2 },
   { id: 'metricas',     label: 'Métricas',               Icon: LineChart },
   { id: 'pagos',        label: 'Configuración de Pagos', Icon: CreditCard },
