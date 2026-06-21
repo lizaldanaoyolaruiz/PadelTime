@@ -392,31 +392,36 @@
   line-height: 1;
 }
 
-/* ── Mobile ── */
+/* ── Tablet ── */
 @media (max-width: 768px) {
   .wc-page-header {
     flex-direction: column;
     gap: 12px;
   }
 
+  .wc-title {
+    font-size: 22px;
+  }
+
   .wc-court-tabs {
     width: 100%;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    flex-wrap: nowrap;
   }
 
   .wc-court-tab {
     padding: 6px 14px;
     font-size: 12px;
-  }
-
-  .wc-title {
-    font-size: 22px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .wc-nav {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
+    gap: 10px;
+    padding: 12px 14px;
   }
 
   .wc-nav-range {
@@ -424,26 +429,150 @@
     font-size: var(--text-sm);
   }
 
+  .wc-legend {
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .wc-legend-item {
+    font-size: 12px;
+  }
+
   .wc-grid-scroll {
-    max-height: 420px;
+    max-height: 400px;
+  }
+
+  .wc-grid {
+    grid-template-columns: 44px repeat(7, minmax(80px, 1fr));
+    min-width: 608px;
+  }
+
+  .wc-hour-label {
+    min-height: 54px;
+    font-size: 10px;
+    padding: 6px 6px 0 0;
+  }
+
+  .wc-slot {
+    min-height: 54px;
+    padding: 4px 2px;
+    gap: 3px;
+  }
+
+  .wc-slot-label {
+    font-size: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .wc-day-header {
+    padding: 10px 4px 8px;
+    gap: 2px;
+  }
+
+  .wc-day-num {
+    font-size: 15px;
   }
 
   .wc-stats {
     grid-template-columns: 1fr;
   }
 
-  .wc-legend {
-    gap: 12px;
+  .wc-stat-card {
+    padding: 16px 18px;
   }
 }
 
+/* ── Mobile ── */
+.wc-slot--pasado {
+  opacity: 0.35;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
 @media (max-width: 480px) {
+  .wc-title {
+    font-size: 20px;
+  }
+
   .wc-court-tab {
-    flex: 1;
-    text-align: center;
+    padding: 5px 12px;
+    font-size: 11px;
   }
 
   .wc-nav-controls {
     gap: 6px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .wc-nav-range {
+    font-size: 12px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .wc-legend {
+    gap: 8px;
+  }
+
+  .wc-legend-item {
+    font-size: 11px;
+  }
+
+  .wc-grid-scroll {
+    max-height: 360px;
+  }
+
+  .wc-grid {
+    grid-template-columns: 36px repeat(7, minmax(62px, 1fr));
+    min-width: 470px;
+  }
+
+  .wc-hour-label {
+    min-height: 46px;
+    font-size: 9px;
+    padding: 4px 4px 0 0;
+  }
+
+  .wc-slot {
+    min-height: 46px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .wc-slot-label {
+    font-size: 7px;
+    letter-spacing: 0.02em;
+  }
+
+  .wc-slot-icon {
+    width: 11px;
+    height: 11px;
+  }
+
+  .wc-day-header {
+    padding: 8px 2px 6px;
+  }
+
+  .wc-day-num {
+    font-size: 13px;
+  }
+
+  .wc-day-label {
+    font-size: 9px;
+  }
+
+  .wc-stat-card {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .wc-stat-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .wc-stat-value {
+    font-size: 18px;
   }
 }

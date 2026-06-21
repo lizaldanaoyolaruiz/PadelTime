@@ -9,7 +9,7 @@ export default function PendingList({ pending, onRefresh }) {
     const result = await Swal.fire({
       ...BASE,
       title: '¿Confirmar turno?',
-      text: `${reserva.player?.name} — ${reserva.court?.name} ${reserva.startTime}`,
+      text: `${reserva.player?.name ?? (reserva.jugadorExterno ? `${reserva.jugadorExterno.nombre} ${reserva.jugadorExterno.apellido}` : 'Sin nombre')} — ${reserva.court?.name} ${reserva.startTime}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí, confirmar',
@@ -65,7 +65,9 @@ export default function PendingList({ pending, onRefresh }) {
           <div key={t._id} className="turno-row">
             <div className="turno-icon"><Users size={18} /></div>
             <div className="turno-info">
-              <span className="turno-nombre">{t.player?.name}</span>
+              <span className="turno-nombre">
+                {t.player?.name ?? (t.jugadorExterno ? `${t.jugadorExterno.nombre} ${t.jugadorExterno.apellido}` : 'Sin nombre')}
+              </span>
               <span className="turno-detalle">{t.court?.name} • {t.startTime} - {t.endTime}</span>
             </div>
             <span className="turno-estado estado-pendiente">${t.totalAmount}</span>
