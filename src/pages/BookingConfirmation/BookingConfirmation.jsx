@@ -38,7 +38,7 @@ const BookingConfirmation = () => {
 
       const initPoint = res.data.payment?.initPoint;
       if (initPoint) {
-        window.location.href = initPoint;
+        window.open(initPoint, '_blank');
       } else {
         alert("¡Simulación: Redirigiendo a Mercado Pago!");
         setProcesandoPago(false);
