@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState,  useEffect } from "react";
 import "./Metrics.css";
+import { getMetrics } from "../../services/metricsService";
 
 import {
   ResponsiveContainer,
