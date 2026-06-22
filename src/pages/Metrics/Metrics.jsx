@@ -121,7 +121,8 @@ function OwnerStats() {
       </div>
     );
   }
-
+  console.log("METRICS FRONT:", metrics);
+  
   return (
     <div className="stats-page">
       <div className="stats-header">
@@ -189,7 +190,7 @@ function OwnerStats() {
 
           <h4>Total Reservas</h4>
 
-          <h2>{metrics?.totalReservations ?? 0}</h2>
+          <h2>{metrics?.totalReservas || 0}</h2>
         </div>
 
         <div className="metric-card">
@@ -203,7 +204,7 @@ function OwnerStats() {
 
           <h4>Tasa Confirmación</h4>
 
-          <h2>{metrics?.confirmationRate ?? 0}%</h2>
+          <h2>{metrics?.tasaConfirmacion || 0}%</h2>
         </div>
 
         <div className="metric-card">
@@ -215,7 +216,7 @@ function OwnerStats() {
 
           <h4>Ingresos Estimados por Señas</h4>
 
-          <h2>${metrics?.estimatedDeposits ?? 0}</h2>
+          <h2>${metrics?.ingresosSenias || 0}</h2>
 
           <small>Basado en reservas confirmadas</small>
         </div>
