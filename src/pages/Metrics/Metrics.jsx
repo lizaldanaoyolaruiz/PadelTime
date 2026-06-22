@@ -114,6 +114,16 @@ function OwnerStats() {
       : periodo === "mes"
         ? reservationsMonth
         : reservationsYear;
+        if (loading) {
+  return (
+    <div className="stats-page">
+      <h2>Cargando métricas...</h2>
+    </div>
+  );
+}
+
+return (
+  <div className="stats-page"></div>
   return (
     <div className="stats-page">
       <div className="stats-header">
