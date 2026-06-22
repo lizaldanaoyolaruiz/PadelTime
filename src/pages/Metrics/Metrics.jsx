@@ -1,4 +1,4 @@
-import { useState,  useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Metrics.css";
 import { getMetrics } from "../../services/metricsService";
 
@@ -88,7 +88,26 @@ const COLORS = ["#9EF01A", "#24324D"];
 function OwnerStats() {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [periodo, setPeriodo] = useState("mes");
+  useEffect(() => {
+    loadMetrics();
+  }, []);
+
+  const loadMetrics = async () => {
+    try {
+      const data = await getMetrics();
+
+      console.log("METRICS:", data);
+
+      setMetrics(data);
+    } catch (error) {
+      console.error("Error cargando métricas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const chartData =
     periodo === "semana"
       ? reservationsWeek
