@@ -62,16 +62,6 @@ const incomeData = [
 
 const courts = [
   {
-    name: "Cancha Cristal Central",
-    value: 312,
-    width: "95%",
-  },
-  {
-    name: "Pista Panorámica Azul",
-    value: 285,
-    width: "85%",
-  },
-  {
     name: "Cancha 3 Techada",
     value: 241,
     width: "72%",
@@ -114,6 +104,12 @@ function OwnerStats() {
       : periodo === "mes"
         ? reservationsMonth
         : reservationsYear;
+  const courts =
+    metrics?.rankingCanchas?.map((court) => ({
+      name: court.name,
+      value: court.reservas,
+      width: "100%",
+    })) || [];
   if (loading) {
     return (
       <div className="stats-page">
@@ -122,7 +118,7 @@ function OwnerStats() {
     );
   }
   console.log("METRICS FRONT:", metrics);
-  
+
   return (
     <div className="stats-page">
       <div className="stats-header">
