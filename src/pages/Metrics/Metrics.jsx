@@ -110,6 +110,12 @@ function OwnerStats() {
       value: court.reservas,
       width: "100%",
     })) || [];
+  const heatmapData = metrics?.reservasPorHora || [];
+  const getIntensity = (reservas) => {
+    if (reservas >= 7) return "high";
+    if (reservas >= 4) return "medium";
+    return "low";
+  };
   if (loading) {
     return (
       <div className="stats-page">
@@ -298,13 +304,12 @@ function OwnerStats() {
         <h2>Intensidad de Juego / Horas Pico</h2>
 
         <div className="heatmap-grid">
-          {Array.from({ length: 28 }).map((_, i) => (
-            <div
-              key={i}
-              className={`heat-cell ${
-                i % 5 === 0 ? "high" : i % 3 === 0 ? "medium" : "low"
-              }`}
-            />
+          {heatmapData.map((cell, i) => (
+            <div key={i} className={`heat-cell ${getIntensity(cell.reservas)}`}>
+              <span className="tooltip">
+                {cell.hora} - {cell.reservas} reservas
+              </span>
+            </div>
           ))}
         </div>
       </div>
