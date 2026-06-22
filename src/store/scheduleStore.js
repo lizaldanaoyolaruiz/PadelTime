@@ -1,73 +1,53 @@
 import { create } from 'zustand';
+import {
+    fetchCourtsSchedule,
+    updateCourtSchedule,
+    fetchGlobalConfig,
+    updateGlobalConfig,
+    createBlockout,
+    updateBlockout,
+    deleteBlockout
+} from '../services/scheduleService';
 
 
-const daysOfWeek = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
 
 
-const defaultCourts = [
-  {
-    id: '1',
-    name: 'Cantina 1 - Pro',
-    active: true,
-    days: daysOfWeek.map(day => ({
-      day,
-      openTime: '08:00 AM',
-      closeTime: '11:00 PM',
-      active: true
-    })),
-    blocks: [
-      { id: 'b1', name: 'Siesta Técnica', recurrence: 'Diario', day: null, startTime: '02:00 PM', endTime: '04:00 PM' }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Cantina 2 - VIP',
-    active: true,
-    days: daysOfWeek.map(day => ({
-      day,
-      openTime: '08:00 AM',
-      closeTime: '11:00 PM',
-      active: true
-    })),
-    blocks: [
-      { id: 'b2', name: 'Limpieza General', recurrence: 'Semanal', day: 'sábado', startTime: '07:00 AM', endTime: '08:30 AM' }
-    ]
-  },
-  {
-    id: '3',
-    name: 'Cantina 3 - Panorámica',
-    active: false,
-    days: daysOfWeek.map(day => ({
-      day,
-      openTime: '08:00 AM',
-      closeTime: '11:00 PM',
-      active: day !== 'domingo' 
-    })),
-    blocks: []
-  },
-  {
-    id: '4',
-    name: 'Cantina 4 - Standard',
-    active: true,
-    days: daysOfWeek.map(day => ({
-      day,
-      openTime: '10:00 AM',
-      closeTime: '10:00 PM',
-      active: true
-    })),
-    blocks: []
-  }
-];
-
-export const useScheduleStore = create((set) => ({
-  courts: defaultCourts,
+export const useScheduleStore = create((set, get) => ({
+  courts: [],
+  onlineStatus: true,
+  publicBookingEnabled: true,
+  globalOpenTime:'08:00 AM',
+  globalCloseTime:'11:00 PM',
   hasUnsavedChanges: false,
-  savedSnapshot: null,
+  isLoading:false,
+  error: null,
+  
+  loadSchedule: async (complexId) => {
+        set({isLoading: true, error: null})
+        try {
+            const courtsResponse = await fetchCourtsSchedule(complexId)
+            const globalResponse = await fetchGlobalConfig(complexId)
+
+            const courtsData = courtsResponse.data || courtsResponse;
+            const globalData = globalResponse.data || globalResponse;
+
+            set({
+                courts: courtsData,
+                onlineStatus: globalData.onlineStatus ?? true,
+                publicBookingEnabled: globalData.publicBookingEnabled ?? true,
+                globalOpenTime: globalData.openTime || '08:00 AM',
+                isLoading: false,
+                hasUnsavedChangesfalse: false
+            })
+        } catch (error) {
+            set({error: error.message || 'error al cargar datos', isLoading: false})
+        }
+  },
 
   
   updateCourtDay: (courtId, dayIndex, field, value) => set((state) => ({
     courts: state.courts.map(c => {
-      if (c.id !== courtId) return c;
+      if (c.courtId !== courtId) return c;
       const newDays = [...c.days];
       newDays[dayIndex] = { ...newDays[dayIndex], [field]: value };
       return { ...c, days: newDays };
@@ -78,15 +58,15 @@ export const useScheduleStore = create((set) => ({
 
   toggleCourtActive: (courtId) => set((state) => ({
     courts: state.courts.map(c =>
-      c.id === courtId ? { ...c, active: !c.active } : c
+      c.courts === courtId ? { ...c, active: !c.active } : c
     ),
     hasUnsavedChanges: true
   })),
 
   addBlockToCourt: (courtId, block) => set((state) => ({
     courts: state.courts.map(c => {
-      if (c.id !== courtId) return c;
-      return { ...c, blocks: [...c.blocks, { ...block, id: Date.now().toString() }] };
+      if (c.courtId !== courtId) return c;
+      return { ...c, blocks: [...c.blocks, { ...block, id: 'temp_' + date.now()}] };
     }),
     hasUnsavedChanges: true
   })),
@@ -94,7 +74,7 @@ export const useScheduleStore = create((set) => ({
   
   updateBlockInCourt: (courtId, blockId, data) => set((state) => ({
     courts: state.courts.map(c => {
-      if (c.id !== courtId) return c;
+      if (c.courts !== courtId) return c;
       return {
         ...c,
         blocks: c.blocks.map(b => b.id === blockId ? { ...b, ...data } : b)
@@ -105,24 +85,67 @@ export const useScheduleStore = create((set) => ({
 
   deleteBlockFromCourt: (courtId, blockId) => set((state) => ({
     courts: state.courts.map(c => {
-      if (c.id !== courtId) return c;
+      if (c.courts !== courtId) return c;
       return { ...c, blocks: c.blocks.filter(b => b.id !== blockId) };
     }),
     hasUnsavedChanges: true
   })),
+  setOnlineStatus: (value) => set({onlineStatus: value, hasUnsavedChanges: true}),
+  setPublicBooking: (value) => set({publicBookingEnabled: value, hasUnsavedChanges: true}),
 
   
-  saveChanges: () => set((state) => ({
-    savedSnapshot: JSON.stringify(state.courts),
-    hasUnsavedChanges: false
-  })),
+  saveChanges: async (complexId) => {
+    set({isLoading: true, error: null})
+    const state = get()
+    try {
+        await updateGlobalConfig(complexId, {
+            onlineStatus: state.onlineStatus,
+            publicBookingEnabled: state.publicBookingEnabled,
+            openTime: state.globalOpenTime,
+            closeTime: state.globalCloseTime
+        })
+        const courtPromises = state.courts.map(court =>
+            updateCourtSchedule(court.courtId, {
+                active: court.active,
+                days: court.days
+            })
+        )
+        await Promise.all(courtPromises)
+
+        for (const court of state.courts) {
+        for (const block of court.blocks) {
+          if (block.id.startsWith('temp_')) {
+            const newBlockResponse = await createBlockout({
+              complexId,
+              courtId: court.courtId,
+              name: block.name,
+              recurrence: block.recurrence,
+              dayOfWeek: block.day || null,
+              startTime: block.startTime,
+              endTime: block.endTime
+            });
+            block.id = newBlockResponse.data?._id || newBlockResponse._id;
+          } else {
+            await updateBlockout(block.id, {
+              name: block.name,
+              recurrence: block.recurrence,
+              dayOfWeek: block.day || null,
+              startTime: block.startTime,
+              endTime: block.endTime
+            });
+          }
+        }
+      }
+      set({hasUnsavedChanges: false, isLoading: false})
+    } catch (error) {
+        set({error: error.message || 'Error al guardar cambios', isLoading: false })
+    }
+  },
 
   
-  discardChanges: () => set((state) => {
-    if (!state.savedSnapshot) return state;
-    return {
-      courts: JSON.parse(state.savedSnapshot),
-      hasUnsavedChanges: false
-    };
-  })
+  discardChanges: async (complexId) => {
+    set({ isLoading: true });
+    await get().loadSchedule(complexId);
+    set({ isLoading: false });
+  }
 }));
