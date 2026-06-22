@@ -21,7 +21,7 @@ export const BlockModal = ({ isOpen, onClose, onSave, initialData }) => {
     if (initialData) {
       setForm({
         name: initialData.name || "",
-        recurrence: initialData.recurrence || "daily",
+        recurrence: initialData.recurrence || "Diario",
         day: initialData.day || "",
         startTime: initialData.startTime || "02:00 PM",
         endTime: initialData.endTime || "03:00 PM",
@@ -29,7 +29,7 @@ export const BlockModal = ({ isOpen, onClose, onSave, initialData }) => {
     } else {
       setForm({
         name: "",
-        recurrence: "daily",
+        recurrence: "Diario",
         day: "",
         startTime: "02:00 PM",
         endTime: "03:00 PM",
@@ -76,7 +76,7 @@ export const BlockModal = ({ isOpen, onClose, onSave, initialData }) => {
               <option value="Semanal">Semanal (día específico)</option>
             </Form.Select>
           </Form.Group>
-          {form.recurrence === "weekly" && (
+          {form.recurrence === "Semanal" && (
             <Form.Group className="mb-3">
               <Form.Label>Día</Form.Label>
               <Form.Select
