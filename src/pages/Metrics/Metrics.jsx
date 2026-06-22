@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Metrics.css";
+import { getMetrics } from "../../services/metricsService";
 
 import {
   ResponsiveContainer,
@@ -61,16 +62,6 @@ const incomeData = [
 
 const courts = [
   {
-    name: "Cancha Cristal Central",
-    value: 312,
-    width: "95%",
-  },
-  {
-    name: "Pista Panorámica Azul",
-    value: 285,
-    width: "85%",
-  },
-  {
     name: "Cancha 3 Techada",
     value: 241,
     width: "72%",
@@ -85,13 +76,56 @@ const courts = [
 const COLORS = ["#9EF01A", "#24324D"];
 
 function OwnerStats() {
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   const [periodo, setPeriodo] = useState("mes");
+  useEffect(() => {
+    loadMetrics();
+  }, []);
+
+  const loadMetrics = async () => {
+    try {
+      const data = await getMetrics();
+
+      console.log("METRICS:", data);
+
+      setMetrics(data);
+    } catch (error) {
+      console.error("Error cargando métricas:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const chartData =
     periodo === "semana"
       ? reservationsWeek
       : periodo === "mes"
         ? reservationsMonth
         : reservationsYear;
+  const courts =
+    metrics?.rankingCanchas?.map((court) => ({
+      name: court.name,
+      value: court.reservas,
+      width: "100%",
+    })) || [];
+  const heatmapData = metrics?.reservasPorHora ?? [];
+  console.log("HEATMAP DATA:", heatmapData);
+  const getIntensity = (reservas) => {
+    if (reservas >= 7) return "high";
+    if (reservas >= 4) return "medium";
+    return "low";
+  };
+  if (loading) {
+    return (
+      <div className="stats-page">
+        <h2>Cargando métricas...</h2>
+      </div>
+    );
+  }
+  console.log("METRICS FRONT:", metrics);
+
   return (
     <div className="stats-page">
       <div className="stats-header">
@@ -142,7 +176,7 @@ function OwnerStats() {
 
           <h4>Total Ingresos</h4>
 
-          <h2>$42.500</h2>
+          <h2>${metrics?.totalIncome ?? 0}</h2>
         </div>
 
         <div className="metric-card">
@@ -159,7 +193,7 @@ function OwnerStats() {
 
           <h4>Total Reservas</h4>
 
-          <h2>1.248</h2>
+          <h2>{metrics?.totalReservas || 0}</h2>
         </div>
 
         <div className="metric-card">
@@ -173,7 +207,7 @@ function OwnerStats() {
 
           <h4>Tasa Confirmación</h4>
 
-          <h2>94.8%</h2>
+          <h2>{metrics?.tasaConfirmacion || 0}%</h2>
         </div>
 
         <div className="metric-card">
@@ -185,7 +219,7 @@ function OwnerStats() {
 
           <h4>Ingresos Estimados por Señas</h4>
 
-          <h2>$12.840</h2>
+          <h2>${metrics?.ingresosSenias || 0}</h2>
 
           <small>Basado en reservas confirmadas</small>
         </div>
@@ -267,20 +301,34 @@ function OwnerStats() {
         </div>
       </div>
 
-      <div className="heatmap-card">
-        <h2>Intensidad de Juego / Horas Pico</h2>
+    <div className="heatmap-card">
+  <h2>Intensidad de Juego / Horas Pico</h2>
 
-        <div className="heatmap-grid">
-          {Array.from({ length: 28 }).map((_, i) => (
-            <div
-              key={i}
-              className={`heat-cell ${
-                i % 5 === 0 ? "high" : i % 3 === 0 ? "medium" : "low"
-              }`}
-            />
-          ))}
+  {heatmapData.length === 0 ? (
+    <p style={{ color: "#94a3b8" }}>
+      No hay datos de reservas por hora
+    </p>
+  ) : (
+    <div className="heatmap-grid">
+      {heatmapData.map((cell, i) => (
+        <div
+          key={i}
+          className={`heat-cell ${
+            cell.reservas >= 7
+              ? "high"
+              : cell.reservas >= 4
+              ? "medium"
+              : "low"
+          }`}
+        >
+          <span className="tooltip">
+            {cell.hora} - {cell.reservas}
+          </span>
         </div>
-      </div>
+      ))}
+    </div>
+  )}
+</div>
 
       <div className="bottom-cards">
         <div className="analysis-card">
