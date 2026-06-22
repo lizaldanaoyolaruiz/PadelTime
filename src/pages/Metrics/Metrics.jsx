@@ -86,6 +86,8 @@ const courts = [
 const COLORS = ["#9EF01A", "#24324D"];
 
 function OwnerStats() {
+  const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [periodo, setPeriodo] = useState("mes");
   const chartData =
     periodo === "semana"
