@@ -164,7 +164,7 @@ function OwnerStats() {
 
           <h4>Total Ingresos</h4>
 
-          <h2>$42.500</h2>
+          <h2>${metrics?.totalIncome ?? 0}</h2>
         </div>
 
         <div className="metric-card">
@@ -181,7 +181,7 @@ function OwnerStats() {
 
           <h4>Total Reservas</h4>
 
-          <h2>1.248</h2>
+          <h2>{metrics?.totalReservations ?? 0}</h2>
         </div>
 
         <div className="metric-card">
@@ -195,7 +195,7 @@ function OwnerStats() {
 
           <h4>Tasa Confirmación</h4>
 
-          <h2>94.8%</h2>
+          <h2>{metrics?.confirmationRate ?? 0}%</h2>
         </div>
 
         <div className="metric-card">
@@ -207,7 +207,7 @@ function OwnerStats() {
 
           <h4>Ingresos Estimados por Señas</h4>
 
-          <h2>$12.840</h2>
+          <h2>${metrics?.estimatedDeposits ?? 0}</h2>
 
           <small>Basado en reservas confirmadas</small>
         </div>
