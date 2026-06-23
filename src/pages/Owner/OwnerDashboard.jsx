@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Building2, Layers, CalendarDays,
-  CreditCard, Clock, LogOut, Star, BarChart2, LineChart
+  CreditCard, Clock, LogOut, Star, BarChart2, LineChart, Menu, X
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
@@ -35,6 +35,7 @@ export default function OwnerDashboard() {
   const [active,     setActive]     = useState('panel');
   const [complejos,  setComplejos]  = useState([]);
   const [complexId,  setComplexId]  = useState(null);
+  const [menuOpen,   setMenuOpen]   = useState(false);
   const { user, logout } = useAuthStore();
   const navigate         = useNavigate();
 
@@ -72,9 +73,19 @@ export default function OwnerDashboard() {
     valoraciones: <Reviews />,
   };
 
+  const navigate_ = (id) => {
+    setActive(id);
+    setMenuOpen(false);
+  };
+
   return (
     <div className="owner-layout">
-      <aside className="owner-sidebar">
+      {/* Overlay mobile */}
+      {menuOpen && (
+        <div className="sidebar-overlay" onClick={() => setMenuOpen(false)} />
+      )}
+
+      <aside className={`owner-sidebar${menuOpen ? ' owner-sidebar--open' : ''}`}>
         <div className="sidebar-brand">
           <span className="brand-name">PadelSaaS</span>
           <span className="brand-sub">Owner Dashboard</span>
@@ -110,7 +121,7 @@ export default function OwnerDashboard() {
             <button
               key={id}
               className={`nav-item${active === id ? ' active' : ''}`}
-              onClick={() => path ? navigate(path) : setActive(id)}
+              onClick={() => path ? navigate(path) : navigate_(id)}
             >
               <Icon size={18} />
               <span>{label}</span>
@@ -133,6 +144,15 @@ export default function OwnerDashboard() {
       </aside>
 
       <main className="owner-main">
+        {/* Hamburger button — solo visible en mobile */}
+        <button
+          className="sidebar-hamburger"
+          onClick={() => setMenuOpen(o => !o)}
+          aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
+
         {panels[active] ?? (
           <div className="coming-soon">
             <h3>Próximamente</h3>
