@@ -89,33 +89,33 @@ function Nosotros() {
           <article className="team-member">
             <div className="member-avatar">FC</div>
 
-            <h3>Facundo Camaño</h3>
+            <h3>Marisol Lamas</h3>
 
-            <span>Frontend Developer</span>
+            <span>Scrum Master</span>
           </article>
 
           <article className="team-member">
             <div className="member-avatar">JM</div>
 
-            <h3>Juan Martínez</h3>
+            <h3>Aldana Ruiz</h3>
 
-            <span>Backend Developer</span>
+            <span>Lider Tecnica</span>
           </article>
 
           <article className="team-member">
             <div className="member-avatar">LP</div>
 
-            <h3>Lucía Pérez</h3>
+            <h3>Facundo Camaño</h3>
 
-            <span>UI / UX Designer</span>
+            <span>Desarrollador</span>
           </article>
 
           <article className="team-member">
             <div className="member-avatar">MG</div>
 
-            <h3>Martín Gómez</h3>
+            <h3>Octavio Fernandez</h3>
 
-            <span>Project Manager</span>
+            <span>Desarrollador</span>
           </article>
         </div>
       </section>
