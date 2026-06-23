@@ -27,8 +27,8 @@ export default function PaymentConfig() {
         if (SENA_OPTIONS.some(o => o.value === complex.depositPercentage)) {
           setSena(complex.depositPercentage);
         }
-        if (complex.mercadopagoPublicKey) setMpKey(complex.mercadopagoPublicKey);
-        setConnected(!!complex.mercadopagoActive);
+        setConnected(!!complex.mercadopagoActive || !!complex.mpTokenConfigured);
+        if (complex.mpTokenConfigured) setMpKey('••••••••••••');
       })
       .catch(err => {
         if (err.response?.status !== 404) toast.error('Error cargando configuración');
@@ -46,8 +46,8 @@ export default function PaymentConfig() {
     try {
       const payload = { depositPercentage: sena };
       if (mpKey.trim() && !mpKey.includes('•')) {
-        payload.mercadopagoPublicKey = mpKey.trim();
-        payload.mercadopagoActive    = true;
+        payload.mpAccessToken     = mpKey.trim();
+        payload.mercadopagoActive = true;
       }
       await updateComplex(complexId, payload);
       if (payload.mercadopagoActive) setConnected(true);
@@ -125,7 +125,10 @@ export default function PaymentConfig() {
               className="form-input"
               placeholder="APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
               value={mpKey}
-              onChange={e => setMpKey(e.target.value)}
+              onChange={e => {
+                const val = e.target.value;
+                setMpKey(val.includes('•') ? '' : val);
+              }}
               autoComplete="off"
               spellCheck={false}
             />
