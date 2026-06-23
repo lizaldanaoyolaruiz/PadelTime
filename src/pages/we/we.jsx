@@ -1,10 +1,14 @@
 import "./we.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
+import marisolImg from "../../assets/mar.padel.jpeg";
+import aldanaImg from "../../assets/ald.padel.jpeg";
+import facundoImg from "../../assets/fac.";
+import octavioImg from "../../assets/oc.padel.jpeg";
 
-<Navbar/>
 function Nosotros() {
   return (
+    
     <div className="about-page">
       <section className="about-hero">
         <div className="about-hero-content">
@@ -91,7 +95,7 @@ function Nosotros() {
         <div className="team-grid">
           <article className="team-member">
             <div className="member-avatar">
-                <img src="../../assets/mar.padel.jpeg" alt="Marisol Lamas" />
+                <img src="{marisolImg}" alt="Marisol Lamas" />
             </div>
 
             <h3>Marisol Lamas</h3>
@@ -101,7 +105,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="../../assets/ald.padel.jpeg" alt="Aldana Ruiz" />
+                <img src="{aldanaImg}" alt="Aldana Ruiz" />
             </div>
 
             <h3>Aldana Ruiz</h3>
@@ -111,7 +115,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="../../assets/fac.pdel.jpeg" alt="Facundo Camaño" />
+                <img src="{facundoImg}" alt="Facundo Camaño" />
             </div>
 
             <h3>Facundo Camaño</h3>
@@ -121,7 +125,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="../../assets/oc.padel.jpeg" alt="Octavio Fernandez" />
+                <img src="{octavioImg}" alt="Octavio Fernandez" />
             </div>
 
             <h3>Octavio Fernandez</h3>
