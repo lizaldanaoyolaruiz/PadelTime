@@ -270,6 +270,9 @@
   font-size: 1.5rem;
   font-weight: 800;
 }
+.about-team {
+  padding-bottom: 5rem;
+}
 /*reponsive*/ 
 @media (max-width: 768px) {
     .about-hero {
