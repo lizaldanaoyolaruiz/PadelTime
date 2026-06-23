@@ -2,14 +2,20 @@
     min-height: 100vh;
     color: white;
 
-    background:
-        radial-gradient(circle at top left,
-            rgba(190, 242, 100, 0.08),
-            transparent 30%),
-        radial-gradient(circle at bottom right,
-            rgba(59, 130, 246, 0.08),
-            transparent 30%),
-        #07152f;
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(190,242,100,.10),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59,130,246,.08),
+      transparent 30%
+    ),
+    #07152f;
+
+  overflow-x: hidden;
 }
 
 .about-hero {
@@ -24,7 +30,7 @@
     background:
         linear-gradient(rgba(7, 21, 47, 0.85),
             rgba(7, 21, 47, 0.95)),
-        url("/images/padel-hero.jpg");
+        url("../../assets/padel-fon.jpeg");
 
     background-position: center;
     background-size: cover;
@@ -375,5 +381,27 @@
 .team-member span {
     color: #bef264;
     font-size: .95rem;
-    font-weight: 600;}
-    
+    font-weight: 600;
+}
+.about-stats,
+.about-vision,
+.about-team {
+  position: relative;
+}
+.about-stats::after,
+.about-vision::after {
+  content: "";
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 1px;
+  background: rgba(255,255,255,.08);
+}
+.stat-card,
+.vision-main,
+.vision-card,
+.team-member {
+  backdrop-filter: blur(8px);
+}
