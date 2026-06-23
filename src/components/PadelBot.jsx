@@ -1,5 +1,5 @@
-﻿import { useState, useRef, useEffect } from 'react';
-import { Send, X, Bot, MessageCircle, Plus } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, X, Bot, MessageCircle, Plus, RotateCcw } from 'lucide-react';
 import api from '../services/axios';
 import './padelbot.css';
 
@@ -7,18 +7,22 @@ function formatTime() {
   return new Date().toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
 }
 
-const WELCOME = {
-  id: 0,
-  role: 'bot',
-  text: '¡Hola! 👋 Soy tu asistente de PadelSaaS. ¿En qué puedo ayudarte hoy? Puedo buscar pistas, consultar disponibilidad o guiarte en el proceso de reserva.',
-  time: formatTime(),
-};
+function makeWelcome() {
+  return {
+    id: Date.now(),
+    role: 'bot',
+    text: '¡Hola! 👋 Soy PadelBot, tu asistente de PadelTime. Puedo consultar disponibilidad de canchas, darte links de reserva directa o por WhatsApp. ¿En qué te puedo ayudar?',
+    time: formatTime(),
+    bookingOptions: null,
+  };
+}
 
 export default function PadelBot() {
-  const [open, setOpen]       = useState(false);
-  const [messages, setMessages] = useState([WELCOME]);
-  const [input, setInput]     = useState('');
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen]           = useState(false);
+  const [messages, setMessages]   = useState([makeWelcome()]);
+  const [input, setInput]         = useState('');
+  const [loading, setLoading]     = useState(false);
+  const [sessionId, setSessionId] = useState(null);
   const bottomRef = useRef(null);
   const inputRef  = useRef(null);
 
@@ -29,26 +33,47 @@ export default function PadelBot() {
     }
   }, [open, messages]);
 
+  const resetChat = () => {
+    setMessages([makeWelcome()]);
+    setSessionId(null);
+  };
+
   const send = async () => {
     const text = input.trim();
     if (!text || loading) return;
 
-    const userMsg = { id: Date.now(), role: 'user', text, time: formatTime() };
+    const userMsg = { id: Date.now(), role: 'user', text, time: formatTime(), bookingOptions: null };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
     setLoading(true);
 
     try {
-      const res = await api.post('/chatbot', { message: text });
-      const botText = res.data.reply || res.data.message || '¿En qué más puedo ayudarte?';
-      setMessages(prev => [...prev, { id: Date.now(), role: 'bot', text: botText, time: formatTime() }]);
+      const res = await api.post('/chatbot', { message: text, sessionId });
+      const { reply, bookingOptions, sessionId: newSessionId } = res.data;
+
+      if (!sessionId && newSessionId) setSessionId(newSessionId);
+
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          role: 'bot',
+          text: reply || '¿En qué más puedo ayudarte?',
+          time: formatTime(),
+          bookingOptions: bookingOptions || null,
+        },
+      ]);
     } catch {
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        role: 'bot',
-        text: 'Lo siento, no pude procesar tu consulta en este momento. Intentá de nuevo más tarde. 🙏',
-        time: formatTime(),
-      }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          id: Date.now(),
+          role: 'bot',
+          text: 'Lo siento, no pude procesar tu consulta en este momento. Intentá de nuevo más tarde. 🙏',
+          time: formatTime(),
+          bookingOptions: null,
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -79,9 +104,14 @@ export default function PadelBot() {
                 </p>
               </div>
             </div>
-            <button className="pb-close" onClick={() => setOpen(false)}>
-              <X size={18} />
-            </button>
+            <div className="pb-header-actions">
+              <button className="pb-close" onClick={resetChat} title="Nueva conversación">
+                <RotateCcw size={15} />
+              </button>
+              <button className="pb-close" onClick={() => setOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
@@ -93,8 +123,47 @@ export default function PadelBot() {
                     <Bot size={13} />
                   </div>
                 )}
-                <div className={`pb-bubble pb-bubble--${msg.role}`}>
+                <div
+                  className={`pb-bubble pb-bubble--${msg.role}${msg.bookingOptions ? ' pb-bubble--wide' : ''}`}
+                >
                   <p>{msg.text}</p>
+
+                  {msg.bookingOptions && (
+                    <div className="pb-booking">
+                      <p className="pb-booking-meta">
+                        {msg.bookingOptions.complejo} · {msg.bookingOptions.fechaFormateada} · {msg.bookingOptions.horario}
+                      </p>
+                      {msg.bookingOptions.disponibles.map(court => (
+                        <div key={court.courtId} className="pb-court-card">
+                          <div className="pb-court-info">
+                            <strong>{court.nombre}</strong>
+                            <span>{court.tipo} · ${court.precio}/hr</span>
+                          </div>
+                          <div className="pb-court-actions">
+                            <a
+                              href={court.linkReserva}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="pb-btn-reserva"
+                            >
+                              Reservar online
+                            </a>
+                            {court.linkWhatsApp && (
+                              <a
+                                href={court.linkWhatsApp}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="pb-btn-wa"
+                              >
+                                WhatsApp
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <span className="pb-time">{msg.time}</span>
                 </div>
               </div>
