@@ -1,167 +1,752 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+  ChevronRight, LogOut, Pencil, Trash2, X, Calendar, Clock, Camera,
+} from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import useAuthStore from '../../store/authStore';
-import { getReservasOwner, cancelarReserva } from '../../services/reservationService';
-import { getFavoritos } from '../../services/favoriteService';
+import api from '../../services/axios';
+import Swal from 'sweetalert2';
 import './ClientPanel.css';
 
-const STATUS_LABEL = { pending: 'Pendiente', confirmed: 'Confirmada', cancelled: 'Cancelado', rejected: 'Rechazada', completed: 'Finalizado' };
-const STATUS_CLASS = { pending: 'pendiente', confirmed: 'confirmada', cancelled: 'cancelado', rejected: 'cancelado', completed: 'finalizado' };
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
-const formatFecha = (f) => {
-  const d = f?.includes('T') ? f.split('T')[0] : f;
-  if (!d) return '-';
-  const [y, m, day] = d.split('-');
-  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-  return `${parseInt(day)} ${meses[parseInt(m)-1]}, ${y}`;
+const STATUS_MAP = {
+  pending:   { label: 'Pendiente',  cls: 'pendiente'  },
+  confirmed: { label: 'Confirmado', cls: 'confirmado'  },
+  rejected:  { label: 'Rechazado',  cls: 'rechazado'   },
+  cancelled: { label: 'Cancelado',  cls: 'cancelado'   },
+  completed: { label: 'Finalizado', cls: 'finalizado'  },
 };
 
-export default function PanelCliente() {
-  const { user, logout } = useAuthStore();
-  const navigate = useNavigate();
-  const [tab,       setTab]       = useState('reservas');
-  const [reservas,  setReservas]  = useState([]);
-  const [favoritos, setFavoritos] = useState([]);
-  const [loading,   setLoading]   = useState(true);
+const fmt = (dateStr) => {
+  if (!dateStr) return '—';
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-ES', {
+    day: '2-digit', month: 'long', year: 'numeric',
+  });
+};
 
-  useEffect(() => {
-    (async () => {
+const getCountdown = (date, startTime) => {
+  if (!date || !startTime) return null;
+  const target = new Date(`${date}T${startTime}:00`);
+  const diff   = target - Date.now();
+  if (diff <= 0) return null;
+  const totalMins = Math.floor(diff / 60000);
+  return { hours: Math.floor(totalMins / 60), mins: totalMins % 60 };
+};
+
+const getInitials = (name = '') =>
+  name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
+export default function ClientPanel() {
+  const { user, logout, setAuth } = useAuthStore();
+  const navigate = useNavigate();
+
+  const [bookings, setBookings]       = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [favoritos, setFavoritos]     = useState([]);
+  const [favLoading, setFavLoading]   = useState(false);
+  const [tab, setTab]                 = useState('reservas');
+  const [filter, setFilter]           = useState('todos');
+
+  const [modal, setModal]             = useState(null);
+  const [form, setForm]               = useState({ name: '', email: '', password: '' });
+  const [formErr, setFormErr]         = useState('');
+  const [formLoading, setFormLoading] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
+
+  // Booking edit modal
+  const [editingBooking, setEditingBooking]   = useState(null);
+  const [bookingForm, setBookingForm]         = useState({ date: '', startTime: '', endTime: '' });
+  const [bookingErr, setBookingErr]           = useState('');
+  const [bookingLoading, setBookingLoading]   = useState(false);
+
+  const fileInputRef = useRef(null);
+
+  // ── Fetch ───────────────────────────────────────────────────────────────────
+
+  const fetchBookings = useCallback(async () => {
+    try {
       setLoading(true);
-      try {
-        const res = await getReservasOwner();
-        setReservas(res.data.bookings || []);
-      } catch {}
-      finally { setLoading(false); }
-    })();
+      const res = await api.get('/bookings');
+      setBookings(res.data.bookings || []);
+    } catch (err) {
+      console.error('Error cargando reservas:', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => {
-    if (tab !== 'favoritos') return;
-    getFavoritos().then(res => setFavoritos(res.data.favoritos || [])).catch(() => {});
-  }, [tab]);
-
-  const hoy = new Date().toISOString().split('T')[0];
-  const partidos = reservas.filter(r => r.status === 'confirmed').length;
-  const proximas = reservas
-    .filter(r => r.status === 'confirmed' && r.date >= hoy)
-    .sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime));
-  const proximaReserva = proximas[0] || null;
-
-  const handleLogout = () => { logout(); navigate('/'); };
-
-  const handleCancelar = async (id) => {
+  const fetchFavoritos = useCallback(async () => {
     try {
-      await cancelarReserva(id);
-      setReservas(prev => prev.map(r => r._id === id ? { ...r, status: 'cancelled' } : r));
-    } catch {}
+      setFavLoading(true);
+      const res = await api.get('/favorites');
+      setFavoritos(res.data.favoritos || []);
+    } catch (err) {
+      console.error('Error cargando favoritos:', err);
+    } finally {
+      setFavLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchBookings(); }, [fetchBookings]);
+
+  useEffect(() => {
+    if (tab === 'favoritos') fetchFavoritos();
+  }, [tab, fetchFavoritos]);
+
+  // ── Derived ─────────────────────────────────────────────────────────────────
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const nextMatch = bookings
+    .filter(b => b.date >= today && ['pending', 'confirmed'].includes(b.status))
+    .sort((a, b) => a.date.localeCompare(b.date) || a.startTime.localeCompare(b.startTime))[0] || null;
+
+  const countdown      = nextMatch ? getCountdown(nextMatch.date, nextMatch.startTime) : null;
+  const totalPartidos  = bookings.length;
+  const victorias      = bookings.filter(b => b.status === 'completed').length;
+
+  const filtered = filter === 'activos'
+    ? bookings.filter(b => ['pending', 'confirmed'].includes(b.status))
+    : bookings;
+
+  // ── Handlers ────────────────────────────────────────────────────────────────
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setAvatarLoading(true);
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await api.post('/auth/me/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setAuth(res.data.user, localStorage.getItem('token'));
+    } catch (err) {
+      console.error('Error subiendo avatar:', err);
+    } finally {
+      setAvatarLoading(false);
+      e.target.value = '';
+    }
   };
 
+  const openEdit  = () => {
+    setForm({ name: user?.name || '', email: user?.email || '', password: '' });
+    setFormErr('');
+    setModal('edit');
+  };
+  const closeModal = () => { setModal(null); setFormErr(''); };
+
+  const handleUpdate = async () => {
+    if (!form.name || !form.email) { setFormErr('Nombre y email son obligatorios.'); return; }
+
+    const confirm = await Swal.fire({
+      title: '¿Guardar cambios?',
+      text: 'Se actualizará tu información de perfil.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, guardar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#bef264',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      setFormLoading(true);
+      const payload = { name: form.name, email: form.email };
+      if (form.password) payload.password = form.password;
+      const res     = await api.put('/auth/me', payload);
+      const updated = res.data.user;
+      setAuth(updated, localStorage.getItem('token'));
+      closeModal();
+      Swal.fire({
+        title: '¡Actualizado!',
+        text: 'Tu perfil fue actualizado correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#bef264',
+        background: '#0e1c42',
+        color: '#f8fafc',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      setFormErr(err.response?.data?.message || 'Error al actualizar el perfil.');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirm = await Swal.fire({
+      title: '¿Eliminar cuenta?',
+      html: 'Esta acción <strong>no se puede deshacer</strong>.<br/>Perderás todos tus datos permanentemente.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      setFormLoading(true);
+      await api.delete('/auth/me');
+      logout();
+      navigate('/');
+    } catch (err) {
+      setFormErr(err.response?.data?.message || 'Error al eliminar la cuenta.');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const openEditBooking = (b) => {
+    setEditingBooking(b);
+    setBookingForm({ date: b.date, startTime: b.startTime, endTime: b.endTime });
+    setBookingErr('');
+  };
+
+  const closeEditBooking = () => { setEditingBooking(null); setBookingErr(''); };
+
+  const handleEditBooking = async () => {
+    if (!bookingForm.date || !bookingForm.startTime || !bookingForm.endTime) {
+      setBookingErr('Completá todos los campos.');
+      return;
+    }
+    const confirm = await Swal.fire({
+      title: '¿Modificar reserva?',
+      text: 'Se actualizará la fecha y horario de tu turno.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, modificar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#bef264',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      setBookingLoading(true);
+      const res = await api.patch(`/bookings/${editingBooking._id}`, bookingForm);
+      const updated = res.data.booking;
+      setBookings(prev => prev.map(b => b._id === editingBooking._id ? { ...b, ...updated } : b));
+      closeEditBooking();
+      Swal.fire({
+        title: '¡Reserva modificada!',
+        text: 'Tu turno fue actualizado correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#bef264',
+        background: '#0e1c42',
+        color: '#f8fafc',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      setBookingErr(err.response?.data?.message || 'Error al modificar la reserva.');
+    } finally {
+      setBookingLoading(false);
+    }
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    const confirm = await Swal.fire({
+      title: '¿Eliminar reserva?',
+      text: 'Se eliminará permanentemente del historial.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await api.delete(`/bookings/${bookingId}`);
+      setBookings(prev => prev.filter(b => b._id !== bookingId));
+      Swal.fire({
+        title: 'Eliminada',
+        text: 'La reserva fue eliminada del historial.',
+        icon: 'success',
+        confirmButtonColor: '#bef264',
+        background: '#0e1c42',
+        color: '#f8fafc',
+        timer: 1800,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        title: 'Error',
+        text: err.response?.data?.message || 'No se pudo eliminar la reserva.',
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+        background: '#0e1c42',
+        color: '#f8fafc',
+      });
+    }
+  };
+
+  const handleCancelBooking = async (bookingId) => {
+    const confirm = await Swal.fire({
+      title: '¿Cancelar reserva?',
+      text: 'Se cancelará tu turno. Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'Volver',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await api.patch(`/bookings/${bookingId}/cancel`);
+      setBookings(prev =>
+        prev.map(b => b._id === bookingId ? { ...b, status: 'cancelled' } : b)
+      );
+      Swal.fire({
+        title: 'Reserva cancelada',
+        text: 'Tu turno fue cancelado correctamente.',
+        icon: 'success',
+        confirmButtonColor: '#bef264',
+        background: '#0e1c42',
+        color: '#f8fafc',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      Swal.fire({
+        title: 'Error',
+        text: err.response?.data?.message || 'No se pudo cancelar la reserva.',
+        icon: 'error',
+        confirmButtonColor: '#ef4444',
+        background: '#0e1c42',
+        color: '#f8fafc',
+      });
+    }
+  };
+
+  const handleRemoveFavorito = async (complexId, nombre) => {
+    const confirm = await Swal.fire({
+      title: '¿Quitar de favoritos?',
+      text: `Se quitará "${nombre}" de tus favoritos.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, quitar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await api.delete(`/favorites/${complexId}`);
+      setFavoritos(prev => prev.filter(f => f._id !== complexId));
+      Swal.fire({
+        title: 'Eliminado',
+        text: `"${nombre}" fue quitado de tus favoritos.`,
+        icon: 'success',
+        confirmButtonColor: '#bef264',
+        background: '#0e1c42',
+        color: '#f8fafc',
+        timer: 1800,
+        showConfirmButton: false,
+      });
+    } catch (err) {
+      console.error('Error quitando favorito:', err);
+    }
+  };
+
+  const handleLogout = async () => {
+    const confirm = await Swal.fire({
+      title: '¿Cerrar sesión?',
+      text: 'Vas a salir de tu cuenta.',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#334155',
+      background: '#0e1c42',
+      color: '#f8fafc',
+    });
+    if (!confirm.isConfirmed) return;
+    logout();
+    navigate('/');
+  };
+
+  // ── Render ──────────────────────────────────────────────────────────────────
+
   return (
-    <div className="panel-cliente-page">
+    <div className="cp-page">
       <Navbar />
-      <div className="panel">
-        <div className="left-column">
-          <div className="card profile-card">
-            <div className="profile-header">
-              <div style={{ width: 60, height: 60, borderRadius: '50%', background: '#bef264', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#000' }}>
-                {user?.name?.[0]?.toUpperCase() || 'J'}
-              </div>
-              <div>
-                <h2>{user?.name || 'Jugador'}</h2>
-                <p>{user?.email}</p>
+
+      <div className="cp-layout">
+
+        {/* ── Left ── */}
+        <aside className="cp-left">
+
+          <div className="cp-card cp-profile">
+            <div
+              className="cp-avatar-wrap"
+              onClick={() => fileInputRef.current?.click()}
+              title="Cambiar foto de perfil"
+            >
+              {user?.avatar
+                ? <img src={user.avatar} alt="avatar" className="cp-avatar-img" />
+                : <div className="cp-avatar">{getInitials(user?.name)}</div>}
+              <div className="cp-avatar-overlay">
+                {avatarLoading ? '...' : <Camera size={18} />}
               </div>
             </div>
-            <div className="stats">
-              <div className="stat-box"><span>RESERVAS</span><h3>{reservas.length}</h3></div>
-              <div className="stat-box"><span>CONFIRMADAS</span><h3>{partidos}</h3></div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: 'none' }}
+              onChange={handleAvatarChange}
+            />
+            <div className="cp-profile-info">
+              <h2>{user?.name || 'Usuario'}</h2>
+              <p>Jugador · PadelSaaS</p>
+            </div>
+            <div className="cp-stats-row">
+              <div className="cp-stat">
+                <span>PARTIDOS</span>
+                <strong>{totalPartidos}</strong>
+              </div>
+              <div className="cp-stat">
+                <span>VICTORIAS</span>
+                <strong>{victorias}</strong>
+              </div>
             </div>
           </div>
 
-          {proximaReserva && (
-            <div className="next-match">
-              <div className="tag">PRÓXIMA RESERVA</div>
-              <h1>{formatFecha(proximaReserva.date)}</h1>
-              <p>{proximaReserva.startTime} — {proximaReserva.court?.name}</p>
-              {proximaReserva.complex?.whatsapp && (
-                <p style={{ fontSize: 13, opacity: 0.7 }}>WhatsApp: {proximaReserva.complex.whatsapp}</p>
+          {nextMatch ? (
+            <div className="cp-next-match">
+              <div className="cp-next-tag-wrap">
+                <span className="cp-next-tag">PRÓXIMO PARTIDO</span>
+              </div>
+              <h1>{fmt(nextMatch.date)}, {nextMatch.startTime}</h1>
+              <p>{nextMatch.complex?.name || '—'} · {nextMatch.court?.name || '—'}</p>
+              {countdown && (
+                <div className="cp-countdown">
+                  <div><strong>{countdown.hours}</strong><span>HORAS</span></div>
+                  <div><strong>{countdown.mins}</strong><span>MINS</span></div>
+                </div>
               )}
+            </div>
+          ) : (
+            <div className="cp-next-match cp-next-empty">
+              <span className="cp-next-tag">PRÓXIMO PARTIDO</span>
+              <p className="cp-no-match">No tenés partidos próximos</p>
             </div>
           )}
 
-          <div className="card settings-card">
+          <div className="cp-card cp-settings">
             <h3>Configuración de Cuenta</h3>
             <ul>
-              <li>Editar Información</li>
-              <li>Notificaciones</li>
-              <li className="logout" onClick={handleLogout} style={{ cursor: 'pointer' }}>Cerrar Sesión</li>
+              <li onClick={openEdit}>
+                <span className="cp-li-icon"><Pencil size={15} /></span>
+                Editar Información
+                <ChevronRight size={15} className="cp-chevron" />
+              </li>
+              <li
+                className="cp-li-danger"
+                onClick={() => { setFormErr(''); setModal('delete'); }}
+              >
+                <span className="cp-li-icon"><Trash2 size={15} /></span>
+                Eliminar Cuenta
+                <ChevronRight size={15} className="cp-chevron" />
+              </li>
+              <li className="cp-li-logout" onClick={handleLogout}>
+                <span className="cp-li-icon"><LogOut size={15} /></span>
+                Cerrar Sesión
+              </li>
             </ul>
           </div>
-        </div>
+        </aside>
 
-        <div className="right-column">
-          <div className="tabs">
-            <span className={tab === 'reservas'    ? 'active-tab' : ''} onClick={() => setTab('reservas')}    style={{ cursor: 'pointer' }}>Mis Reservas</span>
-            <span className={tab === 'favoritos'   ? 'active-tab' : ''} onClick={() => setTab('favoritos')}   style={{ cursor: 'pointer' }}>Mis Favoritos</span>
-            <span className={tab === 'facturacion' ? 'active-tab' : ''} onClick={() => setTab('facturacion')} style={{ cursor: 'pointer' }}>Datos de Facturación</span>
+        {/* ── Right ── */}
+        <main className="cp-right">
+
+          <div className="cp-tabs">
+            {[
+              { id: 'reservas',    label: 'Mis Reservas'        },
+              { id: 'favoritos',   label: 'Mis Favoritos'       },
+              { id: 'facturacion', label: 'Datos de Facturación'},
+            ].map(t => (
+              <button
+                key={t.id}
+                className={`cp-tab ${tab === t.id ? 'active' : ''}`}
+                onClick={() => setTab(t.id)}
+              >{t.label}</button>
+            ))}
           </div>
 
           {tab === 'reservas' && (
             <>
-              <h2>Historial de Actividad</h2>
-              {loading ? <p style={{ color: '#8892a4' }}>Cargando...</p> : reservas.length === 0 ? (
-                <p style={{ color: '#8892a4', textAlign: 'center', marginTop: 40 }}>No tenés reservas todavía.</p>
-              ) : reservas.map((r) => (
-                <div key={r._id} className="reservation-card">
-                  <div className="reservation-info">
-                    <h3>{r.court?.name}</h3>
-                    <p><strong>Cancha:</strong> {r.court?.name}</p>
-                    <p><strong>Fecha:</strong> {formatFecha(r.date)}</p>
-                    <p><strong>Horario:</strong> {r.startTime} - {r.endTime}</p>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8 }}>
-                    <span className={`status ${STATUS_CLASS[r.status] || r.status}`}>{STATUS_LABEL[r.status] || r.status}</span>
-                    {(r.status === 'pending' || r.status === 'confirmed') && (
-                      <button onClick={() => handleCancelar(r._id)} style={{ fontSize: 12, color: '#ef4444', background: 'none', border: 'none', cursor: 'pointer' }}>
-                        Cancelar
-                      </button>
-                    )}
-                  </div>
+              <div className="cp-section-head">
+                <h2>Historial de Actividad</h2>
+                <div className="cp-filters">
+                  <button
+                    className={`cp-filter-btn ${filter === 'todos' ? 'active' : ''}`}
+                    onClick={() => setFilter('todos')}
+                  >Todos</button>
+                  <button
+                    className={`cp-filter-btn ${filter === 'activos' ? 'active' : ''}`}
+                    onClick={() => setFilter('activos')}
+                  >Activos</button>
                 </div>
-              ))}
+              </div>
+
+              {loading ? (
+                <p className="cp-empty">Cargando reservas...</p>
+              ) : filtered.length === 0 ? (
+                <p className="cp-empty">No tenés reservas aún.</p>
+              ) : (
+                <div className="cp-bookings">
+                  {filtered.map(b => {
+                    const st = STATUS_MAP[b.status] || { label: b.status, cls: '' };
+                    return (
+                      <div key={b._id} className="cp-booking-card">
+                        <div className="cp-booking-img">
+                          {b.complex?.image
+                            ? <img src={b.complex.image} alt={b.complex?.name} />
+                            : <div className="cp-img-placeholder" />}
+                        </div>
+                        <div className="cp-booking-info">
+                          <h3>{b.complex?.name || 'Complejo'}</h3>
+                          <p><Calendar size={12} /> {fmt(b.date)}</p>
+                          <p><Clock size={12} /> {b.startTime} - {b.endTime}</p>
+                          {b.court?.name && <p className="cp-court">{b.court.name}</p>}
+                        </div>
+                        <div className="cp-booking-actions">
+                          <span className={`cp-status ${st.cls}`}>{st.label}</span>
+
+                          {/* Editar — solo si está pendiente o confirmada */}
+                          {['pending', 'confirmed'].includes(b.status) && (
+                            <button
+                              className="cp-edit-btn"
+                              onClick={() => openEditBooking(b)}
+                            >
+                              Editar
+                            </button>
+                          )}
+
+                          {/* Cancelar — solo si está pendiente o confirmada */}
+                          {['pending', 'confirmed'].includes(b.status) && (
+                            <button
+                              className="cp-cancel-btn"
+                              onClick={() => handleCancelBooking(b._id)}
+                            >
+                              Cancelar
+                            </button>
+                          )}
+
+                          {/* Eliminar — solo si está cancelada, rechazada o finalizada */}
+                          {['cancelled', 'rejected', 'completed'].includes(b.status) && (
+                            <button
+                              className="cp-delete-btn"
+                              onClick={() => handleDeleteBooking(b._id)}
+                            >
+                              Eliminar
+                            </button>
+                          )}
+
+                          {/* Reservar de nuevo — si fue cancelada o finalizada */}
+                          {['cancelled', 'completed', 'rejected'].includes(b.status) && b.complex?._id && (
+                            <button
+                              className="cp-rebook-btn"
+                              onClick={() => navigate(`/complejo/${b.complex._id}`)}
+                            >
+                              Reservar de nuevo
+                            </button>
+                          )}
+
+                          {b.status === 'confirmed' && (
+                            <button className="cp-comprobante-btn">Comprobante</button>
+                          )}
+                          {b.status === 'cancelled' && (
+                            <span className="cp-reembolso">Reembolsado</span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </>
           )}
 
           {tab === 'favoritos' && (
             <>
-              <h2>Mis Favoritos</h2>
-              {favoritos.length === 0 ? (
-                <p style={{ color: '#8892a4', textAlign: 'center', marginTop: 40 }}>No tenés favoritos guardados.</p>
-              ) : favoritos.map((c) => (
-                <div key={c._id} className="reservation-card" onClick={() => navigate(`/complejo/${c._id}`)} style={{ cursor: 'pointer' }}>
-                  {c.image && <img src={c.image} alt={c.name} style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 8 }} />}
-                  <div className="reservation-info">
-                    <h3>{c.name}</h3>
-                    <p>{c.city}</p>
-                    <p>⭐ {c.ratingAverage?.toFixed(1) || '0.0'}</p>
-                  </div>
+              <div className="cp-section-head">
+                <h2>Mis Favoritos</h2>
+              </div>
+              {favLoading ? (
+                <p className="cp-empty">Cargando favoritos...</p>
+              ) : favoritos.length === 0 ? (
+                <p className="cp-empty">No tenés clubes guardados aún.</p>
+              ) : (
+                <div className="cp-favoritos">
+                  {favoritos.map(club => (
+                    <div key={club._id} className="cp-fav-card">
+                      <div className="cp-fav-img">
+                        {club.image
+                          ? <img src={club.image} alt={club.name} />
+                          : <div className="cp-img-placeholder" />}
+                      </div>
+                      <div className="cp-fav-info">
+                        <h3>{club.name}</h3>
+                        <p>{club.city || club.location || '—'}</p>
+                        {club.ratingAverage > 0 && (
+                          <p className="cp-fav-rating">★ {club.ratingAverage.toFixed(1)}</p>
+                        )}
+                        {club.price > 0 && (
+                          <p className="cp-fav-price">${club.price} / hora</p>
+                        )}
+                      </div>
+                      <button
+                        className="cp-fav-remove"
+                        title="Quitar de favoritos"
+                        onClick={() => handleRemoveFavorito(club._id, club.name)}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </>
           )}
-
           {tab === 'facturacion' && (
-            <>
-              <h2>Datos de Facturación</h2>
-              <p style={{ color: '#8892a4', marginTop: 16 }}>Nombre: <strong style={{ color: '#fff' }}>{user?.name}</strong></p>
-              <p style={{ color: '#8892a4', marginTop: 8 }}>Email: <strong style={{ color: '#fff' }}>{user?.email}</strong></p>
-              <p style={{ color: '#8892a4', marginTop: 8 }}>Rol: <strong style={{ color: '#fff', textTransform: 'capitalize' }}>{user?.role}</strong></p>
-            </>
+            <div className="cp-coming"><p>Tus datos de facturación aparecerán aquí.</p></div>
           )}
-        </div>
+        </main>
       </div>
+
       <Footer />
+
+      {/* ── Edit booking modal ── */}
+      {editingBooking && (
+        <div className="cp-overlay" onClick={closeEditBooking}>
+          <div className="cp-modal" onClick={e => e.stopPropagation()}>
+            <div className="cp-modal-head">
+              <h3>Editar Reserva</h3>
+              <button onClick={closeEditBooking}><X size={17} /></button>
+            </div>
+            <div className="cp-modal-body">
+              {bookingErr && <div className="cp-form-error">{bookingErr}</div>}
+              <p className="cp-modal-hint">
+                {editingBooking.complex?.name} · {editingBooking.court?.name}
+              </p>
+              <label>Nueva fecha</label>
+              <input
+                type="date"
+                value={bookingForm.date}
+                min={new Date().toISOString().split('T')[0]}
+                onChange={e => setBookingForm(f => ({ ...f, date: e.target.value }))}
+              />
+              <label>Hora de inicio</label>
+              <input
+                type="time"
+                value={bookingForm.startTime}
+                onChange={e => setBookingForm(f => ({ ...f, startTime: e.target.value }))}
+              />
+              <label>Hora de fin</label>
+              <input
+                type="time"
+                value={bookingForm.endTime}
+                onChange={e => setBookingForm(f => ({ ...f, endTime: e.target.value }))}
+              />
+            </div>
+            <div className="cp-modal-foot">
+              <button className="cp-btn-cancel" onClick={closeEditBooking}>Cancelar</button>
+              <button className="cp-btn-primary" onClick={handleEditBooking} disabled={bookingLoading}>
+                {bookingLoading ? 'Guardando...' : 'Guardar cambios'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Edit modal ── */}
+      {modal === 'edit' && (
+        <div className="cp-overlay" onClick={closeModal}>
+          <div className="cp-modal" onClick={e => e.stopPropagation()}>
+            <div className="cp-modal-head">
+              <h3>Editar Información</h3>
+              <button onClick={closeModal}><X size={17} /></button>
+            </div>
+            <div className="cp-modal-body">
+              {formErr && <div className="cp-form-error">{formErr}</div>}
+              <label>Nombre</label>
+              <input type="text" value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                placeholder="Tu nombre" />
+              <label>Email</label>
+              <input type="email" value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                placeholder="tu@email.com" />
+              <label>Nueva contraseña (opcional)</label>
+              <input type="password" value={form.password}
+                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                placeholder="Dejar vacío para no cambiar" />
+            </div>
+            <div className="cp-modal-foot">
+              <button className="cp-btn-cancel" onClick={closeModal}>Cancelar</button>
+              <button className="cp-btn-primary" onClick={handleUpdate} disabled={formLoading}>
+                {formLoading ? 'Guardando...' : 'Guardar Cambios'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Delete modal ── */}
+      {modal === 'delete' && (
+        <div className="cp-overlay" onClick={closeModal}>
+          <div className="cp-modal cp-modal--sm" onClick={e => e.stopPropagation()}>
+            <div className="cp-modal-head">
+              <h3>Eliminar cuenta</h3>
+              <button onClick={closeModal}><X size={17} /></button>
+            </div>
+            <div className="cp-modal-body">
+              {formErr && <div className="cp-form-error">{formErr}</div>}
+              <p className="cp-delete-msg">
+                ¿Estás seguro de que querés eliminar tu cuenta?<br />
+                <strong>Esta acción no se puede deshacer.</strong>
+              </p>
+            </div>
+            <div className="cp-modal-foot">
+              <button className="cp-btn-cancel" onClick={closeModal}>Cancelar</button>
+              <button className="cp-btn-danger" onClick={handleDelete} disabled={formLoading}>
+                {formLoading ? 'Eliminando...' : 'Eliminar cuenta'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
