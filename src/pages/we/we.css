@@ -246,6 +246,30 @@
   box-shadow:
     0 20px 40px rgba(0,0,0,.25);
 }
+.member-avatar {
+  width: 110px;
+  height: 110px;
+
+  margin: 0 auto 1.5rem;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      135deg,
+      #bef264,
+      #84cc16
+    );
+
+  color: #07152f;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.5rem;
+  font-weight: 800;
+}
 /*reponsive*/ 
 @media (max-width: 768px) {
     .about-hero {
