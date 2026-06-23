@@ -2,8 +2,6 @@ import { Search, SlidersHorizontal, X } from 'lucide-react';
 
 const PRECIO_MIN_ARS = 1000;
 const PRECIO_MAX_ARS = 6000;
-const FRANJAS = ['Mañana', 'Tarde', 'Noche', 'Madrugada'];
-const TIPOS_CANCHA = ['Cristal', 'Césped artificial', 'Moqueta'];
 
 const FiltrosAvanzados = ({
   searchQuery,
@@ -12,6 +10,8 @@ const FiltrosAvanzados = ({
   franjasSeleccionadas,
   tiposSeleccionados,
   totalActivos,
+  tiposDisponibles = [],
+  franjasDisponibles = [],
   onChangeSearch,
   onChangePrecio,
   onChangeFecha,
@@ -92,41 +92,51 @@ const FiltrosAvanzados = ({
         </div>
       </div>
 
-      {/* Franja Horaria */}
-      <div className="filtro-seccion">
-        <p className="filtro-seccion-titulo">Franja Horaria</p>
-        <div className="franja-grid">
-          {FRANJAS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              className={`franja-btn${franjasSeleccionadas.includes(f) ? ' activo' : ''}`}
-              onClick={() => onToggleFranja(f)}
-            >
-              {f}
-            </button>
-          ))}
+      {/* Franja Horaria — solo se muestra si hay franjas en los datos */}
+      {franjasDisponibles.length > 0 && (
+        <div className="filtro-seccion">
+          <p className="filtro-seccion-titulo">Franja Horaria</p>
+          <div className="franja-grid">
+            {franjasDisponibles.map(franja => {
+              const activo = franjasSeleccionadas.includes(franja);
+              return (
+                <button
+                  key={franja}
+                  type="button"
+                  className={activo ? 'franja-btn activo' : 'franja-btn'}
+                  onClick={() => onToggleFranja(franja)}
+                >
+                  {franja}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Tipo de Pista */}
-      <div className="filtro-seccion">
-        <p className="filtro-seccion-titulo">Tipo de Pista</p>
-        {TIPOS_CANCHA.map((tipo) => (
-          <label
-            key={tipo}
-            className={`filtro-checkbox-label${tiposSeleccionados.includes(tipo) ? ' checked' : ''}`}
-          >
-            <input
-              type="checkbox"
-              checked={tiposSeleccionados.includes(tipo)}
-              onChange={() => onToggleTipo(tipo)}
-            />
-            <span className="checkbox-custom" />
-            {tipo}
-          </label>
-        ))}
-      </div>
+      {/* Tipo de Pista — solo se muestra si hay tipos en los datos */}
+      {tiposDisponibles.length > 0 && (
+        <div className="filtro-seccion">
+          <p className="filtro-seccion-titulo">Tipo de Pista</p>
+          {tiposDisponibles.map(tipo => {
+            const seleccionado = tiposSeleccionados.includes(tipo);
+            return (
+              <label
+                key={tipo}
+                className={seleccionado ? 'filtro-checkbox-label checked' : 'filtro-checkbox-label'}
+              >
+                <input
+                  type="checkbox"
+                  checked={seleccionado}
+                  onChange={() => onToggleTipo(tipo)}
+                />
+                <span className="checkbox-custom" />
+                {tipo}
+              </label>
+            );
+          })}
+        </div>
+      )}
 
       {/* Disponibilidad por fecha */}
       <div className="filtro-seccion">
