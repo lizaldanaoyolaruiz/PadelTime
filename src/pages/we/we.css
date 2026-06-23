@@ -115,11 +115,11 @@
 
     line-height: 1.6;
 }
-    @media (max-width: 768px) {
-      .about-hero {
-        min-height: 65vh;
+
+ @media (max-width: 768px) {
+    .about-hero {
+     min-height: 65vh;
       }
-    
       .about-hero p {
         font-size: 1rem;
       }
