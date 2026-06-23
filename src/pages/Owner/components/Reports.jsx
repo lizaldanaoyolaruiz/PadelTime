@@ -1,113 +1,128 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import api from '../../../services/axios';
+import { getMyCourts } from '../../../services/courtService';
+import { getMyComplex } from '../../../services/complexService';
 import './Reports.css';
 
-const Reports = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [summary, setSummary] = useState({ incomes: 0, completed: 0, cancellations: 0 });
-  
+const STATUS_OPTIONS = [
+  { value: '', label: 'Todos los estados' },
+  { value: 'pending',   label: 'Pendiente' },
+  { value: 'confirmed', label: 'Confirmada' },
+  { value: 'cancelled', label: 'Cancelada' },
+  { value: 'rejected',  label: 'Rechazada' },
+];
+
+const STATUS_CLASS = { pending: 'pendiente', confirmed: 'completada', cancelled: 'cancelada', rejected: 'cancelada' };
+
+export default function Reports({ complexId }) {
+  const [canchas,        setCanchas]        = useState([]);
+  const [data,           setData]           = useState([]);
+  const [summary,        setSummary]        = useState({ ingresos: 0, completadas: 0, cancelaciones: 0 });
+  const [loading,        setLoading]        = useState(false);
+  const [pagination,     setPagination]     = useState({ page: 1, totalPages: 1, total: 0 });
+  const [complexIdLocal, setComplexIdLocal] = useState(complexId || null);
+
   const [filters, setFilters] = useState({
-    court: 'all',
-    dateRange: '',
-    status: 'all'
+    courtId:   '',
+    startDate: '',
+    endDate:   '',
+    status:    '',
   });
-
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 32,
-    totalRecords: 128
-  });
-
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 600));
-      
-      const mockResponse = [
-        { id: 1, name: 'Javier Méndez', email: 'javier.m@example.com', court: 'Pista Central', date: '24 Oct, 2023', time: '18:00 - 19:30', status: 'COMPLETADA', payment: 'Mercado Pago', total: '$45.00' },
-        { id: 2, name: 'Sofía Ruiz', email: 'sofia.r@example.com', court: 'Pista 2', date: '25 Oct, 2023', time: '10:00 - 11:30', status: 'CANCELADA', payment: 'Efectivo', total: '$40.00' },
-        { id: 3, name: 'Marcos Galván', email: 'm.galvan@example.com', court: 'Pista Central', date: '25 Oct, 2023', time: '20:00 - 21:30', status: 'PENDIENTE', payment: 'Tarjeta Débito', total: '$45.00' },
-        { id: 4, name: 'Elena Torres', email: 'elena.t@example.com', court: 'Pista 3', date: '26 Oct, 2023', time: '17:00 - 18:30', status: 'COMPLETADA', payment: 'Mercado Pago', total: '$35.00' },
-      ];
-      
-      setData(mockResponse);
-      setSummary({ incomes: 4850, completed: 112, cancellations: 8 });
-      setPagination(prev => ({ ...prev, totalRecords: 128, totalPages: 32 }));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchData();
-  }, [pagination.currentPage]);
+    (async () => {
+      try {
+        let cId = complexId;
+        if (!cId) {
+          const res = await getMyComplex();
+          cId = res.data.complex?._id || res.data._id;
+          setComplexIdLocal(cId);
+        }
+        if (!cId) return;
+        const res = await getMyCourts(cId);
+        setCanchas(res.data.courts || res.data || []);
+      } catch {}
+    })();
+  }, [complexId]);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters(prev => ({ ...prev, [name]: value }));
+  const fetchData = useCallback(async (page = 1) => {
+    if (!complexIdLocal) return;
+    setLoading(true);
+    try {
+      const params = { complexId: complexIdLocal, page, limit: 10 };
+      if (filters.courtId)   params.courtId   = filters.courtId;
+      if (filters.startDate) params.startDate = filters.startDate;
+      if (filters.endDate)   params.endDate   = filters.endDate;
+      if (filters.status)    params.status    = filters.status;
+
+      const res = await api.get('/reports/bookings', { params });
+      setData(res.data.bookings || []);
+      setSummary(res.data.summary || { ingresos: 0, completadas: 0, cancelaciones: 0 });
+      setPagination({ page: res.data.page, totalPages: res.data.totalPages, total: res.data.total });
+    } catch {}
+    finally { setLoading(false); }
+  }, [complexIdLocal, filters]);
+
+  useEffect(() => { fetchData(1); }, [complexIdLocal]);
+
+  const handleApplyFilters = () => fetchData(1);
+  const handlePageChange   = (p) => fetchData(p);
+
+  const descargar = (format) => {
+    if (!complexIdLocal) return;
+    const params = new URLSearchParams({ complexId: complexIdLocal, format });
+    if (filters.courtId)   params.set('courtId',   filters.courtId);
+    if (filters.startDate) params.set('startDate', filters.startDate);
+    if (filters.endDate)   params.set('endDate',   filters.endDate);
+    if (filters.status)    params.set('status',    filters.status);
+    const token = localStorage.getItem('token');
+    fetch(`/api/reports/export?${params}`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => r.blob())
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `reservas.${format}`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
   };
 
-  const handleApplyFilters = () => {
-    setPagination(prev => ({ ...prev, currentPage: 1 }));
-    fetchData();
-  };
-
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= pagination.totalPages) {
-      setPagination(prev => ({ ...prev, currentPage: newPage }));
-    }
-  };
-
-  const exportCSV = () => {
-    console.log("Exportando CSV con filtros:", filters);
-  };
-
-  const exportPDF = () => {
-    console.log("Exportando PDF con filtros:", filters);
-  };
+  const formatFecha = (f) => f?.includes('T') ? f.split('T')[0] : (f || '-');
 
   return (
     <div className="reports-container">
       <div className="reports-header">
         <div className="reports-title-section">
           <h1>Reportes y Exportación</h1>
-          <p>Gestiona y descarga el historial de actividad de tu complejo con filtros avanzados y múltiples formatos de salida.</p>
+          <p>Gestiona y descarga el historial de actividad de tu complejo.</p>
         </div>
         <div className="reports-actions">
-          <button className="btn-export-csv" onClick={exportCSV}>Descargar CSV</button>
-          <button className="btn-export-pdf" onClick={exportPDF}>Descargar PDF</button>
+          <button className="btn-export-csv" onClick={() => descargar('csv')}>Descargar CSV</button>
+          <button className="btn-export-pdf" onClick={() => descargar('pdf')}>Descargar PDF</button>
         </div>
       </div>
 
       <div className="reports-filters">
         <div className="filter-group">
           <label>Cancha</label>
-          <select name="court" value={filters.court} onChange={handleFilterChange}>
-            <option value="all">Todas las pistas</option>
-            <option value="pista_central">Pista Central</option>
-            <option value="pista_2">Pista 2</option>
-            <option value="pista_3">Pista 3</option>
+          <select value={filters.courtId} onChange={e => setFilters(f => ({ ...f, courtId: e.target.value }))}>
+            <option value="">Todas las canchas</option>
+            {canchas.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
           </select>
         </div>
         <div className="filter-group">
-          <label>Rango de Fechas</label>
-          <input 
-            type="text" 
-            name="dateRange" 
-            placeholder="24 Oct - 31 Oct, 2023" 
-            value={filters.dateRange} 
-            onChange={handleFilterChange} 
-          />
+          <label>Desde</label>
+          <input type="date" value={filters.startDate} onChange={e => setFilters(f => ({ ...f, startDate: e.target.value }))} />
         </div>
         <div className="filter-group">
-          <label>Estado de Reserva</label>
-          <select name="status" value={filters.status} onChange={handleFilterChange}>
-            <option value="all">Todos los estados</option>
-            <option value="completada">Completada</option>
-            <option value="pendiente">Pendiente</option>
-            <option value="cancelada">Cancelada</option>
+          <label>Hasta</label>
+          <input type="date" value={filters.endDate} onChange={e => setFilters(f => ({ ...f, endDate: e.target.value }))} />
+        </div>
+        <div className="filter-group">
+          <label>Estado</label>
+          <select value={filters.status} onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}>
+            {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
         <button className="btn-apply-filters" onClick={handleApplyFilters}>Aplicar Filtros</button>
@@ -117,97 +132,61 @@ const Reports = () => {
         <table className="reports-table">
           <thead>
             <tr>
-              <th>CLIENTE</th>
-              <th>CANCHA</th>
-              <th>FECHA Y HORA</th>
-              <th>ESTADO</th>
-              <th>PAGO</th>
-              <th>TOTAL</th>
+              <th>CLIENTE</th><th>CANCHA</th><th>FECHA Y HORA</th><th>ESTADO</th><th>PAGO</th><th>TOTAL</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>Cargando datos...</td>
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>Cargando...</td></tr>
+            ) : data.length === 0 ? (
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#8892a4' }}>Sin reservas para los filtros seleccionados</td></tr>
+            ) : data.map(row => (
+              <tr key={row._id}>
+                <td>
+                  <div className="client-info">
+                    <div className="avatar placeholder-avatar"></div>
+                    <div><strong>{row.nombre}</strong><span>{row.email}</span></div>
+                  </div>
+                </td>
+                <td>{row.cancha}</td>
+                <td>
+                  <div className="date-time-info">
+                    <strong>{formatFecha(row.fecha)}</strong>
+                    <span className="time-accent">{row.horario}</span>
+                  </div>
+                </td>
+                <td><span className={`status-badge ${STATUS_CLASS[row.status] || row.status}`}>{row.statusLabel}</span></td>
+                <td className="payment-method">{row.pago}</td>
+                <td><strong>${row.total?.toLocaleString('es-AR')}</strong></td>
               </tr>
-            ) : (
-              data.map((row) => (
-                <tr key={row.id}>
-                  <td>
-                    <div className="client-info">
-                      <div className="avatar placeholder-avatar"></div>
-                      <div>
-                        <strong>{row.name}</strong>
-                        <span>{row.email}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{row.court}</td>
-                  <td>
-                    <div className="date-time-info">
-                      <strong>{row.date}</strong>
-                      <span className="time-accent">{row.time}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${row.status.toLowerCase()}`}>
-                      {row.status}
-                    </span>
-                  </td>
-                  <td className="payment-method">{row.payment}</td>
-                  <td><strong>{row.total}</strong></td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
-        
         <div className="reports-pagination">
-          <span>Mostrando {data.length} de {pagination.totalRecords} registros</span>
+          <span>Mostrando {data.length} de {pagination.total} registros</span>
           <div className="pagination-controls">
-            <button 
-              onClick={() => handlePageChange(pagination.currentPage - 1)}
-              disabled={pagination.currentPage === 1}
-            >
-              &lt;
-            </button>
-            <button className="active">{pagination.currentPage}</button>
-            <button 
-              onClick={() => handlePageChange(pagination.currentPage + 1)}
-              disabled={pagination.currentPage === pagination.totalPages}
-            >
-              &gt;
-            </button>
+            <button onClick={() => handlePageChange(pagination.page - 1)} disabled={pagination.page === 1}>&lt;</button>
+            <button className="active">{pagination.page}</button>
+            <button onClick={() => handlePageChange(pagination.page + 1)} disabled={pagination.page === pagination.totalPages}>&gt;</button>
           </div>
         </div>
       </div>
 
       <div className="reports-summary-cards">
         <div className="summary-card incomes">
-          <div className="card-header">
-            <span>Ingresos Totales</span>
-            <span className="trend positive">+12%</span>
-          </div>
-          <h3>${summary.incomes.toLocaleString('en-US', { minimumFractionDigits: 2 })}</h3>
+          <div className="card-header"><span>Ingresos Totales</span></div>
+          <h3>${summary.ingresos?.toLocaleString('es-AR')}</h3>
           <p>Acumulado en el período seleccionado</p>
         </div>
         <div className="summary-card completed">
-          <div className="card-header">
-            <span>Reservas Completadas</span>
-          </div>
-          <h3>{summary.completed}</h3>
-          <p>94% de efectividad de asistencia</p>
+          <div className="card-header"><span>Reservas Confirmadas</span></div>
+          <h3>{summary.completadas}</h3>
         </div>
         <div className="summary-card cancellations">
-          <div className="card-header">
-            <span>Cancelaciones</span>
-          </div>
-          <h3>{summary.cancellations}</h3>
-          <p>Reducción del 5% vs mes anterior</p>
+          <div className="card-header"><span>Cancelaciones</span></div>
+          <h3>{summary.cancelaciones}</h3>
         </div>
       </div>
     </div>
   );
-};
-
-export default Reports;
+}
