@@ -1,23 +1,102 @@
-﻿import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import api from '../../services/axios';
 import './BookingConfirmation.css';
 
+const MESES = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
+
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  
-  const datosReserva = location.state;
-  const [procesandoPago, setProcesandoPago] = useState(false);
-  const [procesandoWA, setProcesandoWA] = useState(false);
+  const [searchParams] = useSearchParams();
 
-  if (!datosReserva) {
+  const [datosReserva, setDatosReserva]     = useState(location.state || null);
+  const [cargando, setCargando]             = useState(!location.state);
+  const [errorCarga, setErrorCarga]         = useState(null);
+  const [procesandoPago, setProcesandoPago] = useState(false);
+  const [procesandoWA, setProcesandoWA]     = useState(false);
+
+  useEffect(() => {
+    if (location.state) return; // datos ya disponibles via router navigate()
+
+    const courtId   = searchParams.get('courtId');
+    const complexId = searchParams.get('complexId');
+    const date      = searchParams.get('date');
+    const startTime = searchParams.get('startTime');
+    const endTime   = searchParams.get('endTime');
+
+    if (!courtId || !complexId || !date || !startTime || !endTime) {
+      setErrorCarga('Datos de reserva incompletos.');
+      setCargando(false);
+      return;
+    }
+
+    (async () => {
+      try {
+        const [courtRes, complexRes] = await Promise.all([
+          api.get(`/courts/public/${courtId}`),
+          api.get(`/complexes/public/${complexId}`),
+        ]);
+
+        const court   = courtRes.data.court;
+        const complex = complexRes.data.complex;
+
+        const fechaObj      = new Date(`${date}T12:00:00`);
+        const precioAlquiler = court.pricePerHour || 0;
+        const depositPct    = complex.depositPercentage || 30;
+        const total         = precioAlquiler;
+        const senia         = Math.round(total * depositPct / 100);
+
+        setDatosReserva({
+          courtId,
+          complexId,
+          date,
+          startTime,
+          endTime,
+          canchaNombre:  court.name,
+          canchaImagen:  court.photo || null,
+          clubNombre:    complex.name,
+          ubicacion:     complex.city || complex.location || '',
+          dia:           fechaObj.getDate(),
+          mesNombre:     MESES[fechaObj.getMonth()],
+          anio:          fechaObj.getFullYear(),
+          horario:       `${startTime} - ${endTime}`,
+          precioAlquiler,
+          precioLuz:     0,
+          total,
+          senia,
+        });
+      } catch {
+        setErrorCarga('No se pudo cargar la información de la cancha. Intentá de nuevo.');
+      } finally {
+        setCargando(false);
+      }
+    })();
+  }, []);
+
+  if (cargando) {
     return (
       <div style={{ textAlign: 'center', padding: '100px', color: '#fff' }}>
-        <h2>No hay ninguna reserva en proceso.</h2>
-        <button onClick={() => navigate('/')} style={{ padding: '10px', marginTop: '20px', cursor: 'pointer' }}>Volver al inicio</button>
+        <p>Cargando información de la reserva...</p>
+      </div>
+    );
+  }
+
+  if (errorCarga || !datosReserva) {
+    return (
+      <div style={{ textAlign: 'center', padding: '100px', color: '#fff' }}>
+        <h2>{errorCarga || 'No hay ninguna reserva en proceso.'}</h2>
+        <button
+          onClick={() => navigate('/')}
+          style={{ padding: '10px', marginTop: '20px', cursor: 'pointer' }}
+        >
+          Volver al inicio
+        </button>
       </div>
     );
   }
@@ -26,13 +105,13 @@ const BookingConfirmation = () => {
     setProcesandoPago(true);
     try {
       const res = await api.post('/bookings', {
-        court: datosReserva.courtId,
-        complex: datosReserva.complexId,
-        date: datosReserva.date,
-        startTime: datosReserva.startTime,
-        endTime: datosReserva.endTime,
-        totalAmount: datosReserva.total,
-        depositAmount: datosReserva.senia,
+        court:              datosReserva.courtId,
+        complex:            datosReserva.complexId,
+        date:               datosReserva.date,
+        startTime:          datosReserva.startTime,
+        endTime:            datosReserva.endTime,
+        totalAmount:        datosReserva.total,
+        depositAmount:      datosReserva.senia,
         confirmationMethod: 'mercadopago',
       });
 
@@ -54,19 +133,19 @@ const BookingConfirmation = () => {
     setProcesandoWA(true);
     try {
       const res = await api.post('/bookings', {
-        court: datosReserva.courtId,
-        complex: datosReserva.complexId,
-        date: datosReserva.date,
-        startTime: datosReserva.startTime,
-        endTime: datosReserva.endTime,
-        totalAmount: datosReserva.total,
-        depositAmount: datosReserva.senia,
+        court:              datosReserva.courtId,
+        complex:            datosReserva.complexId,
+        date:               datosReserva.date,
+        startTime:          datosReserva.startTime,
+        endTime:            datosReserva.endTime,
+        totalAmount:        datosReserva.total,
+        depositAmount:      datosReserva.senia,
         confirmationMethod: 'whatsapp',
       });
 
       const whatsappNumber = res.data.complex?.whatsapp;
       const text = encodeURIComponent(
-        `Hola! Quiero confirmar mi reserva de ${datosReserva.canchaNombre} el día ${datosReserva.dia} a las ${datosReserva.horario}.`
+        `Hola! Quiero confirmar mi reserva de ${datosReserva.canchaNombre} el día ${datosReserva.dia} de ${datosReserva.mesNombre} a las ${datosReserva.horario}.`
       );
       window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
     } catch (err) {
@@ -86,7 +165,7 @@ const BookingConfirmation = () => {
       <Navbar />
       <main className="confirmation-main">
         <div className="confirmation-container">
-          
+
           <div className="confirmation-left">
             <h1 className="confirmation-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="#bef264" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="24" height="24">
@@ -99,10 +178,10 @@ const BookingConfirmation = () => {
 
             <div className="summary-card">
               <div className="club-summary-header">
-                <img 
-                  src={datosReserva.canchaImagen || "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=150"} 
-                  alt={datosReserva.canchaNombre} 
-                  className="club-summary-img" 
+                <img
+                  src={datosReserva.canchaImagen || "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=150"}
+                  alt={datosReserva.canchaNombre}
+                  className="club-summary-img"
                 />
                 <div className="club-summary-info">
                   <h2>{datosReserva.clubNombre}</h2>
@@ -149,11 +228,13 @@ const BookingConfirmation = () => {
                 <span>Alquiler {datosReserva.canchaNombre}</span>
                 <span>{formatearDinero(datosReserva.precioAlquiler)}</span>
               </div>
-              <div className="breakdown-row">
-                <span>Luz (Nocturno)</span>
-                <span>{formatearDinero(datosReserva.precioLuz)}</span>
-              </div>
-              
+              {datosReserva.precioLuz > 0 && (
+                <div className="breakdown-row">
+                  <span>Luz (Nocturno)</span>
+                  <span>{formatearDinero(datosReserva.precioLuz)}</span>
+                </div>
+              )}
+
               <div className="breakdown-total">
                 <span>Total Reserva</span>
                 <span className="total-amount">{formatearDinero(datosReserva.total)}</span>
@@ -176,7 +257,7 @@ const BookingConfirmation = () => {
           <div className="confirmation-right">
             <div className="payment-methods-card">
               <h2>Selecciona un método</h2>
-              
+
               <div className="method-box">
                 <div className="method-icon mp-icon">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
@@ -186,8 +267,8 @@ const BookingConfirmation = () => {
                 </div>
                 <h3>Mercado Pago</h3>
                 <p>Confirmación Inmediata</p>
-                <button 
-                  className="btn-mp" 
+                <button
+                  className="btn-mp"
                   onClick={handleMercadoPago}
                   disabled={procesandoPago}
                 >
