@@ -1,5 +1,8 @@
 import "./we.css";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
+<Navbar/>
 function Nosotros() {
   return (
     <div className="about-page">
@@ -44,7 +47,7 @@ function Nosotros() {
       </section>
       <section className="about-vision">
         <div className="vision-main">
-          <span className="vision-icon">🚀</span>
+          <span className="vision-icon"></span>
 
           <h2>Nuestra Visión 2025</h2>
 
@@ -122,5 +125,5 @@ function Nosotros() {
     </div>
   );
 }
-
+<footer/>
 export default Nosotros;
