@@ -42,6 +42,49 @@ function Nosotros() {
           <p>Espacios deportivos conectados para reservar en segundos.</p>
         </article>
       </section>
+      <section className="about-vision">
+
+  <div className="vision-main">
+
+    <span className="vision-icon">🚀</span>
+
+    <h2>Nuestra Visión 2025</h2>
+
+    <p>
+      Queremos convertirnos en la plataforma de referencia para la
+      gestión deportiva en Latinoamérica, ayudando a clubes y
+      jugadores a conectarse de forma simple y eficiente.
+    </p>
+
+  </div>
+
+  <div className="vision-side">
+
+    <article className="vision-card">
+
+      <h3>Precisión Técnica</h3>
+
+      <p>
+        Diseñamos herramientas enfocadas en optimizar reservas,
+        horarios y administración diaria.
+      </p>
+
+    </article>
+
+    <article className="vision-card">
+
+      <h3>Experiencia de Usuario</h3>
+
+      <p>
+        Una plataforma intuitiva que permite reservar una cancha
+        en pocos segundos desde cualquier dispositivo.
+      </p>
+
+    </article>
+
+  </div>
+
+</section>
     </div>
   );
 }
