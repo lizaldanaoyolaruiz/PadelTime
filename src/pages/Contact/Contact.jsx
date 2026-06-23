@@ -30,33 +30,28 @@ export default function ContactPage() {
     setIsSubmitting(true);
     setStatus({ type: null, message: '' });
 
-    // TODO: Conectar con el backend real — eliminar el bloque de simulación y descomentar esto.
-    // El backend recibe los datos y los envía por SMTP (nodemailer, SendGrid, etc.)
-    //
-    // try {
-    //   const response = await fetch('/api/contact', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(data),
-    //   });
-    //   const result = await response.json();
-    //   if (response.ok) {
-    //     setStatus({ type: 'success', message: result.message });
-    //     reset();
-    //   } else {
-    //     setStatus({ type: 'error', message: result.message });
-    //   }
-    // } catch {
-    //   setStatus({ type: 'error', message: 'No se pudo conectar con el servidor.' });
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
-
-    // Simulación — reemplazar por el bloque de arriba cuando el backend esté listo
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setStatus({ type: 'success', message: '¡Mensaje enviado! Te responderemos a la brevedad.' });
-    reset();
-    setIsSubmitting(false);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.nombre,
+          email: data.email,
+          message: `Asunto: ${data.asunto}\n\n${data.mensaje}`,
+        }),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setStatus({ type: 'success', message: result.message });
+        reset();
+      } else {
+        setStatus({ type: 'error', message: result.message });
+      }
+    } catch {
+      setStatus({ type: 'error', message: 'No se pudo conectar con el servidor.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
