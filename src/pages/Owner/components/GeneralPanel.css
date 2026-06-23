@@ -269,9 +269,9 @@
 }
 .slot-name { font-size: var(--text-sm); font-weight: var(--fw-medium); }
 .slot-sub  { font-size: var(--text-xs); }
-.slot--confirmado { background: rgba(132, 204, 22, 0.1);  border-left: 3px solid var(--color-success); }
-.slot--confirmado .slot-name { color: var(--color-text-base); }
-.slot--confirmado .slot-sub  { color: var(--color-text-muted); }
+.slot--confirmado { background: rgba(239, 68, 68, 0.15); border-left: 3px solid #ef4444; color: #f87171; }
+.slot--confirmado .slot-name { color: #f87171; }
+.slot--confirmado .slot-sub  { color: #f87171; }
 .slot--pendiente  { background: rgba(239, 68, 68, 0.08);  border-left: 3px solid var(--color-error); border-style: dashed; }
 .slot--pendiente .slot-name  { color: var(--color-error); }
 .slot--pendiente .slot-sub   { color: var(--color-error); opacity: 0.7; }
