@@ -105,7 +105,7 @@
 
 .cp-stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
   width: 100%;
   margin-top: 4px;
@@ -135,7 +135,7 @@
 /* ── Next match ──────────────────────────────────────────────────────────── */
 .cp-next-match {
   background: #bef264;
-  color: #07152e;
+  color: #000;
   border-radius: 20px;
   padding: 22px 20px;
   display: flex;
@@ -156,6 +156,7 @@
   font-weight: 700;
   letter-spacing: .8px;
   width: fit-content;
+  color: #000;
 }
 
 .cp-next-match h1 {
@@ -163,12 +164,13 @@
   font-weight: 800;
   margin: 0;
   line-height: 1.1;
+  color: #000;
 }
 
 .cp-next-match p {
   font-size: 13px;
   margin: 0;
-  color: rgba(7,21,46,.8);
+  color: rgba(0,0,0,.7);
 }
 
 .cp-no-match {
@@ -196,13 +198,14 @@
   font-weight: 800;
   line-height: 1;
   margin-bottom: 4px;
+  color: #000;
 }
 
 .cp-countdown span {
   font-size: 10px;
   font-weight: 700;
   letter-spacing: .6px;
-  color: rgba(7,21,46,.75);
+  color: rgba(0,0,0,.65);
 }
 
 /* ── Settings card ───────────────────────────────────────────────────────── */
