@@ -21,11 +21,11 @@
 
 /* ── Brand ───────────────────────────────────────────────────────────────── */
 .sa-brand {
-  padding: 26px 20px 20px;
+  padding: 22px 20px 18px;
   border-bottom: 1px solid var(--color-border-subtle);
   display: flex;
-  align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 2px;
 }
 .sa-brand-name {
   font-size: var(--text-lg);
@@ -33,15 +33,11 @@
   color: var(--color-primary);
   letter-spacing: -0.4px;
 }
-.sa-brand-badge {
+.sa-brand-sub {
   font-size: 10px;
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.8px;
-  color: var(--color-text-inverse);
-  background: var(--color-primary);
-  border-radius: 5px;
-  padding: 2px 7px;
-  line-height: 1.6;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
 }
 
 /* ── Nav ─────────────────────────────────────────────────────────────────── */
@@ -76,12 +72,50 @@
   color: var(--color-text-base);
 }
 .sa-nav-item.active {
-  background: rgba(190, 242, 100, 0.12);
+  background: rgba(190, 242, 100, 0.10);
   color: var(--color-primary);
+  position: relative;
+}
+.sa-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--color-primary);
+  border-radius: 0 3px 3px 0;
 }
 .sa-nav-item.active svg {
   color: var(--color-primary);
 }
+
+/* ── Sidebar Bottom ──────────────────────────────────────────────────────── */
+.sa-sidebar-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sa-new-owner-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: calc(100% - 20px);
+  margin: 0 10px 12px;
+  padding: 10px 14px;
+  background: var(--color-primary);
+  color: #07152f;
+  border: none;
+  border-radius: 10px;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-bold);
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.sa-new-owner-btn:hover { opacity: .88; }
 
 /* ── Sidebar Footer ──────────────────────────────────────────────────────── */
 .sa-sidebar-footer {
@@ -157,8 +191,6 @@
 .sa-main {
   flex: 1;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   min-width: 0;
 }
 
@@ -194,12 +226,14 @@
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sa-sidebar { width: 64px; }
-  .sa-brand-badge,
+  .sa-brand-sub,
   .sa-sidebar-user-info,
-  .sa-nav-item span { display: none; }
+  .sa-nav-item span,
+  .sa-new-owner-btn span { display: none; }
   .sa-brand { padding: 20px 12px; justify-content: center; }
   .sa-brand-name { font-size: var(--text-sm); }
   .sa-nav-item { justify-content: center; padding: 12px; }
+  .sa-new-owner-btn { justify-content: center; width: 40px; margin: 0 auto 12px; padding: 10px; border-radius: 10px; }
   .sa-sidebar-footer { justify-content: center; flex-direction: column; gap: 6px; padding: 10px 6px; }
   .sa-sidebar-user { justify-content: center; }
   .sa-sidebar-avatar { width: 32px; height: 32px; }
