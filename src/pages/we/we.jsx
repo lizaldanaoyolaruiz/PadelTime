@@ -30,14 +30,14 @@ function Nosotros() {
 
         <article className="stat-card">
           <h2>8K+</h2>
-          <h3>Partidos Organizados</h3>
+          <h3>Partidos/ Mes</h3>
 
           <p>Miles de encuentros coordinados mediante nuestra plataforma.</p>
         </article>
 
         <article className="stat-card">
           <h2>4K+</h2>
-          <h3>Canchas Disponibles</h3>
+          <h3>Canchas</h3>
 
           <p>Espacios deportivos conectados para reservar en segundos.</p>
         </article>
@@ -87,7 +87,7 @@ function Nosotros() {
 
         <div className="team-grid">
           <article className="team-member">
-            <div className="member-avatar">FC</div>
+            <div className="member-avatar"></div>
 
             <h3>Marisol Lamas</h3>
 
@@ -95,7 +95,7 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar">JM</div>
+            <div className="member-avatar"></div>
 
             <h3>Aldana Ruiz</h3>
 
@@ -103,7 +103,7 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar">LP</div>
+            <div className="member-avatar"></div>
 
             <h3>Facundo Camaño</h3>
 
@@ -111,7 +111,7 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar">MG</div>
+            <div className="member-avatar"></div>
 
             <h3>Octavio Fernandez</h3>
 
