@@ -12,7 +12,7 @@
     #07152f;
 }
 .about-hero {
-    min-height: 75vh;
+    min-height: 62vh;
 
     display: flex;
     align-items: center;
@@ -31,7 +31,7 @@
 }
 
 .about-hero-content {
-    max-width: 900px;
+    max-width: 750px;
     text-align: center;
 }
 
@@ -48,9 +48,8 @@
 
 .about-hero h1 {
     margin-bottom: 1.5rem;
-
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 1.1;
+    font-size: clamp(2.2rem, 4vw, 3.8rem);
+    line-height: 1.15;
     font-weight: 800;
 }
 
@@ -59,12 +58,10 @@
 }
 
 .about-hero p {
-    max-width: 700px;
+    max-width: 650px;
     margin: 0 auto;
-
-    color: #cbd5e1;
-
-    font-size: 1.1rem;
+    color: #d1d5db;
+    font-size: 1rem;
     line-height: 1.8;
 }
 
@@ -286,24 +283,25 @@
 
 @media (max-width: 900px) {
 
-    .about-stats {
-        grid-template-columns: 1fr;
+  .about-stats {
+    grid-template-columns: 1fr;
+    margin-top: -40px;
+  }
 
-        margin-top: -40px;
-    }
+  .about-vision {
+    grid-template-columns: 1fr;
+  }
 
-    .about-vision {
-        grid-template-columns: 1fr;
-    }
-    .team-grid{
-        grid-template-columns: (2, 2fr);
-    }
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 600px) {
 
   .team-grid {
     grid-template-columns: 1fr;
   }
-
 }    
 /*team */
 
