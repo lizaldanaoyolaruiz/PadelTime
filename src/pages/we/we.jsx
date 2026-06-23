@@ -3,12 +3,19 @@ import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import marisolImg from "../../assets/mar.padel.jpeg";
 import aldanaImg from "../../assets/ald.padel.jpeg";
-import facundoImg from "../../assets/fac.";
+import facundoImg from "../../assets/fac.pdel.jpeg";
 import octavioImg from "../../assets/oc.padel.jpeg";
 
 function Nosotros() {
+  console.log(marisolImg);
+  console.log(aldanaImg);
+  console.log(facundoImg);
+  console.log(octavioImg);
   return (
-    
+      <>
+
+      <Navbar />
+
     <div className="about-page">
       <section className="about-hero">
         <div className="about-hero-content">
@@ -95,7 +102,7 @@ function Nosotros() {
         <div className="team-grid">
           <article className="team-member">
             <div className="member-avatar">
-                <img src="{marisolImg}" alt="Marisol Lamas" />
+              <img src={marisolImg} alt="Marisol Lamas" />
             </div>
 
             <h3>Marisol Lamas</h3>
@@ -105,7 +112,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="{aldanaImg}" alt="Aldana Ruiz" />
+              <img src={aldanaImg} alt="Aldana Ruiz" />
             </div>
 
             <h3>Aldana Ruiz</h3>
@@ -115,7 +122,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="{facundoImg}" alt="Facundo Camaño" />
+              <img src={facundoImg} alt="Facundo Camaño" />
             </div>
 
             <h3>Facundo Camaño</h3>
@@ -125,7 +132,7 @@ function Nosotros() {
 
           <article className="team-member">
             <div className="member-avatar">
-                <img src="{octavioImg}" alt="Octavio Fernandez" />
+              <img src={octavioImg} alt="Octavio Fernandez" />
             </div>
 
             <h3>Octavio Fernandez</h3>
@@ -135,7 +142,10 @@ function Nosotros() {
         </div>
       </section>
     </div>
-  );
+    
+<Footer />
+</>
+  )
 }
-<footer/>
+
 export default Nosotros;
