@@ -1,113 +1,111 @@
 .about-page {
-  background-color: #07152f;
-  color: #fff;
-  min-height: 100vh;
+    background-color: #07152f;
+    color: #fff;
+    min-height: 100vh;
 }
 
 .about-hero {
-  min-height: 75vh;
+    min-height: 75vh;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  padding: 4rem 1.5rem;
+    padding: 4rem 1.5rem;
 
-  background:
-    linear-gradient(
-      rgba(7, 21, 47, 0.85),
-      rgba(7, 21, 47, 0.95)
-    ),
-    url("/images/padel-hero.jpg");
+    background:
+        linear-gradient(rgba(7, 21, 47, 0.85),
+            rgba(7, 21, 47, 0.95)),
+        url("/images/padel-hero.jpg");
 
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .about-hero-content {
-  max-width: 900px;
-  text-align: center;
+    max-width: 900px;
+    text-align: center;
 }
 
 .about-tag {
-  display: inline-block;
+    display: inline-block;
 
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 
-  color: #bef264;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 2px;
+    color: #bef264;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 2px;
 }
 
 .about-hero h1 {
-  margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  line-height: 1.1;
-  font-weight: 800;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    font-weight: 800;
 }
 
 .about-hero h1 span {
-  color: #bef264;
+    color: #bef264;
 }
 
 .about-hero p {
-  max-width: 700px;
-  margin: 0 auto;
+    max-width: 700px;
+    margin: 0 auto;
 
-  color: #cbd5e1;
+    color: #cbd5e1;
 
-  font-size: 1.1rem;
-  line-height: 1.8;
+    font-size: 1.1rem;
+    line-height: 1.8;
 }
 
 
 .about-stats {
     max-width: 1200px;
-    
+
     margin: -80px auto 0;
-    
-  padding: 0 1.5rem;
 
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+    padding: 0 1.5rem;
 
-  gap: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 
-  position: relative;
-  z-index: 2;
+    gap: 1.5rem;
+
+    position: relative;
+    z-index: 2;
 }
 
 .stat-card {
-  background: #0f1f3d;
+    background: #0f1f3d;
 
-  border-radius: 16px;
+    border-radius: 16px;
 
-  padding: 2rem;
+    padding: 2rem;
 
-  text-align: center;
+    text-align: center;
 
-  border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
-  transition: 0.3s;
+    transition: 0.3s;
 }
 
 .stat-card:hover {
-  transform: translateY(-5px);
+    transform: translateY(-5px);
 }
 
 .stat-card h2 {
-  color: #bef264;
+    color: #bef264;
 
-  font-size: 3rem;
+    font-size: 3rem;
 
-  margin-bottom: .5rem;
+    margin-bottom: .5rem;
 }
 
 .stat-card h3 {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .stat-card p {
@@ -115,105 +113,112 @@
 
     line-height: 1.6;
 }
+
 /*vision*/
 
 .about-vision {
-  max-width: 1200px;
+    max-width: 1200px;
 
-  margin: 6rem auto;
+    margin: 6rem auto;
 
-  padding: 0 1.5rem;
+    padding: 0 1.5rem;
 
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
 
-  gap: 1.5rem;
+    gap: 1.5rem;
 }
 
 .vision-main {
-  background: #0f1f3d;
+    background: #0f1f3d;
 
-  border-radius: 18px;
+    border-radius: 18px;
 
-  padding: 3rem;
+    padding: 3rem;
 
-  border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .vision-icon {
-  font-size: 2rem;
+    font-size: 2rem;
 
-  display: inline-block;
+    display: inline-block;
 
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .vision-main h2 {
-  font-size: 2.2rem;
+    font-size: 2.2rem;
 
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
 
 .vision-main p {
-  color: #94a3b8;
+    color: #94a3b8;
 
-  line-height: 1.8;
+    line-height: 1.8;
 }
 
 .vision-side {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  gap: 1.5rem;
+    gap: 1.5rem;
 }
 
 .vision-card {
-  flex: 1;
+    flex: 1;
 
-  background: #0f1f3d;
+    background: #0f1f3d;
 
-  border-radius: 18px;
+    border-radius: 18px;
 
-  padding: 2rem;
+    padding: 2rem;
 
-  border: 1px solid rgba(190,242,100,.15);
+    border: 1px solid rgba(190, 242, 100, .15);
 
-  transition: .3s ease;
+    transition: .3s ease;
 }
 
 .vision-card:hover {
-  transform: translateY(-4px);
+    transform: translateY(-4px);
 
-  border-color: #bef264;
+    border-color: #bef264;
 }
 
 .vision-card h3 {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 
-  color: #bef264;
+    color: #bef264;
 }
 
 .vision-card p {
-  color: #94a3b8;
+    color: #94a3b8;
 
-  line-height: 1.6;
+    line-height: 1.6;
 }
 
-//*reponsive*// 
+/*reponsive*/ 
 @media (max-width: 768px) {
     .about-hero {
-     min-height: 65vh;
-      }
-      .about-hero p {
-        font-size: 1rem;
-      }
+        min-height: 65vh;
     }
+
+    .about-hero p {
+        font-size: 1rem;
+    }
+}
+
 @media (max-width: 900px) {
 
-  .about-stats {
-    grid-template-columns: 1fr;
+    .about-stats {
+        grid-template-columns: 1fr;
 
-    margin-top: -40px;
-  }
+        margin-top: -40px;
+    }
 
-}    
+    .about-vision {
+        grid-template-columns: 1fr;
+    }
+
+}
