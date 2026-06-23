@@ -18,6 +18,7 @@ import CourtDetail from "./pages/CourtDetail/CourtDetail";
 import ClientPanel from "./pages/ClientPanel/ClientPanel";
 import ManagementPanel from "./pages/SuperAdmin/ManagementPanel";
 import Metrics from "./pages/Metrics/Metrics";
+import Nosotros from "./pages/we/we";
 import "./App.css";
 import { ScheduleManager } from "./pages/Schedule/ScheduleManager";
 
@@ -54,7 +55,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/nosotros" element={<AboutPage />} />
+        <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/schedule" element={<ScheduleManager />} />
