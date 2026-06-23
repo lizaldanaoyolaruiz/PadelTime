@@ -149,12 +149,16 @@
 
 .vision-main {
     background: #0f1f3d;
-
     border-radius: 18px;
-
     padding: 3rem;
-
     border: 1px solid rgba(255, 255, 255, 0.08);
+    background:
+  linear-gradient(
+    135deg,
+    rgba(190,242,100,.08),
+    transparent
+  ),
+  #0f1f3d;
 }
 
 .vision-icon {
@@ -215,7 +219,25 @@
 
     line-height: 1.6;
 }
+.team-member {
+  text-align: center;
 
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.03),
+      transparent
+    ),
+    #0f1f3d;
+
+  border-radius: 18px;
+
+  padding: 2rem;
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  transition: all .3s ease;
+}
 
 /*reponsive*/ 
 @media (max-width: 768px) {
