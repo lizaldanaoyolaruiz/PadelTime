@@ -4,12 +4,14 @@ import { confirmarReserva, rechazarReserva } from '../../../services/reservation
 
 const BASE = { background: '#1f2937', color: '#ffffff' };
 
+const formatearFecha = (fecha) => fecha?.split('-').reverse().join('/') ?? '';
+
 export default function PendingList({ pending, onRefresh }) {
   const handleConfirmar = async (reserva) => {
     const result = await Swal.fire({
       ...BASE,
       title: '¿Confirmar turno?',
-      text: `${reserva.player?.name ?? (reserva.jugadorExterno ? `${reserva.jugadorExterno.nombre} ${reserva.jugadorExterno.apellido}` : 'Sin nombre')} — ${reserva.court?.name} ${reserva.startTime}`,
+      text: `${reserva.player?.name ?? (reserva.jugadorExterno ? `${reserva.jugadorExterno.nombre} ${reserva.jugadorExterno.apellido}` : 'Sin nombre')} — ${reserva.court?.name} ${reserva.startTime} · ${formatearFecha(reserva.date)}`,
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí, confirmar',
@@ -68,7 +70,9 @@ export default function PendingList({ pending, onRefresh }) {
               <span className="turno-nombre">
                 {t.player?.name ?? (t.jugadorExterno ? `${t.jugadorExterno.nombre} ${t.jugadorExterno.apellido}` : 'Sin nombre')}
               </span>
-              <span className="turno-detalle">{t.court?.name} • {t.startTime} - {t.endTime}</span>
+              <span className="turno-detalle">
+                {t.court?.name} • {t.startTime} - {t.endTime} • {formatearFecha(t.date)}
+              </span>
             </div>
             <span className="turno-estado estado-pendiente">${t.totalAmount}</span>
             <div className="turno-actions">
