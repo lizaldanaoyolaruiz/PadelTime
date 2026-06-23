@@ -447,7 +447,12 @@ select.form-input option {
   font-weight: 600;
 }
 
-/* Responsive */
+/* Hamburger button — oculto por defecto (desktop) */
+.sidebar-hamburger {
+  display: none;
+}
+
+/* ── Tablet: sidebar icon-only ────────────────────── */
 @media (max-width: 768px) {
   .owner-sidebar { width: 64px; }
   .brand-sub, .sidebar-user-info, .nav-item span, .btn-logout span { display: none; }
@@ -456,4 +461,87 @@ select.form-input option {
   .sidebar-footer { justify-content: center; padding: 10px; }
   .panel-wrap { padding: 20px 16px; }
   .form-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Mobile: sidebar oculto, hamburger visible ─────── */
+@media (max-width: 640px) {
+  /* Sidebar: oculto por defecto, slide-in cuando está abierto */
+  .owner-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .owner-sidebar--open {
+    transform: translateX(0);
+  }
+
+  /* Mostrar textos dentro del sidebar en mobile (drawer completo) */
+  .owner-sidebar--open .brand-sub,
+  .owner-sidebar--open .sidebar-user-info,
+  .owner-sidebar--open .nav-item span {
+    display: block;
+  }
+
+  .owner-sidebar--open .brand-name {
+    font-size: var(--text-lg);
+  }
+
+  .owner-sidebar--open .nav-item {
+    justify-content: flex-start;
+    padding: 10px 12px;
+  }
+
+  .owner-sidebar--open .sidebar-footer {
+    justify-content: flex-start;
+    padding: 14px 10px;
+  }
+
+  /* Overlay oscuro detrás del sidebar */
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 199;
+  }
+
+  /* Hamburger: visible en mobile */
+  .sidebar-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    margin: 12px 0 0 12px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-base);
+    cursor: pointer;
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .sidebar-hamburger:hover {
+    background: var(--color-surface-3);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  /* El main ocupa toda la pantalla (sin sidebar) */
+  .owner-layout {
+    flex-direction: column;
+  }
+
+  .owner-main {
+    width: 100%;
+  }
 }
