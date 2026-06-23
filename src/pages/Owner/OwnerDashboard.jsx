@@ -62,11 +62,11 @@ export default function OwnerDashboard() {
     : 'OW';
 
   const panels = {
-    panel:        <GeneralPanel    complexId={complexId} />,
+    panel:        <GeneralPanel    key={complexId} complexId={complexId} />,
     complejo:     <MyComplex />,
     canchas:      <MyCourts />,
-    reservas:     <ReservasHoyPanel complexId={complexId} />,
-    reportes:     <Reports />,
+    reservas:     <ReservasHoyPanel key={complexId} complexId={complexId} />,
+    reportes:     <Reports         key={complexId} complexId={complexId} />,
     metricas:     <MetricsPanel />,
     pagos:        <PaymentConfig />,
     horarios:     <ScheduleManager />,
