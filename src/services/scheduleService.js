@@ -1,29 +1,19 @@
-import api from "./axios"
+import api from './axios';
 
-export const fetchCourtsSchedule = (complexId) =>{
-    api.get('/courts/schedule', {params: {complexId}  })
-}
+export const getCourtsSchedule = (params) =>
+  api.get('/courts/schedule', { params });
 
-export const updateCourtSchedule = (courtId, data) => {
-  api.put(`/courts/${courtId}/schema`, data)
-}
+export const updateCourtSchedule = (courtId, data) =>
+  api.put(`/courts/${courtId}/schedule`, data);
 
-export const fetchGlobalConfig = (complexId) => {
-  api.get(`/complex/${complexId}/config`)
-}
+export const getBlockouts = (params) =>
+  api.get('/blockouts', { params });
 
-export const updateGlobalConfig = (complexId, data) =>{
-    api.put(`/complex/${complexId}/config`, data)
-}
+export const createBlockout = (data) =>
+  api.post('/blockouts', data);
 
-export const createBlockout = (blockdata) => {
-    api.post('/blockouts', blockdata)
-}
+export const updateBlockout = (id, data) =>
+  api.put(`/blockouts/${id}`, data);
 
-export const updateBlockout = (blockId, data) => {
-    api.put(`/blockouts/${blockId}`, data)
-}
-
-export const deleteBlockout = (blockId) => {
-    api.delete(`/blockouts/${blockId}`)
-}
+export const deleteBlockout = (id) =>
+  api.delete(`/blockouts/${id}`);
