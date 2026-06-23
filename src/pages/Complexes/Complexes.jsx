@@ -17,7 +17,7 @@ const mapComplex = (c) => ({
   image: c.photos?.[0] || c.image || PLACEHOLDER_IMAGE,
   location: c.location,
   city: c.city,
-  surface: c.surface || '',
+  surface: c.courtTypes || [],
   rating: c.ratingAverage || 0,
   isFeatured: (c.ratingAverage || 0) >= 4.5 && (c.ratingCount || 0) > 0,
   status: c.status || c.estado || 'pendiente',
@@ -92,6 +92,27 @@ const Complexes = () => {
     cargarComplejos();
   }, []);
 
+  const tiposDisponibles = useMemo(() => {
+    const tipos = [];
+    complexes.forEach(c => {
+      c.surface.forEach(tipo => {
+        if (!tipos.includes(tipo)) tipos.push(tipo);
+      });
+    });
+    return tipos.sort();
+  }, [complexes]);
+
+  const franjasDisponibles = useMemo(() => {
+    const orden = ['Mañana', 'Tarde', 'Noche', 'Madrugada'];
+    const encontradas = [];
+    complexes.forEach(c => {
+      c.franjas.forEach(f => {
+        if (!encontradas.includes(f)) encontradas.push(f);
+      });
+    });
+    return orden.filter(f => encontradas.includes(f));
+  }, [complexes]);
+
   const filteredComplexes = useMemo(() => {
     return complexes.filter((c) => {
       const q = searchQuery.toLowerCase();
@@ -99,23 +120,19 @@ const Complexes = () => {
         !q ||
         c.name.toLowerCase().includes(q) ||
         (c.city || '').toLowerCase().includes(q);
-      // Sin precio declarado (datos del API sin actualizar) → pasa siempre
       const matchesPrice = c.price <= 0 || c.price <= precioMax;
-      // Sin disponibilidad declarada → pasa siempre
       const matchesDate =
         !fechaSeleccionada ||
         !c.availability?.length ||
         c.availability.includes(fechaSeleccionada);
-      // Sin franjas declaradas → pasa siempre
       const matchesFranja =
         franjasSeleccionadas.length === 0 ||
         !c.franjas?.length ||
         franjasSeleccionadas.some((f) => c.franjas.includes(f));
-      // Sin surface declarada → pasa siempre
       const matchesTipo =
         tiposSeleccionados.length === 0 ||
-        !c.surface ||
-        tiposSeleccionados.includes(c.surface);
+        c.surface.length === 0 ||
+        tiposSeleccionados.some(t => c.surface.includes(t));
 
       return matchesSearch && matchesPrice && matchesDate && matchesFranja && matchesTipo;
     });
@@ -175,6 +192,8 @@ const Complexes = () => {
           franjasSeleccionadas={franjasSeleccionadas}
           tiposSeleccionados={tiposSeleccionados}
           totalActivos={filtrosActivos}
+          tiposDisponibles={tiposDisponibles}
+          franjasDisponibles={franjasDisponibles}
           onChangeSearch={setSearchQuery}
           onChangePrecio={setPrecioMax}
           onChangeFecha={setFechaSeleccionada}
