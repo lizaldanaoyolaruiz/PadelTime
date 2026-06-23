@@ -220,6 +220,16 @@
     .about-vision {
         grid-template-columns: 1fr;
     }
+    .team-grid{
+        grid-template-columns: (2, 2fr);
+    }
+@media (max-width: 600px) {
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+
+}    
 /*team */
 
 .about-team {
