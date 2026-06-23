@@ -116,7 +116,9 @@
     line-height: 1.6;
 }
 
- @media (max-width: 768px) {
+
+//*reponsive*// 
+@media (max-width: 768px) {
     .about-hero {
      min-height: 65vh;
       }
