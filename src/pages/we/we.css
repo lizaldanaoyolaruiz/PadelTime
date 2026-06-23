@@ -115,7 +115,89 @@
 
     line-height: 1.6;
 }
+/*vision*/
 
+.about-vision {
+  max-width: 1200px;
+
+  margin: 6rem auto;
+
+  padding: 0 1.5rem;
+
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  gap: 1.5rem;
+}
+
+.vision-main {
+  background: #0f1f3d;
+
+  border-radius: 18px;
+
+  padding: 3rem;
+
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.vision-icon {
+  font-size: 2rem;
+
+  display: inline-block;
+
+  margin-bottom: 1rem;
+}
+
+.vision-main h2 {
+  font-size: 2.2rem;
+
+  margin-bottom: 1rem;
+}
+
+.vision-main p {
+  color: #94a3b8;
+
+  line-height: 1.8;
+}
+
+.vision-side {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.5rem;
+}
+
+.vision-card {
+  flex: 1;
+
+  background: #0f1f3d;
+
+  border-radius: 18px;
+
+  padding: 2rem;
+
+  border: 1px solid rgba(190,242,100,.15);
+
+  transition: .3s ease;
+}
+
+.vision-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #bef264;
+}
+
+.vision-card h3 {
+  margin-bottom: 1rem;
+
+  color: #bef264;
+}
+
+.vision-card p {
+  color: #94a3b8;
+
+  line-height: 1.6;
+}
 
 //*reponsive*// 
 @media (max-width: 768px) {
