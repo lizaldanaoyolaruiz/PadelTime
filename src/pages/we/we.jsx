@@ -75,6 +75,50 @@ function Nosotros() {
           </article>
         </div>
       </section>
+      <section className="about-team">
+        <div className="team-header">
+          <h2>Nuestro Equipo</h2>
+
+          <p>
+            Personas apasionadas por el deporte y la tecnología, trabajando para
+            transformar la experiencia del pádel.
+          </p>
+        </div>
+
+        <div className="team-grid">
+          <article className="team-member">
+            <div className="member-avatar">FC</div>
+
+            <h3>Facundo Camaño</h3>
+
+            <span>Frontend Developer</span>
+          </article>
+
+          <article className="team-member">
+            <div className="member-avatar">JM</div>
+
+            <h3>Juan Martínez</h3>
+
+            <span>Backend Developer</span>
+          </article>
+
+          <article className="team-member">
+            <div className="member-avatar">LP</div>
+
+            <h3>Lucía Pérez</h3>
+
+            <span>UI / UX Designer</span>
+          </article>
+
+          <article className="team-member">
+            <div className="member-avatar">MG</div>
+
+            <h3>Martín Gómez</h3>
+
+            <span>Project Manager</span>
+          </article>
+        </div>
+      </section>
     </div>
   );
 }
