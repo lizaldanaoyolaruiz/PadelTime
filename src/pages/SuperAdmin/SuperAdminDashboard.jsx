@@ -1,27 +1,32 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Building2, Users, Settings, LogOut } from 'lucide-react';
+import {
+  LayoutDashboard, Users, Building2,
+  LogOut, Plus,
+} from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import ComplexManagement from './ComplexManagement';
 import ManagementPanel from './ManagementPanel';
 import './SuperAdminDashboard.css';
 
 const NAV = [
-  { id: 'complejos',     label: 'Clubes Pendientes',   Icon: Building2 },
-  { id: 'usuarios',      label: 'Gestión de Usuarios', Icon: Users     },
-  { id: 'configuracion', label: 'Configuración',        Icon: Settings  },
+  { id: 'complejo',  label: 'Complejo',  Icon: LayoutDashboard },
+  { id: 'usuarios',  label: 'Usuarios',  Icon: Users           },
+  { id: 'complejos', label: 'Complejos', Icon: Building2       },
 ];
 
 export default function SuperAdminDashboard() {
-  const [active, setActive] = useState('complejos');
-  const { user, logout }    = useAuthStore();
-  const navigate            = useNavigate();
+  const [active, setActive]           = useState('usuarios');
+  const [triggerCreate, setTriggerCreate] = useState(0);
+  const { user, logout }              = useAuthStore();
+  const navigate                      = useNavigate();
 
   const handleLogout = () => { logout(); navigate('/login'); };
 
-  const initials = user?.name
-    ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-    : 'SA';
+  const handleNuevoPropietario = () => {
+    setActive('usuarios');
+    setTriggerCreate(n => n + 1);
+  };
 
   return (
     <div className="sa-layout">
@@ -29,7 +34,7 @@ export default function SuperAdminDashboard() {
       <aside className="sa-sidebar">
         <div className="sa-brand">
           <span className="sa-brand-name">PadelSaaS</span>
-          <span className="sa-brand-badge">ADMIN</span>
+          <span className="sa-brand-sub">PANEL DE CONTROL</span>
         </div>
 
         <nav className="sa-nav">
@@ -39,35 +44,44 @@ export default function SuperAdminDashboard() {
               className={`sa-nav-item${active === id ? ' active' : ''}`}
               onClick={() => setActive(id)}
             >
-              <Icon size={18} />
+              <Icon size={17} />
               <span>{label}</span>
             </button>
           ))}
         </nav>
 
-        <div className="sa-sidebar-footer">
-          <div className="sa-sidebar-user">
-            <div className="sa-sidebar-avatar">{initials}</div>
-            <div className="sa-sidebar-user-info">
-              <span className="sa-sidebar-user-name">{user?.name || 'Super Admin'}</span>
-              <span className="sa-sidebar-user-role">Super Administrador</span>
-            </div>
-          </div>
-          <button className="sa-btn-logout" onClick={handleLogout} title="Cerrar sesión">
-            <LogOut size={16} />
+        <div className="sa-sidebar-bottom">
+          <button className="sa-new-owner-btn" onClick={handleNuevoPropietario}>
+            <Plus size={16} />
+            Nuevo Propietario
           </button>
+
+          <div className="sa-sidebar-footer">
+            <div className="sa-sidebar-user">
+              <div className="sa-sidebar-avatar">
+                {user?.name
+                  ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
+                  : 'SA'}
+              </div>
+              <div className="sa-sidebar-user-info">
+                <span className="sa-sidebar-user-name">{user?.name || 'Super Admin'}</span>
+                <span className="sa-sidebar-user-role">Super Administrador</span>
+              </div>
+            </div>
+            <button className="sa-btn-logout" onClick={handleLogout} title="Cerrar sesión">
+              <LogOut size={16} />
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* ── Main ── */}
       <main className="sa-main">
-        {active === 'complejos'    && <ComplexManagement />}
-        {active === 'usuarios'     && <ManagementPanel />}
-        {active === 'configuracion' && (
-          <div className="sa-coming-soon">
-            <h3>Próximamente</h3>
-            <p>Esta sección estará disponible pronto.</p>
-          </div>
+        {active === 'usuarios'  && (
+          <ManagementPanel triggerCreate={triggerCreate} />
+        )}
+        {(active === 'complejo' || active === 'complejos') && (
+          <ComplexManagement />
         )}
       </main>
     </div>
