@@ -431,12 +431,8 @@ export default function ClientPanel() {
             </div>
             <div className="cp-stats-row">
               <div className="cp-stat">
-                <span>PARTIDOS</span>
+                <span>RESERVAS</span>
                 <strong>{totalPartidos}</strong>
-              </div>
-              <div className="cp-stat">
-                <span>VICTORIAS</span>
-                <strong>{victorias}</strong>
               </div>
             </div>
           </div>
@@ -583,9 +579,6 @@ export default function ClientPanel() {
                             </button>
                           )}
 
-                          {b.status === 'confirmed' && (
-                            <button className="cp-comprobante-btn">Comprobante</button>
-                          )}
                           {b.status === 'cancelled' && (
                             <span className="cp-reembolso">Reembolsado</span>
                           )}
