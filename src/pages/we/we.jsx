@@ -1,4 +1,4 @@
-import "./Nosotros.css";
+import "./we.css";
 
 function Nosotros() {
   return (
