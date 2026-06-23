@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, Fragment } from 'react';
+import { useState, useMemo, useEffect, Fragment, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Lock, Settings2, Clock, CalendarDays, BadgeDollarSign, Users } from 'lucide-react';
 import './WeeklyCalendar.css';
 
@@ -90,6 +90,7 @@ export default function WeeklyCalendar({
 
   const [weekStart,     setWeekStart]     = useState(() => getMondayOf(new Date()));
   const [selectedCourt, setSelectedCourt] = useState(activeCourts[0]?._id);
+  const [maintModal,    setMaintModal]    = useState(null);
 
   const activeCourt = selectedCourt ?? activeCourts[0]?._id;
 
@@ -109,6 +110,29 @@ export default function WeeklyCalendar({
     });
     return map;
   }, [slots, activeCourt, weekStart, activeCourts]);
+
+  const blockoutMap = useMemo(() => {
+    if (!slots) return {};
+    const map = {};
+    slots.forEach(({ courtId, date, hour, blockout }) => {
+      if (courtId !== activeCourt || !blockout) return;
+      if (!map[date]) map[date] = {};
+      map[date][hour] = blockout;
+    });
+    return map;
+  }, [slots, activeCourt]);
+
+  // Cuando slots viene de la API, solo mostramos las horas que realmente existen
+  const visibleHours = useMemo(() => {
+    if (!slots) return HOURS;
+    const hoursSet = new Set();
+    slots.forEach(s => {
+      if (s.courtId === activeCourt && weekDays.some(d => d.date === s.date)) {
+        hoursSet.add(s.hour);
+      }
+    });
+    return hoursSet.size > 0 ? Array.from(hoursSet).sort((a, b) => a - b) : HOURS;
+  }, [slots, activeCourt, weekDays]);
 
   const today = todayIso();
 
@@ -141,6 +165,9 @@ export default function WeeklyCalendar({
       onSlotClick(activeCourt, date, hour);
     } else if (status === 'reservado' || status === 'pendiente') {
       onOccupiedSlotClick?.(activeCourt, date, hour, status);
+    } else if (status === 'mantenimiento') {
+      const info = blockoutMap[date]?.[hour] ?? { name: 'Bloqueo', start: `${String(hour).padStart(2,'0')}:00`, end: `${String(hour+1).padStart(2,'0')}:00` };
+      setMaintModal(info);
     }
   };
 
@@ -232,16 +259,17 @@ export default function WeeklyCalendar({
                     ))}
                   </Fragment>
                 ))
-              : HOURS.map(hour => (
+              : visibleHours.map(hour => (
                   <Fragment key={hour}>
                     <div className="wc-hour-label">
                       {String(hour).padStart(2, '0')}:00
                     </div>
                     {weekDays.map(({ date }) => {
-                      const status = slotMap[date]?.[hour] ?? 'disponible';
+                      const status = slotMap[date]?.[hour] ?? (slots ? 'cerrado' : 'disponible');
                       const pasado = isPast(date, hour);
-                      const isClickable = !pasado && (
+                      const isClickable = !pasado && status !== 'cerrado' && (
                         status === 'disponible' ||
+                        status === 'mantenimiento' ||
                         ((status === 'reservado' || status === 'pendiente') && !!onOccupiedSlotClick)
                       );
                       return (
@@ -273,6 +301,20 @@ export default function WeeklyCalendar({
           </div>
         </div>
       </div>
+
+      {/* Modal bloqueo */}
+      {maintModal && (
+        <div className="wc-maint-overlay" onClick={() => setMaintModal(null)}>
+          <div className="wc-maint-modal" onClick={e => e.stopPropagation()}>
+            <div className="wc-maint-modal-icon"><Settings2 size={20} /></div>
+            <div className="wc-maint-modal-body">
+              <span className="wc-maint-modal-name">{maintModal.name}</span>
+              <span className="wc-maint-modal-time">{maintModal.start} – {maintModal.end}</span>
+            </div>
+            <button className="wc-maint-modal-close" onClick={() => setMaintModal(null)}>✕</button>
+          </div>
+        </div>
+      )}
 
       {/* Stats */}
       {showStats && (
