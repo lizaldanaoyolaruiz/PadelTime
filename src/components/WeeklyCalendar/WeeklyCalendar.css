@@ -302,7 +302,7 @@
     rgba(51, 65, 85, 0.4) 5px,
     rgba(51, 65, 85, 0.4) 10px
   );
-  cursor: not-allowed;
+  cursor: pointer;
 }
 
 /* Skeleton */
@@ -424,14 +424,22 @@
     padding: 12px 14px;
   }
 
+  .wc-nav-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .wc-nav-range {
     min-width: unset;
     font-size: var(--text-sm);
+    flex: 1;
+    text-align: center;
   }
 
   .wc-legend {
     gap: 10px;
     flex-wrap: wrap;
+    width: 100%;
   }
 
   .wc-legend-item {
@@ -474,12 +482,85 @@
   }
 
   .wc-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .wc-stat-card {
     padding: 16px 18px;
   }
+}
+
+/* CERRADO (fuera del horario de la cancha) */
+.wc-slot--cerrado {
+  background: rgba(15, 23, 42, 0.6);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Modal bloqueo/mantenimiento ── */
+.wc-maint-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.wc-maint-modal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-surface, #1e293b);
+  border: 1px solid var(--color-border, rgba(255,255,255,0.1));
+  border-radius: 12px;
+  padding: 20px 24px;
+  min-width: 260px;
+  max-width: 360px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.wc-maint-modal-icon {
+  flex-shrink: 0;
+  color: #94A3B8;
+}
+
+.wc-maint-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.wc-maint-modal-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-base, #f1f5f9);
+}
+
+.wc-maint-modal-time {
+  font-size: 13px;
+  color: var(--color-text-muted, #94a3b8);
+}
+
+.wc-maint-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted, #94a3b8);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.wc-maint-modal-close:hover {
+  color: var(--color-text-base, #f1f5f9);
+  background: rgba(255,255,255,0.08);
 }
 
 /* ── Mobile ── */
@@ -499,6 +580,11 @@
     font-size: 11px;
   }
 
+  .wc-nav {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
   .wc-nav-controls {
     gap: 6px;
     width: 100%;
@@ -511,6 +597,7 @@
     text-align: center;
   }
 
+  /* En mobile ocultar Pendiente y Mantenimiento de la leyenda para que no ocupe 2 filas */
   .wc-legend {
     gap: 8px;
   }
@@ -520,34 +607,33 @@
   }
 
   .wc-grid-scroll {
-    max-height: 360px;
+    max-height: 340px;
   }
 
   .wc-grid {
-    grid-template-columns: 36px repeat(7, minmax(62px, 1fr));
-    min-width: 470px;
+    grid-template-columns: 36px repeat(7, minmax(56px, 1fr));
+    min-width: 428px;
   }
 
   .wc-hour-label {
-    min-height: 46px;
+    min-height: 44px;
     font-size: 9px;
     padding: 4px 4px 0 0;
   }
 
   .wc-slot {
-    min-height: 46px;
+    min-height: 44px;
     padding: 2px;
     gap: 2px;
   }
 
   .wc-slot-label {
-    font-size: 7px;
-    letter-spacing: 0.02em;
+    font-size: 0; /* Ocultar texto en slots, solo icono */
   }
 
   .wc-slot-icon {
-    width: 11px;
-    height: 11px;
+    width: 12px;
+    height: 12px;
   }
 
   .wc-day-header {
@@ -559,7 +645,11 @@
   }
 
   .wc-day-label {
-    font-size: 9px;
+    font-size: 8px;
+  }
+
+  .wc-stats {
+    grid-template-columns: 1fr;
   }
 
   .wc-stat-card {
@@ -574,5 +664,12 @@
 
   .wc-stat-value {
     font-size: 18px;
+  }
+
+  /* Modal mantenimiento: ancho completo en mobile */
+  .wc-maint-modal {
+    min-width: calc(100vw - 2rem);
+    max-width: calc(100vw - 2rem);
+    margin: 0 1rem;
   }
 }
