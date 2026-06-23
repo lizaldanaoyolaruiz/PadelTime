@@ -1,7 +1,7 @@
 ﻿import { useState, useEffect, useCallback } from 'react';
 import { getMyComplex } from '../../../services/complexService';
 import { getMyCourts } from '../../../services/courtService';
-import { getReservasOwner } from '../../../services/reservationService';
+import { getReservasOwner, getBookingStats } from '../../../services/reservationService';
 import { generarSlots } from '../utils/constants';
 import StatCards from './StatCards';
 import PendingList from './PendingList';
@@ -15,7 +15,9 @@ export default function GeneralPanel({ complexId }) {
   const [canchas,   setCanchas]   = useState([]);
   const [agenda,    setAgenda]    = useState([]);
   const [loading,   setLoading]   = useState(true);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal,        setShowModal]        = useState(false);
+  const [slotSeleccionado, setSlotSeleccionado] = useState(null);
+  const [statsHoy,         setStatsHoy]         = useState({});
 
   const hoy = new Date().toISOString().split('T')[0];
   const todayLabel = new Date().toLocaleDateString('es-AR', {
@@ -24,16 +26,29 @@ export default function GeneralPanel({ complexId }) {
 
   const cargarDatos = useCallback(async () => {
     try {
-      try {
-        const complexRes = await getMyComplex(complexId);
-        const complex = complexRes.data.complex || complexRes.data;
-        setComplejo(complex ?? null);
-      } catch {
-        // continúa sin complejo
+      let resolvedComplexId = complexId;
+
+      if (!resolvedComplexId) {
+        try {
+          const complexRes = await getMyComplex();
+          const complex = complexRes.data.complex || complexRes.data;
+          resolvedComplexId = complex?._id;
+          setComplejo(complex ?? null);
+        } catch {
+          // continúa sin complejo
+        }
+      } else {
+        try {
+          const complexRes = await getMyComplex(complexId);
+          const complex = complexRes.data.complex || complexRes.data;
+          setComplejo(complex ?? null);
+        } catch {}
       }
 
+      if (!resolvedComplexId) return;
+
       const [canchasRes, pendientesRes, agendaRes] = await Promise.all([
-        getMyCourts(complexId),
+        getMyCourts(resolvedComplexId),
         getReservasOwner({ status: 'pending' }),
         getReservasOwner({ date: hoy }),
       ]);
@@ -59,6 +74,17 @@ export default function GeneralPanel({ complexId }) {
       });
 
       setAgenda(matriz);
+
+      try {
+        const statsRes = await getBookingStats({ from: hoy, to: hoy });
+        const s = statsRes.data;
+        setStatsHoy({
+          reservas:  s.totalBookings,
+          ingresos:  `$${(s.estimatedRevenue || 0).toLocaleString('es-AR')}`,
+          jugadores: s.newPlayers,
+          ocupacion: `${s.occupancyRate}%`,
+        });
+      } catch { /* silencia errores */ }
     } catch (err) {
       const status = err.response?.status;
       if (status && ![404, 401, 403].includes(status)) console.error('Error cargando panel:', err);
@@ -89,7 +115,7 @@ export default function GeneralPanel({ complexId }) {
         </div>
       </div>
 
-      <StatCards />
+      <StatCards data={statsHoy} />
 
       <div className="pg-mid">
         <div className="pg-card pg-card--sena">
@@ -104,12 +130,24 @@ export default function GeneralPanel({ complexId }) {
         <PendingList pending={pending} onRefresh={cargarDatos} />
       </div>
 
-      <AgendaTable canchas={canchas} agenda={agenda} />
+      <AgendaTable
+        canchas={canchas}
+        agenda={agenda}
+        onSlotClick={(courtId, horario) => {
+          setSlotSeleccionado({
+            courtId,
+            date: hoy,
+            hour: parseInt(horario.split(':')[0]),
+          });
+          setShowModal(true);
+        }}
+      />
 
       {showModal && (
         <NewReservationModal
-          onClose={() => setShowModal(false)}
-          onCreated={() => { setShowModal(false); cargarDatos(); }}
+          slotData={slotSeleccionado}
+          onClose={() => { setShowModal(false); setSlotSeleccionado(null); }}
+          onCreated={() => { setShowModal(false); setSlotSeleccionado(null); cargarDatos(); }}
         />
       )}
     </div>
