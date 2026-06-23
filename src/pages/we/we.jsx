@@ -90,7 +90,9 @@ function Nosotros() {
 
         <div className="team-grid">
           <article className="team-member">
-            <div className="member-avatar"></div>
+            <div className="member-avatar">
+                <img src="../../assets/mar.padel.jpeg" alt="Marisol Lamas" />
+            </div>
 
             <h3>Marisol Lamas</h3>
 
@@ -98,7 +100,9 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar"></div>
+            <div className="member-avatar">
+                <img src="../../assets/ald.padel.jpeg" alt="Aldana Ruiz" />
+            </div>
 
             <h3>Aldana Ruiz</h3>
 
@@ -106,7 +110,9 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar"></div>
+            <div className="member-avatar">
+                <img src="../../assets/fac.pdel.jpeg" alt="Facundo Camaño" />
+            </div>
 
             <h3>Facundo Camaño</h3>
 
@@ -114,7 +120,9 @@ function Nosotros() {
           </article>
 
           <article className="team-member">
-            <div className="member-avatar"></div>
+            <div className="member-avatar">
+                <img src="../../assets/oc.padel.jpeg" alt="Octavio Fernandez" />
+            </div>
 
             <h3>Octavio Fernandez</h3>
 
