@@ -43,48 +43,38 @@ function Nosotros() {
         </article>
       </section>
       <section className="about-vision">
+        <div className="vision-main">
+          <span className="vision-icon">🚀</span>
 
-  <div className="vision-main">
+          <h2>Nuestra Visión 2025</h2>
 
-    <span className="vision-icon">🚀</span>
+          <p>
+            Queremos convertirnos en la plataforma de referencia para la gestión
+            deportiva en Latinoamérica, ayudando a clubes y jugadores a
+            conectarse de forma simple y eficiente.
+          </p>
+        </div>
 
-    <h2>Nuestra Visión 2025</h2>
+        <div className="vision-side">
+          <article className="vision-card">
+            <h3>Precisión Técnica</h3>
 
-    <p>
-      Queremos convertirnos en la plataforma de referencia para la
-      gestión deportiva en Latinoamérica, ayudando a clubes y
-      jugadores a conectarse de forma simple y eficiente.
-    </p>
+            <p>
+              Diseñamos herramientas enfocadas en optimizar reservas, horarios y
+              administración diaria.
+            </p>
+          </article>
 
-  </div>
+          <article className="vision-card">
+            <h3>Experiencia de Usuario</h3>
 
-  <div className="vision-side">
-
-    <article className="vision-card">
-
-      <h3>Precisión Técnica</h3>
-
-      <p>
-        Diseñamos herramientas enfocadas en optimizar reservas,
-        horarios y administración diaria.
-      </p>
-
-    </article>
-
-    <article className="vision-card">
-
-      <h3>Experiencia de Usuario</h3>
-
-      <p>
-        Una plataforma intuitiva que permite reservar una cancha
-        en pocos segundos desde cualquier dispositivo.
-      </p>
-
-    </article>
-
-  </div>
-
-</section>
+            <p>
+              Una plataforma intuitiva que permite reservar una cancha en pocos
+              segundos desde cualquier dispositivo.
+            </p>
+          </article>
+        </div>
+      </section>
     </div>
   );
 }
