@@ -1,7 +1,11 @@
-function SlotCell({ reserva }) {
+function SlotCell({ reserva, courtId, horario, onSlotClick }) {
   if (!reserva) {
     return (
-      <div className="slot slot--libre">
+      <div
+        className="slot slot--libre"
+        onClick={() => onSlotClick?.(courtId, horario)}
+        style={{ cursor: 'pointer' }}
+      >
         <span>Turno Libre</span>
         <span className="slot-sub">Click para reservar</span>
       </div>
@@ -13,7 +17,10 @@ function SlotCell({ reserva }) {
     : reserva.status === 'pending'  ? 'slot--pendiente'
     : 'slot--libre';
 
-  const nombre = reserva.player?.name ?? '—';
+  const nombre = reserva.player?.name ??
+    (reserva.jugadorExterno
+      ? `${reserva.jugadorExterno.nombre} ${reserva.jugadorExterno.apellido}`
+      : '—');
 
   return (
     <div className={`slot ${cls}`}>
@@ -25,7 +32,7 @@ function SlotCell({ reserva }) {
   );
 }
 
-export default function AgendaTable({ canchas, agenda }) {
+export default function AgendaTable({ canchas, agenda, onSlotClick }) {
   if (!canchas.length) {
     return (
       <div className="agenda-card">
@@ -67,7 +74,12 @@ export default function AgendaTable({ canchas, agenda }) {
                 <td className="horario-cell">{fila.horario}</td>
                 {canchas.map(c => (
                   <td key={c._id}>
-                    <SlotCell reserva={fila[c._id]} />
+                    <SlotCell
+                      reserva={fila[c._id]}
+                      courtId={c._id}
+                      horario={fila.horario}
+                      onSlotClick={onSlotClick}
+                    />
                   </td>
                 ))}
               </tr>
