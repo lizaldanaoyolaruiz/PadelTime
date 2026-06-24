@@ -17,10 +17,17 @@
 
 /* ── Hero ── */
 .tp-hero {
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
   margin-bottom: 2rem;
+  text-align: center;
+}
+
+.tp-hero-icon {
+  position: absolute;
+  left: 0;
 }
 
 .tp-hero-icon {
