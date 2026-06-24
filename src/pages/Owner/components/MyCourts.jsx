@@ -1,6 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2 } from 'lucide-react';
-import { getMyCourts, createCourt, updateCourt, deleteCourt } from '../../../services/courtService';
+import { getMyCourts, createCourt, updateCourt, deleteCourt, uploadCourtPhotos, setCourtPrincipalPhoto } from '../../../services/courtService';
 import { getMyComplex } from '../../../services/complexService';
 import { confirmDelete, confirmDisable, successAlert, errorAlert } from '../../../utils/alerts';
 import { SUPERFICIES } from '../utils/constants';
@@ -29,17 +29,30 @@ export default function MyCourts() {
       .finally(() => setLoading(false));
   }, []);
 
-  const handleSave = async (data) => {
+  const handleSave = async (data, newFiles, principalUrl, currentImages) => {
     try {
       if (modal?.cancha?._id) {
-        const res = await updateCourt(modal.cancha._id, { ...data, complexId }, null);
-        const updated = res.data.court || res.data;
+        const courtId = modal.cancha._id;
+        const res = await updateCourt(courtId, { ...data, complexId });
+        let updated = res.data.court || res.data;
+
+        if (principalUrl && principalUrl !== (modal.cancha.photo || null)) {
+          await setCourtPrincipalPhoto(courtId, principalUrl);
+        }
+
+        updated = { ...updated, photos: currentImages, photo: principalUrl || updated.photo };
         setCanchas(prev => prev.map(c => c._id === updated._id ? updated : c));
         setModal(null);
         await successAlert('Cancha actualizada correctamente.');
       } else {
-        const res = await createCourt({ ...data, complexId }, null);
-        const created = res.data.court || res.data;
+        const res = await createCourt({ ...data, complexId });
+        let created = res.data.court || res.data;
+
+        if (newFiles?.length) {
+          const uploadRes = await uploadCourtPhotos(created._id, newFiles);
+          created = { ...created, photos: uploadRes.data.photos, photo: uploadRes.data.photo };
+        }
+
         setCanchas(prev => [...prev, created]);
         setModal(null);
         await successAlert('Cancha creada correctamente.');
@@ -104,6 +117,9 @@ export default function MyCourts() {
         <div className="canchas-list">
           {canchas.map(cancha => (
             <div key={cancha._id} className={`cancha-card${!cancha.enabled ? ' cancha-card--disabled' : ''}`}>
+              {(cancha.photos?.[0] || cancha.photo) && (
+                <img src={cancha.photos?.[0] || cancha.photo} alt={cancha.name} className="cancha-thumb" />
+              )}
               <div className="cancha-info">
                 <div className="cancha-name-row">
                   <span className="cancha-name">{cancha.name}</span>
