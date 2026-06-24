@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Building2, Layers, CalendarDays,
-  CreditCard, Clock, LogOut, Star, BarChart2, LineChart, Menu, X
+  CreditCard, Clock, LogOut, Star, BarChart2, LineChart, Trophy, Menu, X
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
@@ -16,6 +16,7 @@ import Reviews        from './components/Reviews';
 import Reports        from './components/Reports';
 import MetricsPanel    from '../Metrics/Metrics';
 import ReservasHoyPanel from './components/ReservasHoyPanel';
+import TorneosList      from './components/TorneosList';
 import { ScheduleManager } from '../Schedule/ScheduleManager';
 import './OwnerDashboard.css';
 
@@ -24,6 +25,7 @@ const NAV = [
   { id: 'complejo',     label: 'Mi Complejo',            Icon: Building2 },
   { id: 'canchas',      label: 'Mis Canchas',            Icon: Layers },
   { id: 'reservas',     label: 'Reservas',               Icon: CalendarDays },
+  { id: 'torneos',      label: 'Torneos',                Icon: Trophy },
   { id: 'reportes',     label: 'Reportes',               Icon: BarChart2 },
   { id: 'metricas',     label: 'Métricas',               Icon: LineChart },
   { id: 'pagos',        label: 'Configuración de Pagos', Icon: CreditCard },
@@ -63,6 +65,7 @@ export default function OwnerDashboard() {
     complejo:     <MyComplex />,
     canchas:      <MyCourts />,
     reservas:     <ReservasHoyPanel key={complexId} complexId={complexId} />,
+    torneos:      <TorneosList />,
     reportes:     <Reports         key={complexId} complexId={complexId} />,
     metricas:     <MetricsPanel />,
     pagos:        <PaymentConfig />,
