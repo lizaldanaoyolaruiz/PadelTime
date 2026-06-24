@@ -65,7 +65,6 @@ export default function TorneosSection() {
             onKeyDown={e => e.key === 'Enter' && navigate('/torneos')}
           >
             <div className="ts-card-header">
-              <span className="ts-badge-activo">En curso</span>
               <span className="ts-categoria">{CATEGORIA_LABEL[torneo.categoria] || torneo.categoria}</span>
             </div>
             <h3 className="ts-card-name">{torneo.nombre}</h3>
