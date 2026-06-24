@@ -31,15 +31,17 @@ export const complexSchema = z
       .string()
       .min(3, 'Mínimo 3 caracteres')
       .max(500, 'Máximo 500 caracteres'),
-    depositPercentage: z
-      .string()
-      .min(1, 'El porcentaje es requerido')
-      .pipe(
-        z.coerce
-          .number({ invalid_type_error: 'Ingresá un número válido' })
-          .min(0, 'Mínimo 0%')
-          .max(100, 'Máximo 100%')
-      ),
+    depositPercentage: z.preprocess(
+      (val) => (val === '' || val === undefined || val === null ? undefined : Number(val)),
+      z
+        .number({
+          required_error: 'El porcentaje de seña es requerido',
+          invalid_type_error: 'Ingresá un número válido',
+        })
+        .int('Debe ser un número entero')
+        .min(0, 'Mínimo 0%')
+        .max(100, 'Máximo 100%')
+    ),
   })
   .refine(
     (d) => !d.openTime || !d.closeTime || d.openTime < d.closeTime,

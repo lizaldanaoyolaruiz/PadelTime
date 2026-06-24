@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, X, Bot, MessageCircle, Plus, RotateCcw } from 'lucide-react';
+import { Send, X, Bot, MessageCircle, RotateCcw } from 'lucide-react';
 import api from '../services/axios';
 import './padelbot.css';
 
@@ -49,7 +49,7 @@ export default function PadelBot() {
 
     try {
       const res = await api.post('/chatbot', { message: text, sessionId });
-      const { reply, bookingOptions, sessionId: newSessionId } = res.data;
+      const { reply, bookingOptions, alternativasOpciones, sessionId: newSessionId } = res.data;
 
       if (!sessionId && newSessionId) setSessionId(newSessionId);
 
@@ -61,6 +61,7 @@ export default function PadelBot() {
           text: reply || '¿En qué más puedo ayudarte?',
           time: formatTime(),
           bookingOptions: bookingOptions || null,
+          alternativasOpciones: alternativasOpciones || null,
         },
       ]);
     } catch {
@@ -124,7 +125,7 @@ export default function PadelBot() {
                   </div>
                 )}
                 <div
-                  className={`pb-bubble pb-bubble--${msg.role}${msg.bookingOptions ? ' pb-bubble--wide' : ''}`}
+                  className={`pb-bubble pb-bubble--${msg.role}${(msg.bookingOptions || msg.alternativasOpciones) ? ' pb-bubble--wide' : ''}`}
                 >
                   <p>{msg.text}</p>
 
@@ -140,25 +141,46 @@ export default function PadelBot() {
                             <span>{court.tipo} · ${court.precio}/hr</span>
                           </div>
                           <div className="pb-court-actions">
-                            <a
-                              href={court.linkReserva}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="pb-btn-reserva"
-                            >
+                            <a href={court.linkReserva} target="_blank" rel="noreferrer" className="pb-btn-reserva">
                               Reservar online
                             </a>
                             {court.linkWhatsApp && (
-                              <a
-                                href={court.linkWhatsApp}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="pb-btn-wa"
-                              >
+                              <a href={court.linkWhatsApp} target="_blank" rel="noreferrer" className="pb-btn-wa">
                                 WhatsApp
                               </a>
                             )}
                           </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {msg.alternativasOpciones && (
+                    <div className="pb-booking">
+                      <p className="pb-booking-meta">
+                        {msg.alternativasOpciones.complejo} · {msg.alternativasOpciones.fechaFormateada} · Horarios disponibles
+                      </p>
+                      {msg.alternativasOpciones.slots.map(slot => (
+                        <div key={slot.horario} className="pb-slot-group">
+                          <p className="pb-slot-label">🕐 {slot.horarioLabel}</p>
+                          {slot.canchas.map(court => (
+                            <div key={court.courtId} className="pb-court-card">
+                              <div className="pb-court-info">
+                                <strong>{court.nombre}</strong>
+                                <span>{court.tipo} · ${court.precio}/hr</span>
+                              </div>
+                              <div className="pb-court-actions">
+                                <a href={court.linkReserva} target="_blank" rel="noreferrer" className="pb-btn-reserva">
+                                  Reservar
+                                </a>
+                                {court.linkWhatsApp && (
+                                  <a href={court.linkWhatsApp} target="_blank" rel="noreferrer" className="pb-btn-wa">
+                                    WhatsApp
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       ))}
                     </div>
@@ -187,9 +209,6 @@ export default function PadelBot() {
 
           {/* Input */}
           <div className="pb-input-wrap">
-            <button className="pb-attach" tabIndex={-1}>
-              <Plus size={17} />
-            </button>
             <input
               ref={inputRef}
               type="text"

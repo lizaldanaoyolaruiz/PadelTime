@@ -3,12 +3,10 @@ import { Link } from 'react-router-dom';
 import { MapPin, Clock } from 'lucide-react';
 import { getPublicComplexes } from '../services/complexService';
 
-const PLACEHOLDER = 'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400&h=200';
-
 const mapClub = (c) => ({
   id: c._id,
   name: c.name,
-  image: c.photos?.[0] || c.image || PLACEHOLDER,
+  image: c.image || c.photos?.[0] || null,
   price: c.price ? `$${Number(c.price).toLocaleString('es-AR')}/h` : null,
   location: [c.city, c.location].filter(Boolean).join(' — '),
   time: c.openTime && c.closeTime ? `${c.openTime} – ${c.closeTime}` : 'Consultar horarios',
@@ -45,9 +43,11 @@ const ClubsSection = () => {
         {clubs.map((club) => (
           <div className="club-card" key={club.id}>
             <div className="club-image-container">
-              <img src={club.image} alt={club.name} className="club-image" loading="lazy" />
-              <span className="badge-admin">✓ APROBADO POR ADMIN</span>
-              {club.rating && <span className="badge-rating">☆ {club.rating}</span>}
+              {club.image
+                ? <img src={club.image} alt={club.name} className="club-image" loading="lazy" />
+                : <div className="club-image club-image--empty" />
+              }
+              <span className="badge-admin" title="Este club ha sido verificado por nuestro equipo.">✓ VERIFICADO</span>
             </div>
             <div className="club-info">
               <div className="club-title-row">

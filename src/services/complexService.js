@@ -19,6 +19,12 @@ export const uploadComplexPhotos = (id, files) => {
   return api.post(`/complexes/${id}/photos`, form);
 };
 
+export const deleteComplexPhoto = (id, url) =>
+  api.delete(`/complexes/${id}/photos`, { data: { url } });
+
+export const setComplexPrincipalPhoto = (id, url) =>
+  api.patch(`/complexes/${id}/photos/principal`, { url });
+
 // Superadmin — todos los complejos
 export const getAdminComplexes = (params) => api.get('/complexes/admin', { params });
 export const getAllComplexes    = ()       => api.get("/complexes/admin");

@@ -26,6 +26,10 @@
   padding: 2.5rem 5%;
 }
 
+.cd-hero--no-img {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+}
+
 .cd-hero-overlay {
   position: absolute;
   inset: 0;
@@ -163,9 +167,44 @@
   color: #cbd5e1;
 }
 
+.cd-info-row--single {
+  grid-template-columns: 1fr;
+}
+
 .cd-gallery-section {
   margin-bottom: 4rem;
 }
+
+/* Gallery grid variants based on photo count */
+.cd-gallery-grid--1 {
+  grid-template-columns: 1fr;
+  grid-template-rows: 320px;
+}
+.cd-gallery-grid--1 .img-0 {
+  grid-column: 1;
+  grid-row: 1;
+}
+.cd-gallery-grid--2 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 280px;
+}
+.cd-gallery-grid--2 .img-0 {
+  grid-column: 1;
+  grid-row: 1;
+}
+.cd-gallery-grid--3 {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 220px 220px;
+}
+.cd-gallery-grid--3 .img-0 {
+  grid-column: 1;
+  grid-row: span 2;
+}
+.cd-gallery-grid--3 .img-1,
+.cd-gallery-grid--3 .img-2 {
+  grid-column: 2;
+}
+/* 4 and 5 use the default 4-col layout from the base class */
 
 .cd-gallery-section h2 {
   font-size: 1.2rem;

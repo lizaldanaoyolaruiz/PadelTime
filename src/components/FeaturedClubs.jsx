@@ -50,9 +50,8 @@ const FeaturedClubs = () => {
                 className="badge-admin"
                 title="Este club ha sido verificado y certificado por nuestro equipo."
               >
-                ✓ APROBADO POR ADMIN
+                ✓ VERIFICADO
               </span>
-              <span className="badge-rating">☆ {club.rating}</span>
             </div>
             <div className="club-info">
               <div className="club-title-row">
