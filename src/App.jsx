@@ -17,6 +17,7 @@ import Error404 from "./pages/Error404/Error404";
 import CourtDetail from "./pages/CourtDetail/CourtDetail";
 import ClientPanel from "./pages/ClientPanel/ClientPanel";
 import ManagementPanel from "./pages/SuperAdmin/ManagementPanel";
+import Torneos from "./pages/Torneos/Torneos";
 import Metrics from "./pages/Metrics/Metrics";
 import Nosotros from "./pages/we/we";
 import "./App.css";
@@ -59,6 +60,7 @@ function App() {
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/schedule" element={<ScheduleManager />} />
+        <Route path="/torneos" element={<Torneos />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/cancha/:id" element={<CourtDetail />} />
         <Route
