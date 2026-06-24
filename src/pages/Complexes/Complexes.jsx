@@ -7,14 +7,10 @@ import FiltrosAvanzados from './FiltrosAvanzados';
 import { getPublicComplexes } from '../../services/complexService';
 import './complexes.css';
 
-const PLACEHOLDER_IMAGE =
-  'https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=600&h=320';
-
-
 const mapComplex = (c) => ({
   id: c._id,
   name: c.name,
-  image: c.photos?.[0] || c.image || PLACEHOLDER_IMAGE,
+  image: c.image || c.photos?.[0] || null,
   location: c.location,
   city: c.city,
   surface: c.courtTypes || [],
@@ -32,7 +28,10 @@ const PRECIO_INICIAL = 6000;
 const ComplexCard = ({ complex }) => (
   <article className="complex-card">
     <div className="card-image-wrapper">
-      <img src={complex.image} alt={complex.name} className="card-img" loading="lazy" />
+      {complex.image
+        ? <img src={complex.image} alt={complex.name} className="card-img" loading="lazy" />
+        : <div className="card-img card-img--empty" />
+      }
       {complex.isFeatured && <span className="badge-top-rated">TOP RATED</span>}
     </div>
     <div className="card-body">

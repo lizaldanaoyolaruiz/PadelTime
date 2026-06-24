@@ -209,6 +209,10 @@
   transform: scale(1.04);
 }
 
+.card-img--empty {
+  background: linear-gradient(135deg, rgba(190, 242, 100, 0.05) 0%, rgba(15, 23, 42, 0.95) 100%);
+}
+
 .badge-top-rated {
   position: absolute;
   top: 12px;

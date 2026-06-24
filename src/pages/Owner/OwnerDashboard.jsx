@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
-import { getMyComplexes } from '../../services/complexService';
+import { getMyComplex } from '../../services/complexService';
 import GeneralPanel   from './components/GeneralPanel';
 import MyComplex      from './components/MyComplex';
 import MyCourts       from './components/MyCourts';
@@ -32,20 +32,17 @@ const NAV = [
 ];
 
 export default function OwnerDashboard() {
-  const [active,     setActive]     = useState('panel');
-  const [complejos,  setComplejos]  = useState([]);
-  const [complexId,  setComplexId]  = useState(null);
-  const [menuOpen,   setMenuOpen]   = useState(false);
+  const [active,    setActive]    = useState('panel');
+  const [complexId, setComplexId] = useState(null);
+  const [menuOpen,  setMenuOpen]  = useState(false);
   const { user, logout } = useAuthStore();
   const navigate         = useNavigate();
 
   useEffect(() => {
-    getMyComplexes()
+    getMyComplex()
       .then(res => {
-        const list = res.data.complexes || res.data || [];
-        const arr  = Array.isArray(list) ? list : [];
-        setComplejos(arr);
-        if (arr.length) setComplexId(arr[0]._id);
+        const c = res.data.complex || res.data;
+        if (c?._id) setComplexId(c._id);
       })
       .catch(() => {});
   }, []);
@@ -90,31 +87,6 @@ export default function OwnerDashboard() {
           <span className="brand-name">PadelSaaS</span>
           <span className="brand-sub">Owner Dashboard</span>
         </div>
-
-        {complejos.length > 0 && (
-          <div style={{ padding: '0 16px 12px' }}>
-            <select
-              value={complexId ?? ''}
-              onChange={e => setComplexId(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '7px 10px',
-                borderRadius: '8px',
-                border: '1px solid var(--color-border)',
-                background: 'var(--color-surface-3)',
-                color: 'var(--color-text-base)',
-                fontSize: '13px',
-                fontFamily: 'var(--font-base)',
-                cursor: 'pointer',
-                outline: 'none',
-              }}
-            >
-              {complejos.map(c => (
-                <option key={c._id} value={c._id}>{c.name}</option>
-              ))}
-            </select>
-          </div>
-        )}
 
         <nav className="sidebar-nav">
           {NAV.map(({ id, label, Icon, path }) => (

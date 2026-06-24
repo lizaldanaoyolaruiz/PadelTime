@@ -1,18 +1,23 @@
-﻿import { useState, useEffect, useRef } from 'react';
-import { Upload, X, ImagePlus } from 'lucide-react';
-import { getMyComplex, createComplex, updateComplex, uploadComplexPhotos } from '../../../services/complexService';
+import { useState, useEffect, useRef } from 'react';
+import { Upload, X, ImagePlus, Star } from 'lucide-react';
+import {
+  getMyComplex, createComplex, updateComplex, uploadComplexPhotos,
+  deleteComplexPhoto, setComplexPrincipalPhoto,
+} from '../../../services/complexService';
 import { confirmSave, successAlert, errorAlert } from '../../../utils/alerts';
 import { useComplexForm } from '../utils/hooks/useComplexForm';
 import { blockNonLetters, blockNonPhone, blockNonDigits } from '../utils/validations';
 import './MyComplex.css';
 
 export default function MyComplex() {
-  const [complejo,     setComplejo]     = useState(null);
-  const [loading,      setLoading]      = useState(true);
-  const [saving,       setSaving]       = useState(false);
-  const [images,       setImages]       = useState([]);
-  const [newFiles,     setNewFiles]     = useState([]);
-  const [uploadingImg, setUploadingImg] = useState(false);
+  const [complejo,       setComplejo]       = useState(null);
+  const [loading,        setLoading]        = useState(true);
+  const [saving,         setSaving]         = useState(false);
+  const [images,         setImages]         = useState([]);
+  const [newFiles,       setNewFiles]       = useState([]);   // solo para complejo NUEVO aún sin _id
+  const [uploadingImg,   setUploadingImg]   = useState(false);
+  const [principalUrl,   setPrincipalUrl]   = useState(null);
+  const [deletingImgUrl, setDeletingImgUrl] = useState(null);
   const fileRef = useRef(null);
 
   const { register, handleSubmit, reset, watch, formState: { errors } } = useComplexForm();
@@ -27,6 +32,7 @@ export default function MyComplex() {
         const data = res.data.complex || res.data;
         setComplejo(data);
         setImages(data.photos || []);
+        setPrincipalUrl(data.image || data.photos?.[0] || null);
         reset({
           name:              data.name              || '',
           location:          data.location          || '',
@@ -46,19 +52,54 @@ export default function MyComplex() {
       .finally(() => setLoading(false));
   }, [reset]);
 
-  const handleFiles = (e) => {
+  const handleFiles = async (e) => {
     const files = Array.from(e.target.files);
     if (!files.length) return;
-    if (images.length + newFiles.length + files.length > 5) {
+    if (fileRef.current) fileRef.current.value = '';
+
+    const totalActual = images.length + newFiles.length;
+    if (totalActual + files.length > 5) {
       errorAlert('Máximo 5 imágenes permitidas.');
       return;
     }
-    setNewFiles(prev => [...prev, ...files]);
-    if (fileRef.current) fileRef.current.value = '';
+
+    if (complejo?._id) {
+      // Complejo existente → subir inmediatamente a Cloudinary
+      setUploadingImg(true);
+      try {
+        const res = await uploadComplexPhotos(complejo._id, files);
+        const updatedPhotos = res.data.photos;
+        if (updatedPhotos) {
+          setImages(updatedPhotos);
+          if (!principalUrl) setPrincipalUrl(updatedPhotos[0] || null);
+        }
+      } catch {
+        errorAlert('Error al subir las fotos. Intentá de nuevo.');
+      } finally {
+        setUploadingImg(false);
+      }
+    } else {
+      // Complejo nuevo (aún no tiene _id) → guardar para subir al crear
+      setNewFiles(prev => [...prev, ...files]);
+    }
   };
 
-  const removeImage    = (idx) => setImages(prev => prev.filter((_, i) => i !== idx));
-  const removeNewFile  = (idx) => setNewFiles(prev => prev.filter((_, i) => i !== idx));
+  const handleRemoveImage = async (url) => {
+    if (!complejo?._id) return;
+    setDeletingImgUrl(url);
+    try {
+      await deleteComplexPhoto(complejo._id, url);
+      const next = images.filter(u => u !== url);
+      setImages(next);
+      if (principalUrl === url) setPrincipalUrl(next[0] || null);
+    } catch {
+      await errorAlert('Error al eliminar la foto.');
+    } finally {
+      setDeletingImgUrl(null);
+    }
+  };
+
+  const removeNewFile = (idx) => setNewFiles(prev => prev.filter((_, i) => i !== idx));
 
   const onSubmit = async (data) => {
     const confirm = await confirmSave();
@@ -67,23 +108,34 @@ export default function MyComplex() {
     setSaving(true);
     try {
       let saved;
+
       if (complejo) {
         const res = await updateComplex(complejo._id, data);
         saved = res.data.complex || res.data;
+        saved.photos = images; // las fotos ya están sincronizadas (upload inmediato)
       } else {
         const res = await createComplex(data);
         saved = res.data.complex || res.data;
+
+        // Subir fotos pendientes del complejo recién creado
+        if (newFiles.length) {
+          setUploadingImg(true);
+          const uploadRes = await uploadComplexPhotos(saved._id, newFiles);
+          const updatedPhotos = uploadRes.data.photos ?? [];
+          saved = { ...saved, photos: updatedPhotos };
+          setNewFiles([]);
+        }
       }
 
-      if (newFiles.length) {
-        setUploadingImg(true);
-        const res = await uploadComplexPhotos(saved._id, newFiles);
-        saved = res.data.complex || saved;
-        setNewFiles([]);
+      // Establecer foto principal si fue elegida
+      if (principalUrl && (saved.photos || []).includes(principalUrl)) {
+        const pr = await setComplexPrincipalPhoto(saved._id, principalUrl);
+        saved.image = pr.data.image || principalUrl;
       }
 
       setComplejo(saved);
       setImages(saved.photos || []);
+      setPrincipalUrl(saved.image || saved.photos?.[0] || null);
       await successAlert(
         complejo ? 'Complejo actualizado correctamente.' : 'Complejo creado — pendiente de aprobación.'
       );
@@ -121,24 +173,49 @@ export default function MyComplex() {
           <h3 className="section-title">Fotos del complejo</h3>
           <p className="section-desc">Subí hasta 5 fotos. Serán visibles en el portal público de reservas.</p>
           <div className="images-grid">
-            {images.map((url, i) => (
-              <div key={`saved-${i}`} className="img-thumb">
-                <img src={url} alt={`Foto ${i + 1}`} />
-                <button type="button" className="img-remove" onClick={() => removeImage(i)} title="Eliminar">
-                  <X size={14} />
-                </button>
-                {i === 0 && <span className="img-badge">Principal</span>}
-              </div>
-            ))}
+            {/* Fotos guardadas en Cloudinary */}
+            {images.map((url, i) => {
+              const isPrincipal = principalUrl === url;
+              return (
+                <div key={`saved-${url}`} className={`img-thumb${isPrincipal ? ' img-thumb--principal' : ''}`}>
+                  <img src={url} alt={`Foto ${i + 1}`} />
+                  <button
+                    type="button"
+                    className="img-remove"
+                    onClick={() => handleRemoveImage(url)}
+                    title="Eliminar"
+                    disabled={!!deletingImgUrl}
+                  >
+                    <X size={14} />
+                  </button>
+                  {isPrincipal ? (
+                    <span className="img-badge"><Star size={9} /> Principal</span>
+                  ) : (
+                    <button
+                      type="button"
+                      className="img-set-principal"
+                      onClick={() => setPrincipalUrl(url)}
+                      title="Marcar como foto principal"
+                    >
+                      <Star size={12} />
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Archivos pendientes (solo para complejo nuevo aún sin _id) */}
             {newFiles.map((file, i) => (
               <div key={`new-${i}`} className="img-thumb img-thumb--pending">
                 <img src={URL.createObjectURL(file)} alt={file.name} />
                 <button type="button" className="img-remove" onClick={() => removeNewFile(i)} title="Quitar">
                   <X size={14} />
                 </button>
-                <span className="img-badge img-badge--pending">Pendiente</span>
+                <span className="img-badge img-badge--pending">Al guardar</span>
               </div>
             ))}
+
+            {/* Botón agregar */}
             {images.length + newFiles.length < 5 && (
               <button
                 type="button"
@@ -262,7 +339,7 @@ export default function MyComplex() {
               />
               {errors.depositPercentage
                 ? <span className="error-msg">{errors.depositPercentage.message}</span>
-                : <span className="form-hint">Solo números — entre 0 y 100</span>}
+                : <span className="form-hint">Entero entre 0 y 100 (0 = sin seña)</span>}
             </div>
 
             <div className="form-group form-group--full">
@@ -288,7 +365,7 @@ export default function MyComplex() {
         )}
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={saving}>
+          <button type="submit" className="btn-primary" disabled={saving || uploadingImg}>
             {saving ? 'Guardando...' : complejo ? 'Guardar cambios' : 'Crear complejo'}
           </button>
         </div>
