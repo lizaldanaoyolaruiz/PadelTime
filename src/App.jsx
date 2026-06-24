@@ -74,7 +74,7 @@ function App() {
         <Route
           path="/panelcliente"
           element={
-            <ProtectedRoute role="client">
+            <ProtectedRoute role="player">
               <ClientPanel />
             </ProtectedRoute>
           }
