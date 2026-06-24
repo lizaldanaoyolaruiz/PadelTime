@@ -178,11 +178,13 @@ const BookingConfirmation = () => {
 
             <div className="summary-card">
               <div className="club-summary-header">
-                <img
-                  src={datosReserva.canchaImagen || "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&q=80&w=150"}
-                  alt={datosReserva.canchaNombre}
-                  className="club-summary-img"
-                />
+                {datosReserva.canchaImagen && (
+                  <img
+                    src={datosReserva.canchaImagen}
+                    alt={datosReserva.canchaNombre}
+                    className="club-summary-img"
+                  />
+                )}
                 <div className="club-summary-info">
                   <h2>{datosReserva.clubNombre}</h2>
                   <span className="location">
