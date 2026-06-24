@@ -11,8 +11,6 @@ import { checkFavorito, agregarFavorito, quitarFavorito } from '../../services/f
 import useAuthStore from '../../store/authStore';
 import './ClubDetail.css';
 
-const PLACEHOLDER_IMAGE = 'https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=400';
-
 const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
 
 const mapCourt = (court) => ({
@@ -23,7 +21,7 @@ const mapCourt = (court) => ({
   status: court.enabled ? 'Habilitada' : 'Deshabilitada',
   description: court.description || '',
   tags: [TYPE_LABELS[court.type] || court.type, ...(court.features || [])].filter(Boolean),
-  image: court.photo || PLACEHOLDER_IMAGE,
+  image: court.photo || court.photos?.[0] || null,
 });
 
 const ClubDetail = () => {
@@ -66,6 +64,11 @@ const ClubDetail = () => {
         ]);
 
         const complex = complexRes.data?.complex;
+        const allPhotos = complex?.photos || [];
+        const principal = complex?.image;
+        const fotosOrdenadas = principal
+          ? [principal, ...allPhotos.filter(p => p !== principal)]
+          : allPhotos;
         setClub({
           nombre: complex?.name || 'Complejo',
           ubicacion: complex?.location || '',
@@ -73,6 +76,7 @@ const ClubDetail = () => {
           horario: complex?.openTime && complex?.closeTime
             ? `${complex.openTime} - ${complex.closeTime}`
             : 'No disponible',
+          fotos: fotosOrdenadas,
         });
 
         const lista = (courtsRes.data?.courts || []).map(mapCourt);
@@ -86,7 +90,7 @@ const ClubDetail = () => {
         }
       } catch (err) {
         console.error('Error cargando el complejo:', err);
-        setClub({ nombre: 'Complejo no encontrado', ubicacion: '', telefono: '', horario: '' });
+        setClub({ nombre: 'Complejo no encontrado', ubicacion: '', telefono: '', horario: '', fotos: [] });
         setCanchas([]);
         setCanchaSeleccionada(null);
       } finally {
@@ -204,14 +208,27 @@ const ClubDetail = () => {
           </div>
         </div>
 
-        <div className="gallery-grid">
-          <img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=800" alt="Cancha principal" className="img-main" />
-          <div className="gallery-right">
-            <img src="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&q=80&w=400" alt="Cancha detalle 1" className="img-sub" />
-            <img src="https://images.unsplash.com/photo-1574629810360-7efbb1925536?auto=format&fit=crop&q=80&w=400" alt="Cancha detalle 2" className="img-sub" />
-            <img src="https://images.unsplash.com/photo-1554068865-24cecd4e34b8?auto=format&fit=crop&q=80&w=800" alt="Cancha detalle 3" className="img-wide" />
+        {club.fotos.length > 0 && (
+          <div className="gallery-grid">
+            <img
+              src={club.fotos[0]}
+              alt={club.nombre}
+              className="img-main"
+            />
+            {club.fotos.length > 1 && (
+              <div className="gallery-right">
+                {club.fotos.slice(1, 4).map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`${club.nombre} ${i + 2}`}
+                    className={i === 2 ? 'img-wide' : 'img-sub'}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
         <div className="content-split">
           <section className="courts-list">
@@ -229,9 +246,12 @@ const ClubDetail = () => {
                 onClick={() => setCanchaSeleccionada(cancha)}
               >
                 <div className="court-media-col">
-                  <div className="court-img-container">
+                  <div className={`court-img-container${!cancha.image ? ' court-img-container--empty' : ''}`}>
                     <span className="badge-status">{cancha.status}</span>
-                    <img src={cancha.image} alt={cancha.name} />
+                    {cancha.image
+                      ? <img src={cancha.image} alt={cancha.name} />
+                      : <div className="court-img-empty" />
+                    }
                     {canchaSeleccionada?.id === cancha.id && (
                       <div className="selected-badge">✓</div>
                     )}
