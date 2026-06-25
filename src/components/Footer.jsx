@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import logo from '../assets/padeltime_logo_white2.png';
-import './Footer.css';
+import './footer.css';
 
 const Footer = () => {
   return (
