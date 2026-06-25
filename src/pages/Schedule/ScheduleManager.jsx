@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Clock, Plus, Trash2, Pencil, AlertTriangle, X } from 'lucide-react';
+import Swal from 'sweetalert2';
 import {
   getCourtsSchedule,
   updateCourtSchedule,
@@ -8,7 +9,7 @@ import {
   updateBlockout,
   deleteBlockout,
 } from '../../services/scheduleService';
-import { confirmDelete } from '../../utils/alerts';
+import { confirmDelete, confirmSave, successAlert, errorAlert } from '../../utils/alerts';
 import './schedule.css';
 
 const DAYS = [
@@ -172,8 +173,27 @@ function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
     const errs = validateForm(form, todayStr, currentTime);
     if (Object.keys(errs).length) { setErrors(errs); return; }
     const finalName = form.name === 'Otro' ? form.customName.trim() : form.name;
+
+    if (isEditing) {
+      const confirm = await Swal.fire({
+        background: '#1f2937', color: '#ffffff',
+        confirmButtonColor: '#a3e635', cancelButtonColor: '#374151',
+        title: '¿Actualizar bloqueo?',
+        text: 'Se guardarán los cambios del bloqueo.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, actualizar',
+        cancelButtonText: 'Cancelar',
+      });
+      if (!confirm.isConfirmed) return;
+    }
+
     setSaving(true);
-    try { await onSave({ ...form, name: finalName }); } finally { setSaving(false); }
+    try {
+      await onSave({ ...form, name: finalName });
+    } finally {
+      setSaving(false);
+    }
   };
 
   const ic = (field) => `sm-input${errors[field] ? ' sm-input--error' : ''}`;
@@ -333,6 +353,8 @@ export const ScheduleManager = () => {
   };
 
   const handleSave = async () => {
+    const confirm = await confirmSave();
+    if (!confirm.isConfirmed) return;
     setSaving(true);
     try {
       await Promise.all(
@@ -340,8 +362,9 @@ export const ScheduleManager = () => {
       );
       setScheduleChanges({});
       await loadData();
+      await successAlert('Horarios guardados correctamente.');
     } catch (err) {
-      alert(err?.response?.data?.message || 'Error al guardar');
+      await errorAlert(err?.response?.data?.message || err?.message || 'Error al guardar los cambios.');
     } finally {
       setSaving(false);
     }
@@ -357,14 +380,19 @@ export const ScheduleManager = () => {
       endTime: form.endTime,
       courtId: form.courtId || null,
     };
-    if (editingBlock) {
-      await updateBlockout(editingBlock._id, payload);
-    } else {
-      await createBlockout(payload);
+    try {
+      if (editingBlock) {
+        await updateBlockout(editingBlock._id, payload);
+      } else {
+        await createBlockout(payload);
+      }
+      setShowModal(false);
+      setEditingBlock(null);
+      await loadData();
+      await successAlert(editingBlock ? 'Bloqueo actualizado correctamente.' : 'Bloqueo creado correctamente.');
+    } catch (err) {
+      await errorAlert(err?.response?.data?.message || err?.message || 'Error al guardar el bloqueo.');
     }
-    setShowModal(false);
-    setEditingBlock(null);
-    await loadData();
   };
 
   const handleOpenEdit = (block) => {
@@ -385,8 +413,13 @@ export const ScheduleManager = () => {
   const handleDeleteBlock = async (id, name) => {
     const result = await confirmDelete(`Se eliminará el bloqueo "${name}".`);
     if (!result.isConfirmed) return;
-    await deleteBlockout(id);
-    await loadData();
+    try {
+      await deleteBlockout(id);
+      await loadData();
+      await successAlert('Bloqueo eliminado correctamente.');
+    } catch (err) {
+      await errorAlert(err?.response?.data?.message || err?.message || 'Error al eliminar el bloqueo.');
+    }
   };
 
   const courtBlockouts = blockouts.filter(
