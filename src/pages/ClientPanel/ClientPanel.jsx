@@ -53,7 +53,7 @@ export default function ClientPanel() {
   const [filter, setFilter]           = useState('todos');
 
   const [modal, setModal]             = useState(null);
-  const [form, setForm]               = useState({ name: '', email: '', password: '' });
+  const [form, setForm]               = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [formErr, setFormErr]         = useState('');
   const [formLoading, setFormLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
@@ -136,7 +136,7 @@ export default function ClientPanel() {
   };
 
   const openEdit  = () => {
-    setForm({ name: user?.name || '', email: user?.email || '', password: '' });
+    setForm({ name: user?.name || '', email: user?.email || '', password: '', confirmPassword: '' });
     setFormErr('');
     setModal('edit');
   };
@@ -144,6 +144,8 @@ export default function ClientPanel() {
 
   const handleUpdate = async () => {
     if (!form.name || !form.email) { setFormErr('Nombre y email son obligatorios.'); return; }
+    if (form.password && form.password.length < 8) { setFormErr('La contraseña debe tener al menos 8 caracteres.'); return; }
+    if (form.password !== form.confirmPassword) { setFormErr('Las contraseñas no coinciden.'); return; }
 
     const confirm = await Swal.fire({
       title: '¿Guardar cambios?',
@@ -444,12 +446,6 @@ export default function ClientPanel() {
               </div>
               <h1>{fmt(nextMatch.date)}, {nextMatch.startTime}</h1>
               <p>{nextMatch.complex?.name || '—'} · {nextMatch.court?.name || '—'}</p>
-              {countdown && (
-                <div className="cp-countdown">
-                  <div><strong>{countdown.hours}</strong><span>HORAS</span></div>
-                  <div><strong>{countdown.mins}</strong><span>MINS</span></div>
-                </div>
-              )}
             </div>
           ) : (
             <div className="cp-next-match cp-next-empty">
@@ -661,17 +657,25 @@ export default function ClientPanel() {
                 onChange={e => setBookingForm(f => ({ ...f, date: e.target.value }))}
               />
               <label>Hora de inicio</label>
-              <input
-                type="time"
+              <select
                 value={bookingForm.startTime}
                 onChange={e => setBookingForm(f => ({ ...f, startTime: e.target.value }))}
-              />
+              >
+                {Array.from({ length: 15 }, (_, i) => i + 8).map(h => {
+                  const val = `${String(h).padStart(2,'0')}:00`;
+                  return <option key={h} value={val}>{val}</option>;
+                })}
+              </select>
               <label>Hora de fin</label>
-              <input
-                type="time"
+              <select
                 value={bookingForm.endTime}
                 onChange={e => setBookingForm(f => ({ ...f, endTime: e.target.value }))}
-              />
+              >
+                {Array.from({ length: 15 }, (_, i) => i + 8).map(h => {
+                  const val = `${String(h).padStart(2,'0')}:00`;
+                  return <option key={h} value={val}>{val}</option>;
+                })}
+              </select>
             </div>
             <div className="cp-modal-foot">
               <button className="cp-btn-cancel" onClick={closeEditBooking}>Cancelar</button>
@@ -704,7 +708,12 @@ export default function ClientPanel() {
               <label>Nueva contraseña (opcional)</label>
               <input type="password" value={form.password}
                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
-                placeholder="Dejar vacío para no cambiar" />
+                placeholder="Mínimo 8 caracteres" />
+              <label>Confirmar nueva contraseña</label>
+              <input type="password" value={form.confirmPassword}
+                onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                placeholder="Repetí la contraseña"
+                style={{ borderColor: form.password && form.confirmPassword && form.password !== form.confirmPassword ? '#f87171' : undefined }} />
             </div>
             <div className="cp-modal-foot">
               <button className="cp-btn-cancel" onClick={closeModal}>Cancelar</button>

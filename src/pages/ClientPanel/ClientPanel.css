@@ -695,7 +695,41 @@
   transition: border-color .15s;
 }
 
-.cp-modal-body input:focus { border-color: #bef264; }
+.cp-modal-body input:focus,
+.cp-modal-body select:focus { border-color: #bef264; }
+
+.cp-modal-body select {
+  width: 100%;
+  background: #07102a;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 9px;
+  padding: 10px 12px;
+  color: #f8fafc;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color .15s;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.cp-modal-body select option {
+  background: #0e1c42;
+  color: #f8fafc;
+}
+
+.cp-modal-body input:-webkit-autofill,
+.cp-modal-body input:-webkit-autofill:hover,
+.cp-modal-body input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #07102a inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  border-color: rgba(255,255,255,.1) !important;
+  caret-color: #f8fafc;
+}
 
 .cp-form-error {
   background: rgba(239,68,68,.1);
