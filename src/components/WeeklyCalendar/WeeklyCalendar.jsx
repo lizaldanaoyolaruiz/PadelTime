@@ -279,13 +279,13 @@ export default function WeeklyCalendar({
                           tabIndex={isClickable ? 0 : undefined}
                           aria-label={`${date} ${hour}:00 — ${status}`}
                           aria-disabled={!isClickable}
-                          className={`wc-slot wc-slot--${status}${pasado ? ' wc-slot--pasado' : ''}`}
+                          className={`wc-slot wc-slot--${status}${pasado ? ' wc-slot--pasado' : ''}${isClickable && status !== 'disponible' ? ' wc-slot--clickable' : ''}`}
                           onClick={isClickable ? () => handleSlot(date, hour) : undefined}
                           onKeyDown={isClickable ? e => e.key === 'Enter' && handleSlot(date, hour) : undefined}
                         >
-                          {status === 'reservado'     && <Lock      size={13} className="wc-slot-icon" aria-hidden="true" />}
-                          {status === 'mantenimiento' && <Settings2 size={13} className="wc-slot-icon" aria-hidden="true" />}
-                          {status === 'pendiente'     && <Clock     size={13} className="wc-slot-icon" aria-hidden="true" />}
+                          {status === 'reservado'     && !isClickable && <Lock      size={13} className="wc-slot-icon" aria-hidden="true" />}
+                          {status === 'mantenimiento' &&                 <Settings2 size={13} className="wc-slot-icon" aria-hidden="true" />}
+                          {status === 'pendiente'     && !isClickable && <Clock     size={13} className="wc-slot-icon" aria-hidden="true" />}
                           <span className="wc-slot-label">
                             {status === 'disponible'  ? 'DISPONIBLE'
                              : status === 'reservado' ? 'RESERVADO'
