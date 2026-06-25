@@ -76,6 +76,7 @@ const ClubDetail = () => {
           horario: complex?.openTime && complex?.closeTime
             ? `${complex.openTime} - ${complex.closeTime}`
             : 'No disponible',
+          mercadopagoActive: !!complex?.mercadopagoActive,
           fotos: fotosOrdenadas,
         });
 
@@ -156,7 +157,8 @@ const ClubDetail = () => {
         precioAlquiler: canchaSeleccionada.precioNumerico,
         precioLuz:      1500,
         total:          canchaSeleccionada.precioNumerico + 1500,
-        senia:          Math.round((canchaSeleccionada.precioNumerico + 1500) * 0.3),
+        senia:              Math.round((canchaSeleccionada.precioNumerico + 1500) * 0.3),
+        mercadopagoActive:  club?.mercadopagoActive || false,
       }
     });
   };
