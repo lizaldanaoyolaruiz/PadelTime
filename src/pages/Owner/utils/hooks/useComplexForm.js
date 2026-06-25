@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { complexSchema } from '../schemas/complexSchema';
 
 const DEFAULT_VALUES = {
-  name: '', location: '', city: '', price: '',
+  name: '', city: '', address: '', price: '',
   openTime: '', closeTime: '', whatsapp: '',
   description: '', depositPercentage: '',
 };
