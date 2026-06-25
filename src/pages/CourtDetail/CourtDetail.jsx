@@ -7,6 +7,41 @@ import './CourtDetail.css';
 
 const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
 
+const DAYS_ES = [
+  { key: 'monday',    label: 'Lunes',      short: 'Lun' },
+  { key: 'tuesday',   label: 'Martes',     short: 'Mar' },
+  { key: 'wednesday', label: 'Miércoles',  short: 'Mié' },
+  { key: 'thursday',  label: 'Jueves',     short: 'Jue' },
+  { key: 'friday',    label: 'Viernes',    short: 'Vie' },
+  { key: 'saturday',  label: 'Sábado',     short: 'Sáb' },
+  { key: 'sunday',    label: 'Domingo',    short: 'Dom' },
+];
+
+function ScheduleGrid({ schedule }) {
+  if (!schedule) return null;
+  const activeDays = DAYS_ES.filter(d => schedule[d.key]?.enabled);
+  if (!activeDays.length) return null;
+  return (
+    <div className="cd-info-card cd-schedule-card">
+      <h3>Horarios disponibles</h3>
+      <div className="cd-schedule-grid">
+        {DAYS_ES.map(d => {
+          const day = schedule[d.key];
+          const on = day?.enabled;
+          return (
+            <div key={d.key} className={`cd-sched-day${on ? '' : ' cd-sched-day--off'}`}>
+              <span className="cd-sched-label">{d.short}</span>
+              {on
+                ? <span className="cd-sched-time">{day.start} – {day.end}</span>
+                : <span className="cd-sched-closed">Cerrado</span>}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 const CourtDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -104,6 +139,8 @@ const CourtDetail = () => {
               )}
             </div>
           )}
+
+          <ScheduleGrid schedule={cancha.schedule} />
         </div>
 
         {gallery.length > 0 && (
