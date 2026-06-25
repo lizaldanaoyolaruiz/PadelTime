@@ -21,6 +21,8 @@ const BookingConfirmation = () => {
   const [procesandoPago, setProcesandoPago] = useState(false);
   const [procesandoWA, setProcesandoWA]     = useState(false);
 
+  const mercadopagoActive = datosReserva?.mercadopagoActive ?? false;
+
   useEffect(() => {
     if (location.state) return; // datos ya disponibles via router navigate()
 
@@ -260,27 +262,31 @@ const BookingConfirmation = () => {
             <div className="payment-methods-card">
               <h2>Selecciona un método</h2>
 
-              <div className="method-box">
-                <div className="method-icon mp-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
-                    <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
-                    <line x1="2" y1="10" x2="22" y2="10"></line>
-                  </svg>
+              {mercadopagoActive && (
+                <div className="method-box">
+                  <div className="method-icon mp-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="28" height="28">
+                      <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                      <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                  </div>
+                  <h3>Mercado Pago</h3>
+                  <p>Confirmación Inmediata</p>
+                  <button
+                    className="btn-mp"
+                    onClick={handleMercadoPago}
+                    disabled={procesandoPago}
+                  >
+                    {procesandoPago ? 'PROCESANDO...' : 'PAGAR AHORA'}
+                  </button>
                 </div>
-                <h3>Mercado Pago</h3>
-                <p>Confirmación Inmediata</p>
-                <button
-                  className="btn-mp"
-                  onClick={handleMercadoPago}
-                  disabled={procesandoPago}
-                >
-                  {procesandoPago ? 'PROCESANDO...' : 'PAGAR AHORA'}
-                </button>
-              </div>
+              )}
 
-              <div className="divider">
-                <span>O TAMBIÉN</span>
-              </div>
+              {mercadopagoActive && (
+                <div className="divider">
+                  <span>O TAMBIÉN</span>
+                </div>
+              )}
 
               <div className="method-box">
                 <div className="method-icon wa-icon">

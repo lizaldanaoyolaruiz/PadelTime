@@ -1,21 +1,8 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { toast } from 'sonner';
 import logo from '../assets/padeltime_logo_white2.png';
-
 import './Footer.css';
 
 const Footer = () => {
-  const [email, setEmail] = useState('');
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (!email) return;
-
-    setEmail('');
-    toast.success('¡Gracias por suscribirte al newsletter!');
-  };
-
   return (
     <footer className="footer">
       <div className="footer-brand">
@@ -57,20 +44,6 @@ const Footer = () => {
           <li><Link to="/404">Términos</Link></li>
           <li><Link to="/404">Cookies</Link></li>
         </ul>
-      </div>
-      <div className="footer-newsletter">
-        <h3>NEWSLETTER</h3>
-        <p>Recibe las mejores ofertas y torneos.</p>
-        <form className="newsletter-input" onSubmit={handleSubscribe}>
-          <input 
-            type="email" 
-            placeholder="Email" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn-send">➤</button>
-        </form>
       </div>
     </footer>
   );

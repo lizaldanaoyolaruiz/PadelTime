@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MapPin, Star, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import FiltrosAvanzados from './FiltrosAvanzados';
@@ -66,10 +66,12 @@ const ComplexCard = ({ complex }) => (
 );
 
 const Complexes = () => {
+  const [searchParams] = useSearchParams();
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Todos los filtros viven en el sidebar
+  const [ciudad,      setCiudad]      = useState(searchParams.get('ciudad') || '');
   const [searchQuery, setSearchQuery] = useState('');
   const [precioMax, setPrecioMax] = useState(PRECIO_INICIAL);
   const [fechaSeleccionada, setFechaSeleccionada] = useState('');

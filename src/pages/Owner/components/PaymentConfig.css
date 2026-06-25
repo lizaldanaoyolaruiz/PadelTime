@@ -79,6 +79,30 @@
 }
 .btn-eye-mp:hover { color: var(--color-text-base); }
 
+.btn-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-block;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.22);
+  border-color: #ef4444;
+}
+
+.btn-danger:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .mp-security-note {
   display: flex;
   align-items: center;
