@@ -50,7 +50,7 @@ export default function ClientPanel() {
   const [favoritos, setFavoritos]     = useState([]);
   const [favLoading, setFavLoading]   = useState(false);
   const [tab, setTab]                 = useState('reservas');
-  const [filter, setFilter]           = useState('todos');
+  const [filter, setFilter]           = useState('activos');
 
   const [modal, setModal]             = useState(null);
   const [form, setForm]               = useState({ name: '', email: '', password: '' });
@@ -111,7 +111,7 @@ export default function ClientPanel() {
   const victorias      = bookings.filter(b => b.status === 'completed').length;
 
   const filtered = filter === 'activos'
-    ? bookings.filter(b => ['pending', 'confirmed'].includes(b.status))
+    ? bookings.filter(b => b.status === 'confirmed')
     : bookings;
 
   // ── Handlers ────────────────────────────────────────────────────────────────
