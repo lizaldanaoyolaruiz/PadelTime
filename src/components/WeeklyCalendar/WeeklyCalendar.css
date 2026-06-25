@@ -570,6 +570,10 @@
   pointer-events: none;
 }
 
+.wc-slot--clickable {
+  cursor: pointer !important;
+}
+
 @media (max-width: 480px) {
   .wc-title {
     font-size: 20px;
@@ -672,4 +676,17 @@
     max-width: calc(100vw - 2rem);
     margin: 0 1rem;
   }
+}
+
+/* Hover en slots clickeables del owner (reservado + pendiente) */
+.wc-slot--clickable:hover {
+  filter: brightness(1.3);
+  transition: filter 0.15s ease;
+}
+
+/* Hover en mantenimiento — funciona en owner Y en cliente */
+.wc-slot--mantenimiento:hover {
+  filter: brightness(1.3);
+  transition: filter 0.15s ease;
+  cursor: default;
 }
