@@ -26,7 +26,8 @@ export const setComplexPrincipalPhoto = (id, url) =>
   api.patch(`/complexes/${id}/photos/principal`, { url });
 
 // Superadmin — todos los complejos
-export const getAdminComplexes = (params) => api.get('/complexes/admin', { params });
+export const createComplexByAdmin = (data) => api.post('/complexes/admin', data);
+export const getAdminComplexes    = (params) => api.get('/complexes/admin', { params });
 export const getAllComplexes    = ()       => api.get("/complexes/admin");
 
 export const approveComplex = (id)               => api.patch(`/complexes/${id}/approve`);
