@@ -43,14 +43,20 @@ const Navbar = () => {
             {(user?.role === 'client' || user?.role === 'player') ? (
               <Link to="/panelcliente" className="user-info">
                 <div className="user-avatar">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  {user?.avatar
+                    ? <img src={user.avatar} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                    : user?.name?.charAt(0).toUpperCase() || 'U'
+                  }
                 </div>
                 <span className="user-name">Hola, {user?.name || 'Usuario'}</span>
               </Link>
             ) : (
               <div className="user-info">
                 <div className="user-avatar">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                  {user?.avatar
+                    ? <img src={user.avatar} alt="avatar" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                    : user?.name?.charAt(0).toUpperCase() || 'U'
+                  }
                 </div>
                 <span className="user-name">Hola, {user?.name || 'Usuario'}</span>
               </div>
