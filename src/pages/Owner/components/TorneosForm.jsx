@@ -122,6 +122,24 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
             </div>
           </div>
 
+          {/* WhatsApp de contacto */}
+          <div className="form-group">
+            <label className="form-label">
+              WhatsApp de contacto
+              <span className="form-optional"> (opcional)</span>
+            </label>
+            <input
+              type="tel"
+              className={`form-input${errors.whatsapp ? ' input-error' : ''}`}
+              placeholder="Ej: 5493815001122"
+              maxLength={20}
+              {...register('whatsapp')}
+            />
+            {errors.whatsapp
+              ? <span className="error-msg">{errors.whatsapp.message}</span>
+              : <span className="form-hint">Número sin espacios ni guiones — se usará para el botón de reserva</span>}
+          </div>
+
           {/* Descripción */}
           <div className="form-group">
             <label className="form-label">
