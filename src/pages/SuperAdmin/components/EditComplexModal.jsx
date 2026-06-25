@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { X, Building2 } from 'lucide-react';
 import { blockNonLetters, blockNonPhone, blockNonDigits } from '../utils/validations';
+import { CITIES } from '../../../constants/cities';
 import '../ComplexManagement.css';
 
 export function EditComplexModal({ complex, onClose, onSave }) {
@@ -12,7 +13,7 @@ export function EditComplexModal({ complex, onClose, onSave }) {
     courts:       complex.courts       || '',
     address:      complex.address      || '',
     city:         complex.city         || '',
-    province:     complex.province     || '',
+    province:     'Tucumán',
     observations: complex.observations || '',
   });
 
@@ -25,8 +26,7 @@ export function EditComplexModal({ complex, onClose, onSave }) {
     if (!form.phone || form.phone.replace(/\D/g, '').length < 10) e.phone = 'Mínimo 10 dígitos';
     if (!form.courts || Number(form.courts) < 1 || Number(form.courts) > 50) e.courts = 'Entre 1 y 50';
     if (!form.address || form.address.trim().length < 5) e.address = 'Mínimo 5 caracteres';
-    if (!form.city || form.city.trim().length < 3)   e.city     = 'Mínimo 3 caracteres';
-    if (!form.province || form.province.trim().length < 3) e.province = 'Mínimo 3 caracteres';
+    if (!form.city || !CITIES.includes(form.city)) e.city = 'Seleccioná una ciudad';
     return e;
   };
 
@@ -161,34 +161,28 @@ export function EditComplexModal({ complex, onClose, onSave }) {
 
           <div className="gc-new-field">
             <label className="gc-new-label">Ciudad <span className="gc-required">*</span></label>
-            <input
+            <select
               name="city"
               className={`gc-new-input${errors.city ? ' gc-new-input--error' : ''}`}
               value={form.city}
               onChange={handleChange}
-              placeholder="Ej: Córdoba"
-              maxLength={50}
-              onKeyDown={blockNonLetters}
-            />
-            {errors.city
-              ? <span className="gc-new-error">{errors.city}</span>
-              : <span className="gc-new-hint">Solo letras — mín. 3</span>}
+            >
+              <option value="" disabled>Seleccioná una ciudad...</option>
+              {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {errors.city && <span className="gc-new-error">{errors.city}</span>}
           </div>
 
           <div className="gc-new-field">
             <label className="gc-new-label">Provincia <span className="gc-required">*</span></label>
-            <input
+            <select
               name="province"
-              className={`gc-new-input${errors.province ? ' gc-new-input--error' : ''}`}
+              className="gc-new-input"
               value={form.province}
               onChange={handleChange}
-              placeholder="Ej: Buenos Aires"
-              maxLength={50}
-              onKeyDown={blockNonLetters}
-            />
-            {errors.province
-              ? <span className="gc-new-error">{errors.province}</span>
-              : <span className="gc-new-hint">Solo letras — mín. 3</span>}
+            >
+              <option value="Tucumán">Tucumán</option>
+            </select>
           </div>
 
           <div className="gc-new-field gc-new-field--full">
