@@ -453,13 +453,16 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                 value={form.password}
                 onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
               />
-              <label>Ubicación</label>
-              <input
-                type="text"
-                placeholder="Ej: Buenos Aires, Argentina"
+              <label>Ubicación del Complejo</label>
+              <select
                 value={form.location}
                 onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
-              />
+              >
+                <option value="" disabled>Seleccioná una ciudad...</option>
+                <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
+                <option value="Yerba Buena">Yerba Buena</option>
+                <option value="Tafí Viejo">Tafí Viejo</option>
+              </select>
             </div>
             <div className="mp-modal-foot">
               <button className="mp-btn-cancel" onClick={closeModal}>Cancelar</button>
