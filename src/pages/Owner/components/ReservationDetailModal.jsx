@@ -17,7 +17,8 @@ function formatFecha(dateStr) {
 }
 
 export default function ReservationDetailModal({ reserva, onClose, onRefresh }) {
-  const [cargando, setCargando] = useState(false);
+  const [cargando,       setCargando]       = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const jugador = reserva.player?.name ??
     (reserva.jugadorExterno
@@ -125,10 +126,10 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
         {/* Actions */}
         {reserva.status === 'pending' && (
           <div className="rdm-actions">
-            <button className="rdm-btn rdm-btn--confirm" onClick={handleConfirmar} disabled={cargando}>
+            <button className="rdm-btn rdm-btn--confirm" onClick={handleConfirmar} disabled={cargando || confirmAction !== null}>
               Confirmar
             </button>
-            <button className="rdm-btn rdm-btn--reject" onClick={handleRechazar} disabled={cargando}>
+            <button className="rdm-btn rdm-btn--reject" onClick={() => setConfirmAction('reject')} disabled={cargando || confirmAction !== null}>
               Rechazar
             </button>
           </div>
@@ -136,9 +137,36 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
 
         {(reserva.status === 'confirmed' || reserva.status === 'pending') && (
           <div className="rdm-actions rdm-actions--secondary">
-            <button className="rdm-btn rdm-btn--cancel" onClick={handleCancelar} disabled={cargando}>
+            <button className="rdm-btn rdm-btn--cancel" onClick={() => setConfirmAction('cancel')} disabled={cargando || confirmAction !== null}>
               Cancelar reserva
             </button>
+          </div>
+        )}
+
+        {confirmAction && (
+          <div style={{ marginTop: 16, padding: '16px', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 10 }}>
+            <p style={{ color: '#f87171', fontWeight: 600, marginBottom: 12, textAlign: 'center' }}>
+              {confirmAction === 'reject'
+                ? '¿Confirmás que querés rechazar esta reserva?'
+                : '¿Confirmás que querés cancelar esta reserva?'}
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <button
+                className="rdm-btn rdm-btn--reject"
+                style={{ flex: 1 }}
+                disabled={cargando}
+                onClick={confirmAction === 'reject' ? handleRechazar : handleCancelar}
+              >
+                {cargando ? 'Procesando...' : 'Sí, confirmar'}
+              </button>
+              <button
+                style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid #475569', background: 'transparent', color: '#94a3b8', cursor: 'pointer' }}
+                onClick={() => setConfirmAction(null)}
+                disabled={cargando}
+              >
+                No, volver
+              </button>
+            </div>
           </div>
         )}
 
