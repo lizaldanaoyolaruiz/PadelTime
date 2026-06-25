@@ -1,10 +1,10 @@
 import { z } from 'zod';
+import { CITIES } from '../../../../constants/cities';
 
 const LETTERS_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'\-.]+$/;
 const EMAIL_RE   = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE   = /^\+?[0-9][\d\s\-()]{8,}$/;
 const NAME_RE    = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s'\-&.]+$/;
-const ADDR_RE    = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s'\-,.#°/]+$/;
 
 export const complexSchema = z.object({
   name: z
@@ -42,26 +42,12 @@ export const complexSchema = z.object({
     .refine(v => parseInt(v) >= 1, 'Mínimo 1 pista')
     .refine(v => parseInt(v) <= 50, 'Máximo 50 pistas'),
 
+  city: z.enum(CITIES, { errorMap: () => ({ message: 'Seleccioná una ciudad' }) }),
+
   address: z
     .string()
-    .min(1, 'Campo requerido')
     .min(5, 'Mínimo 5 caracteres')
-    .max(120, 'Máximo 120 caracteres')
-    .regex(ADDR_RE, 'Caracteres no permitidos'),
-
-  city: z
-    .string()
-    .min(1, 'Campo requerido')
-    .min(3, 'Mínimo 3 caracteres')
-    .max(50, 'Máximo 50 caracteres')
-    .regex(LETTERS_RE, 'Solo se permiten letras y espacios'),
-
-  province: z
-    .string()
-    .min(1, 'Campo requerido')
-    .min(3, 'Mínimo 3 caracteres')
-    .max(50, 'Máximo 50 caracteres')
-    .regex(LETTERS_RE, 'Solo se permiten letras y espacios'),
+    .max(120, 'Máximo 120 caracteres'),
 
   observations: z
     .string()

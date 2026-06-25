@@ -6,7 +6,8 @@ import {
 } from '../../../services/complexService';
 import { confirmSave, successAlert, errorAlert } from '../../../utils/alerts';
 import { useComplexForm } from '../utils/hooks/useComplexForm';
-import { blockNonLetters, blockNonPhone, blockNonDigits } from '../utils/validations';
+import { blockNonPhone, blockNonDigits } from '../utils/validations';
+import { CITIES } from '../../../constants/cities';
 import './MyComplex.css';
 
 export default function MyComplex() {
@@ -23,7 +24,6 @@ export default function MyComplex() {
   const { register, handleSubmit, reset, watch, formState: { errors } } = useComplexForm();
 
   const watchedName        = watch('name', '');
-  const watchedLocation    = watch('location', '');
   const watchedDescription = watch('description', '');
 
   useEffect(() => {
@@ -35,8 +35,8 @@ export default function MyComplex() {
         setPrincipalUrl(data.image || data.photos?.[0] || null);
         reset({
           name:              data.name              || '',
-          location:          data.location          || '',
           city:              data.city              || '',
+          address:           data.address || data.location || '',
           price:             data.price             || '',
           openTime:          data.openTime          || '',
           closeTime:         data.closeTime         || '',
@@ -250,29 +250,27 @@ export default function MyComplex() {
 
             <div className="form-group">
               <label className="form-label">Ciudad</label>
-              <input
-                className={`form-input${errors.city ? ' input-error' : ''}`}
-                placeholder="Buenos Aires"
-                maxLength={50}
-                onKeyDown={blockNonLetters}
+              <select
+                className={`form-input form-select${errors.city ? ' input-error' : ''}`}
                 {...register('city')}
-              />
-              {errors.city
-                ? <span className="error-msg">{errors.city.message}</span>
-                : <span className="form-hint">Solo letras — mín. 3</span>}
+              >
+                <option value="" disabled>Seleccioná una ciudad...</option>
+                {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+              {errors.city && <span className="error-msg">{errors.city.message}</span>}
             </div>
 
             <div className="form-group form-group--full">
               <label className="form-label">Dirección</label>
               <input
-                className={`form-input${errors.location ? ' input-error' : ''}`}
-                placeholder="Av. Corrientes 1234"
-                maxLength={200}
-                {...register('location')}
+                className={`form-input${errors.address ? ' input-error' : ''}`}
+                placeholder="Ej: Av. Aconquija 1234"
+                maxLength={120}
+                {...register('address')}
               />
-              {errors.location
-                ? <span className="error-msg">{errors.location.message}</span>
-                : <span className="form-hint">{watchedLocation.length}/200 — mín. 5 caracteres</span>}
+              {errors.address
+                ? <span className="error-msg">{errors.address.message}</span>
+                : <span className="form-hint">Mín. 5 caracteres — máx. 120</span>}
             </div>
 
             <div className="form-group">
