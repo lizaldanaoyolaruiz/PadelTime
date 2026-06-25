@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CITIES } from '../../../../constants/cities';
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
@@ -8,15 +9,11 @@ export const complexSchema = z
       .string()
       .min(3, 'Mínimo 3 caracteres')
       .max(100, 'Máximo 100 caracteres'),
-    location: z
+    city: z.enum(CITIES, { errorMap: () => ({ message: 'Seleccioná una ciudad' }) }),
+    address: z
       .string()
       .min(5, 'Mínimo 5 caracteres')
-      .max(200, 'Máximo 200 caracteres'),
-    city: z
-      .string()
-      .min(3, 'Mínimo 3 caracteres')
-      .max(50, 'Máximo 50 caracteres')
-      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/, 'Solo letras permitidas'),
+      .max(120, 'Máximo 120 caracteres'),
     price: z.coerce
       .number({ invalid_type_error: 'Ingresá un número válido' })
       .positive('Debe ser mayor a 0')
