@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #07102a;
+  background: #0F172A;
   color: #f8fafc;
 }
 
@@ -683,7 +683,7 @@
 
 .cp-modal-body input {
   width: 100%;
-  background: #07102a;
+  background: #0F172A;
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 9px;
   padding: 10px 12px;

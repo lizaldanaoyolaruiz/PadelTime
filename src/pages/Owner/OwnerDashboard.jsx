@@ -1,13 +1,14 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Building2, Layers, CalendarDays,
-  CreditCard, Clock, LogOut, Star, BarChart2, LineChart, Trophy, Menu, X
+  CreditCard, Clock, LogOut, Star, BarChart2, LineChart, Trophy, Menu, X, Camera
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { confirmLogout } from '../../utils/alerts';
 import { getMyComplex } from '../../services/complexService';
+import api from '../../services/axios';
 import GeneralPanel   from './components/GeneralPanel';
 import MyComplex      from './components/MyComplex';
 import MyCourts       from './components/MyCourts';
@@ -60,6 +61,26 @@ export default function OwnerDashboard() {
     ? user.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
     : 'OW';
 
+  const fileInputRef = useRef(null);
+
+  const handleAvatarChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await api.post('/auth/me/avatar', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      const { token } = useAuthStore.getState();
+      useAuthStore.getState().setAuth(res.data.user, token);
+    } catch (err) {
+      console.error('Error subiendo avatar:', err);
+    } finally {
+      e.target.value = '';
+    }
+  };
+
   const panels = {
     panel:        <GeneralPanel    key={complexId} complexId={complexId} />,
     complejo:     <MyComplex />,
@@ -87,8 +108,23 @@ export default function OwnerDashboard() {
 
       <aside className={`owner-sidebar${menuOpen ? ' owner-sidebar--open' : ''}`}>
         <div className="sidebar-brand">
-          <span className="brand-name">PadelSaaS</span>
-          <span className="brand-sub">Owner Dashboard</span>
+          <div
+            className="sidebar-profile-avatar-wrap"
+            onClick={() => fileInputRef.current?.click()}
+            title="Cambiar foto de perfil"
+            style={{ cursor: 'pointer', position: 'relative', width: 64, height: 64, margin: '0 auto 10px' }}
+          >
+            {user?.avatar
+              ? <img src={user.avatar} alt="avatar" style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', border: '2px solid #bef264' }} />
+              : <div className="sidebar-avatar" style={{ width: 64, height: 64, fontSize: '1.4rem', margin: 0 }}>{initials}</div>
+            }
+            <div style={{ position: 'absolute', bottom: 0, right: 0, background: '#bef264', borderRadius: '50%', width: 20, height: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Camera size={11} color="#000" />
+            </div>
+          </div>
+          <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleAvatarChange} />
+          <span className="brand-name" style={{ fontSize: '1rem' }}>{user?.name || 'Owner'}</span>
+          <span className="brand-sub">Administrador</span>
         </div>
 
         <nav className="sidebar-nav">
@@ -105,12 +141,9 @@ export default function OwnerDashboard() {
         </nav>
 
         <div className="sidebar-footer">
-          <div className="sidebar-user">
-            <div className="sidebar-avatar">{initials}</div>
-            <div className="sidebar-user-info">
-              <span className="sidebar-user-name">{user?.name || 'Owner'}</span>
-              <span className="sidebar-user-club">Administrador</span>
-            </div>
+          <div className="sidebar-user-info" style={{ flex: 1 }}>
+            <span className="sidebar-user-name">Owner Dashboard</span>
+            <span className="sidebar-user-club">Administrador</span>
           </div>
           <button className="btn-logout" onClick={handleLogout} title="Cerrar sesión">
             <LogOut size={16} />

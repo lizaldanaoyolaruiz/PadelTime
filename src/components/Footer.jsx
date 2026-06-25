@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
-import logo from '../assets/logo.png';
+import logo from '../assets/padeltime_logo_white2.png';
+
 import './Footer.css';
 
 const Footer = () => {
