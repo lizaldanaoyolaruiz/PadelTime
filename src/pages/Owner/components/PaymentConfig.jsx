@@ -2,6 +2,7 @@
 import { toast } from 'sonner';
 import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import { getMyComplex, updateComplex } from '../../../services/complexService';
+import api from '../../../services/axios';
 import './PaymentConfig.css';
 
 const SENA_OPTIONS = [
@@ -54,6 +55,21 @@ export default function PaymentConfig() {
       toast.success('Configuración guardada correctamente');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Error al guardar');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDeleteToken = async () => {
+    if (!complexId) return;
+    setSaving(true);
+    try {
+      await api.delete(`/complexes/${complexId}/mp-token`);
+      setMpKey('');
+      setConnected(false);
+      toast.success('Token de Mercado Pago eliminado correctamente.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error al eliminar el token.');
     } finally {
       setSaving(false);
     }
@@ -146,6 +162,18 @@ export default function PaymentConfig() {
             <ShieldCheck size={14} />
             Tu token se almacena cifrado y nunca es visible para los jugadores.
           </div>
+
+          {connected && (
+            <button
+              type="button"
+              className="btn-danger"
+              onClick={handleDeleteToken}
+              disabled={saving}
+              style={{ marginTop: 12 }}
+            >
+              Desvincular Mercado Pago
+            </button>
+          )}
         </div>
 
         <div className="form-actions">
