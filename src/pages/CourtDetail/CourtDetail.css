@@ -332,9 +332,58 @@
   }
 }
 
+/* ── Schedule grid ──────────────────────────────────────────────────────── */
+.cd-schedule-card {
+  margin-top: 1.5rem;
+}
+.cd-schedule-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 1rem;
+}
+.cd-sched-day {
+  background: rgba(190, 242, 100, 0.08);
+  border: 1px solid rgba(190, 242, 100, 0.2);
+  border-radius: 10px;
+  padding: 10px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.cd-sched-day--off {
+  background: rgba(255,255,255,0.03);
+  border-color: rgba(255,255,255,0.08);
+  opacity: 0.5;
+}
+.cd-sched-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #bef264;
+  letter-spacing: 0.05em;
+}
+.cd-sched-day--off .cd-sched-label {
+  color: #64748b;
+}
+.cd-sched-time {
+  font-size: 11px;
+  color: #e2e8f0;
+  text-align: center;
+  line-height: 1.4;
+}
+.cd-sched-closed {
+  font-size: 10px;
+  color: #475569;
+}
+
 @media (max-width: 768px) {
   .cd-title {
     font-size: 2rem;
+  }
+  .cd-schedule-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
   .cd-recommended-grid {
     grid-template-columns: 1fr;
