@@ -34,6 +34,7 @@ export const torneoSchema = z
       ['activo', 'finalizado', 'cancelado'],
       { errorMap: () => ({ message: 'Seleccioná un estado' }) }
     ),
+    whatsapp: z.string().max(20, 'Máximo 20 caracteres').optional().or(z.literal('')),
   })
   .refine(
     d => !d.fechaInicio || !d.fechaFin || new Date(d.fechaFin) >= new Date(d.fechaInicio),
