@@ -2,7 +2,8 @@ import { X, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useComplexForm } from '../utils/hooks/useComplexForm';
 import { blockNonLetters, blockNonPhone, blockNonDigits } from '../utils/validations';
-import { createComplex } from '../../../services/complexService';
+import { createComplexByAdmin } from '../../../services/complexService';
+import { CITIES } from '../../../constants/cities';
 
 export function NewComplexModal({ onClose, onCreated }) {
   const {
@@ -14,17 +15,22 @@ export function NewComplexModal({ onClose, onCreated }) {
 
   const watchedName         = watch('name', '');
   const watchedOwner        = watch('owner', '');
-  const watchedAddress      = watch('address', '');
   const watchedObservations = watch('observations', '');
 
   const onSubmit = async (data) => {
     try {
-      const res = await createComplex({ ...data, courts: parseInt(data.courts) });
-      toast.success(`Complejo "${res.data.data.name}" creado correctamente.`);
-      onCreated(res.data.data);
+      const res = await createComplexByAdmin({
+        name:         data.name,
+        ownerEmail:   data.email,
+        city:         data.city,
+        address:      data.address,
+        observations: data.observations,
+      });
+      toast.success(`Complejo "${res.data.complex.name}" creado correctamente.`);
+      onCreated(res.data.complex);
       onClose();
-    } catch {
-      toast.error('Error al crear el complejo.');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Error al crear el complejo.');
     }
   };
 
@@ -122,48 +128,31 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">Entre 1 y 50</span>}
           </div>
 
+          {/* Ciudad */}
+          <div className="gc-new-field">
+            <label className="gc-new-label">Ciudad <span className="gc-required">*</span></label>
+            <select
+              {...register('city')}
+              className={`gc-new-input${errors.city ? ' gc-new-input--error' : ''}`}
+            >
+              <option value="" disabled>Seleccioná una ciudad...</option>
+              {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {errors.city && <span className="gc-new-error">{errors.city.message}</span>}
+          </div>
+
           {/* Dirección */}
           <div className="gc-new-field gc-new-field--full">
             <label className="gc-new-label">Dirección <span className="gc-required">*</span></label>
             <input
               {...register('address')}
               className={`gc-new-input${errors.address ? ' gc-new-input--error' : ''}`}
-              placeholder="Ej: Av. Diagonal 123"
+              placeholder="Ej: Av. Aconquija 1234"
               maxLength={120}
             />
             {errors.address
               ? <span className="gc-new-error">{errors.address.message}</span>
-              : <span className="gc-new-hint">{watchedAddress.length}/120 — mín. 5 caracteres</span>}
-          </div>
-
-          {/* Ciudad */}
-          <div className="gc-new-field">
-            <label className="gc-new-label">Ciudad <span className="gc-required">*</span></label>
-            <input
-              {...register('city')}
-              className={`gc-new-input${errors.city ? ' gc-new-input--error' : ''}`}
-              placeholder="Ej: Barcelona"
-              maxLength={50}
-              onKeyDown={blockNonLetters}
-            />
-            {errors.city
-              ? <span className="gc-new-error">{errors.city.message}</span>
-              : <span className="gc-new-hint">Solo letras — mín. 3</span>}
-          </div>
-
-          {/* Provincia */}
-          <div className="gc-new-field">
-            <label className="gc-new-label">Provincia <span className="gc-required">*</span></label>
-            <input
-              {...register('province')}
-              className={`gc-new-input${errors.province ? ' gc-new-input--error' : ''}`}
-              placeholder="Ej: Cataluña"
-              maxLength={50}
-              onKeyDown={blockNonLetters}
-            />
-            {errors.province
-              ? <span className="gc-new-error">{errors.province.message}</span>
-              : <span className="gc-new-hint">Solo letras — mín. 3</span>}
+              : <span className="gc-new-hint">Mín. 5 caracteres — máx. 120</span>}
           </div>
 
           {/* Observaciones */}
@@ -183,8 +172,7 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">{watchedObservations.length}/300</span>}
           </div>
 
-          <div className="gc-new-modal-footer">
-            <p className="gc-new-footer-note"><span className="gc-required">*</span> Campos obligatorios</p>
+          <div className="gc-new-modal-footer" style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
             <div className="gc-new-footer-actions">
               <button
                 type="button"
@@ -202,6 +190,7 @@ export function NewComplexModal({ onClose, onCreated }) {
                 {isSubmitting ? 'Guardando...' : 'Guardar complejo'}
               </button>
             </div>
+            <p className="gc-new-footer-note"><span className="gc-required">*</span> Campos obligatorios</p>
           </div>
         </form>
       </div>
