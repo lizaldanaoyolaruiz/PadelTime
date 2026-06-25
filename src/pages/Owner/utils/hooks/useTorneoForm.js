@@ -4,7 +4,7 @@ import { torneoSchema } from '../schemas/torneoSchema';
 
 const DEFAULTS = {
   nombre: '', descripcion: '', fechaInicio: '', fechaFin: '',
-  ubicacion: '', cupoMaximo: '', categoria: '', estado: 'activo',
+  ubicacion: '', cupoMaximo: '', categoria: '', estado: 'activo', whatsapp: '',
 };
 
 export function useTorneoForm(torneo = null) {
@@ -20,6 +20,7 @@ export function useTorneoForm(torneo = null) {
           cupoMaximo:  torneo.cupoMaximo,
           categoria:   torneo.categoria,
           estado:      torneo.estado,
+          whatsapp:    torneo.whatsapp || '',
         }
       : DEFAULTS,
   });
