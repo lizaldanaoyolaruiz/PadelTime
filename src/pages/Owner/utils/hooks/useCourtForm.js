@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { courtSchema } from '../schemas/courtSchema';
 
 const DEFAULT_VALUES = {
-  name: '', type: '', pricePerHour: '', description: '',
+  name: '', type: '', description: '',
 };
 
 export function useCourtForm(cancha = null) {
@@ -11,10 +11,9 @@ export function useCourtForm(cancha = null) {
     resolver: zodResolver(courtSchema),
     defaultValues: cancha
       ? {
-          name:         cancha.name,
-          type:         cancha.type,
-          pricePerHour: cancha.pricePerHour,
-          description:  cancha.description || '',
+          name:        cancha.name,
+          type:        cancha.type,
+          description: cancha.description || '',
         }
       : DEFAULT_VALUES,
   });
