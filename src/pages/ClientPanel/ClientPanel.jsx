@@ -429,7 +429,7 @@ export default function ClientPanel() {
             />
             <div className="cp-profile-info">
               <h2>{user?.name || 'Usuario'}</h2>
-              <p>Jugador · PadelSaaS</p>
+              <p>Jugador · PadelTime</p>
             </div>
             <div className="cp-stats-row">
               <div className="cp-stat">

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import "./we.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -6,7 +7,39 @@ const aldanaImg  = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/
 const facundoImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/fac-padel.jpg';
 const octavioImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/oc-padel.jpg';
 
+function useCounter(target, duration = 1800, startCounting) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!startCounting) return;
+    let start = 0;
+    const step = Math.ceil(target / (duration / 16));
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(start);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [startCounting, target, duration]);
+  return count;
+}
+
 function Nosotros() {
+  const statsRef = useRef(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    if (statsRef.current) observer.observe(statsRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const count1 = useCounter(404, 1800, started);
+  const count2 = useCounter(8,   1200, started);
+  const count3 = useCounter(4,   1000, started);
+
   return (
     <>
       <Navbar />
@@ -20,25 +53,25 @@ function Nosotros() {
             </h1>
             <p>
               Nacimos de la intersección entre la pasión por el deporte y la obsesión por la
-              eficiencia tecnológica. En PadelSaaS, eliminamos las fricciones operativas
+              eficiencia tecnológica. En PadelTime, eliminamos las fricciones operativas
               para que los clubes crezcan y los jugadores nunca dejen de competir.
             </p>
           </div>
         </section>
 
-        <section className="about-stats">
+        <section className="about-stats" ref={statsRef}>
           <article className="stat-card">
-            <h2>404+</h2>
+            <h2>{count1}+</h2>
             <h3>Clubes Activos</h3>
             <p>Optimizando su gestión diaria con nuestra tecnología de punta.</p>
           </article>
           <article className="stat-card">
-            <h2>8+</h2>
+            <h2>{count2}+</h2>
             <h3>Partidos/Mes</h3>
             <p>Reservas procesadas sin interrupciones ni errores humanos.</p>
           </article>
           <article className="stat-card">
-            <h2>4+</h2>
+            <h2>{count3}+</h2>
             <h3>Canchas</h3>
             <p>Digitalizadas y listas para ser reservadas en segundos.</p>
           </article>
@@ -57,10 +90,10 @@ function Nosotros() {
               ))}
             </svg>
             <span className="vision-icon">🚀</span>
-            <h2>Nuestra Visión 2025</h2>
+            <h2>Nuestra Visión 2026</h2>
             <p>
-              Liderar la transformación digital del deporte amateur en Europa, convirtiéndonos
-              en el estándar de oro para la administración de recintos deportivos.
+              Liderar la transformación digital del deporte amateur en Tucumán, convirtiéndonos
+              en el estándar de oro para la administración de recintos deportivos de la región.
             </p>
           </div>
           <div className="vision-side">
