@@ -29,23 +29,17 @@ export default function Error404() {
             <button className="e404-btn-primary" onClick={() => navigate("/")}>
               Volver al Inicio
             </button>
-            <button className="e404-btn-secondary" onClick={() => window.history.back()}>
-              Regresar
-            </button>
           </div>
 
-          <div className="e404-cards">
-            <div className="e404-card">
+          <div className="cards">
+            <div className="card" onClick={() => navigate('/complejos')} style={{ cursor: 'pointer' }}>
               <h3>Clubes</h3>
               <p>Encuentra tu pista</p>
             </div>
-            <div className="e404-card">
+
+            <div className="card" onClick={() => navigate('/panelcliente')} style={{ cursor: 'pointer' }}>
               <h3>Reservas</h3>
               <p>Gestiona tus partidos</p>
-            </div>
-            <div className="e404-card">
-              <h3>Comunidad</h3>
-              <p>Busca compañeros</p>
             </div>
           </div>
         </div>
