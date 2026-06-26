@@ -5,15 +5,8 @@ import { getMyComplex, updateComplex } from '../../../services/complexService';
 import api from '../../../services/axios';
 import './PaymentConfig.css';
 
-const SENA_OPTIONS = [
-  { value: 20, label: '20%', desc: 'Seña baja — más reservas, mayor riesgo de ausencia' },
-  { value: 30, label: '30%', desc: 'Opción recomendada — equilibrio perfecto' },
-  { value: 50, label: '50%', desc: 'Seña alta — mayor compromiso del jugador' },
-];
-
 export default function PaymentConfig() {
   const [complexId, setComplexId] = useState(null);
-  const [sena,      setSena]      = useState(30);
   const [mpKey,     setMpKey]     = useState('');
   const [showKey,   setShowKey]   = useState(false);
   const [loading,   setLoading]   = useState(true);
@@ -25,9 +18,6 @@ export default function PaymentConfig() {
       .then(res => {
         const complex = res.data.complex || res.data;
         setComplexId(complex._id);
-        if (SENA_OPTIONS.some(o => o.value === complex.depositPercentage)) {
-          setSena(complex.depositPercentage);
-        }
         setConnected(!!complex.mercadopagoActive || !!complex.mpTokenConfigured);
         if (complex.mpTokenConfigured) setMpKey('••••••••••••');
       })
@@ -45,7 +35,7 @@ export default function PaymentConfig() {
     }
     setSaving(true);
     try {
-      const payload = { depositPercentage: sena };
+      const payload = {};
       if (mpKey.trim() && !mpKey.includes('•')) {
         payload.mpAccessToken     = mpKey.trim();
         payload.mercadopagoActive = true;
@@ -82,7 +72,7 @@ export default function PaymentConfig() {
       <div className="panel-header">
         <div>
           <h2>Configuración de Pagos</h2>
-          <p className="panel-subtitle">Configurá el porcentaje de seña y vinculá tu cuenta de Mercado Pago.</p>
+          <p className="panel-subtitle">Vinculá tu cuenta de Mercado Pago para recibir pagos online.</p>
         </div>
         {connected && (
           <span className="status-badge status-approved">
@@ -93,33 +83,6 @@ export default function PaymentConfig() {
       </div>
 
       <form onSubmit={handleSave} noValidate>
-        <div className="form-section">
-          <h3 className="section-title">Porcentaje de seña</h3>
-          <p className="section-desc">
-            El jugador debe abonar este porcentaje del precio del turno al reservar online vía Mercado Pago.
-          </p>
-          <div className="sena-options">
-            {SENA_OPTIONS.map(opt => (
-              <label
-                key={opt.value}
-                className={`sena-option${sena === opt.value ? ' sena-option--active' : ''}`}
-              >
-                <input
-                  type="radio"
-                  name="sena"
-                  value={opt.value}
-                  checked={sena === opt.value}
-                  onChange={() => setSena(opt.value)}
-                  style={{ display: 'none' }}
-                />
-                <div className="sena-option-pct">{opt.label}</div>
-                <div className="sena-option-desc">{opt.desc}</div>
-                {opt.value === 30 && <span className="sena-recommended">Recomendado</span>}
-              </label>
-            ))}
-          </div>
-        </div>
-
         <div className="form-section">
           <h3 className="section-title">Mercado Pago — Access Token</h3>
           <p className="section-desc">
