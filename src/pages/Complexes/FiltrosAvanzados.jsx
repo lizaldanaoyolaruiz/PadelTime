@@ -1,34 +1,23 @@
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown } from 'lucide-react';
 
 const PRECIO_MIN_ARS = 1000;
-const PRECIO_MAX_ARS = 6000;
+const PRECIO_MAX_ARS = 100000;
+const CIUDADES = ['San Miguel de Tucumán', 'Yerba Buena', 'Tafí Viejo'];
 
 const FiltrosAvanzados = ({
   searchQuery,
+  ciudadSeleccionada,
   precioMax,
-  fecha,
-  franjasSeleccionadas,
   tiposSeleccionados,
   totalActivos,
   tiposDisponibles = [],
-  franjasDisponibles = [],
   onChangeSearch,
+  onChangeCiudad,
   onChangePrecio,
-  onChangeFecha,
-  onToggleFranja,
   onToggleTipo,
   onReset,
 }) => {
   const pctFill = ((precioMax - PRECIO_MIN_ARS) / (PRECIO_MAX_ARS - PRECIO_MIN_ARS)) * 100;
-  const hoy = new Date().toISOString().split('T')[0];
-
-  const fechaLabel = fecha
-    ? new Date(fecha + 'T00:00:00').toLocaleDateString('es-AR', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-      })
-    : '';
 
   return (
     <aside className="filtros-sidebar">
@@ -45,22 +34,21 @@ const FiltrosAvanzados = ({
         )}
       </div>
 
-      {/* Búsqueda por nombre o ciudad */}
+      {/* Ciudad */}
       <div className="filtro-seccion">
-        <div className="filtro-search-wrapper">
-          <Search size={14} className="filtro-search-icon" />
-          <input
-            type="text"
-            className="filtro-search-input"
-            placeholder="Nombre o ciudad..."
-            value={searchQuery}
-            onChange={(e) => onChangeSearch(e.target.value)}
-          />
-          {searchQuery && (
-            <button className="filtro-clear-btn" onClick={() => onChangeSearch('')}>
-              <X size={12} />
-            </button>
-          )}
+        <p className="filtro-seccion-titulo">Ciudad</p>
+        <div className="filtro-ciudad-wrapper">
+          <select
+            className="filtro-ciudad-select"
+            value={ciudadSeleccionada}
+            onChange={(e) => onChangeCiudad(e.target.value)}
+          >
+            <option value="">Todas las ciudades</option>
+            {CIUDADES.map(city => (
+              <option key={city} value={city}>{city}</option>
+            ))}
+          </select>
+          <ChevronDown size={13} className="filtro-ciudad-chevron" />
         </div>
       </div>
 
@@ -80,7 +68,7 @@ const FiltrosAvanzados = ({
             className="precio-range"
             min={PRECIO_MIN_ARS}
             max={PRECIO_MAX_ARS}
-            step={500}
+            step={1000}
             value={precioMax}
             onChange={(e) => onChangePrecio(Number(e.target.value))}
           />
@@ -88,31 +76,9 @@ const FiltrosAvanzados = ({
 
         <div className="precio-limites">
           <span>$1.000</span>
-          <span>$6.000</span>
+          <span>$100.000</span>
         </div>
       </div>
-
-      {/* Franja Horaria — solo se muestra si hay franjas en los datos */}
-      {franjasDisponibles.length > 0 && (
-        <div className="filtro-seccion">
-          <p className="filtro-seccion-titulo">Franja Horaria</p>
-          <div className="franja-grid">
-            {franjasDisponibles.map(franja => {
-              const activo = franjasSeleccionadas.includes(franja);
-              return (
-                <button
-                  key={franja}
-                  type="button"
-                  className={activo ? 'franja-btn activo' : 'franja-btn'}
-                  onClick={() => onToggleFranja(franja)}
-                >
-                  {franja}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Tipo de Pista — solo se muestra si hay tipos en los datos */}
       {tiposDisponibles.length > 0 && (
@@ -137,30 +103,6 @@ const FiltrosAvanzados = ({
           })}
         </div>
       )}
-
-      {/* Disponibilidad por fecha */}
-      <div className="filtro-seccion">
-        <p className="filtro-seccion-titulo">Disponibilidad</p>
-        <div className="filtro-fecha-wrapper">
-          <input
-            type="date"
-            className="filtro-fecha"
-            value={fecha}
-            min={hoy}
-            onChange={(e) => onChangeFecha(e.target.value)}
-          />
-          {fecha && (
-            <button
-              className="filtro-clear-btn"
-              onClick={() => onChangeFecha('')}
-              title="Quitar fecha"
-            >
-              <X size={12} />
-            </button>
-          )}
-        </div>
-        {fecha && <p className="filtro-fecha-hint">Disponibles el {fechaLabel}</p>}
-      </div>
     </aside>
   );
 };
