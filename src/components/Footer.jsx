@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../assets/padeltime_logo_white2.png';
+const logo = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
 import './footer.css';
 
 const Footer = () => {

@@ -77,7 +77,7 @@ export default function Register() {
             className={`auth-tab${role === 'admin' ? ' active' : ''}`}
             onClick={() => setRole('admin')}
           >
-            Owner de complejo
+            Dueño de complejo
           </button>
         </div>
 

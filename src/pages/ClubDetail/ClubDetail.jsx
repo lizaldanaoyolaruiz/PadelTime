@@ -178,6 +178,8 @@ const ClubDetail = () => {
     finally { setCargandoFav(false); }
   };
 
+  const LOGO_URL = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
+
   const formatearDinero = (monto) =>
     new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
 
@@ -210,12 +212,12 @@ const ClubDetail = () => {
           </div>
         </div>
 
-        {club.fotos.length > 0 && (
+        {(club.fotos.length > 0 || true) && (
           <div className="gallery-grid">
             <img
-              src={club.fotos[0]}
+              src={club.fotos[0] || 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png'}
               alt={club.nombre}
-              className="img-main"
+              className={`img-main${club.fotos[0] ? '' : ' img-main--logo'}`}
             />
             {club.fotos.length > 1 && (
               <div className="gallery-right">
@@ -250,10 +252,11 @@ const ClubDetail = () => {
                 <div className="court-media-col">
                   <div className={`court-img-container${!cancha.image ? ' court-img-container--empty' : ''}`}>
                     <span className="badge-status">{cancha.status}</span>
-                    {cancha.image
-                      ? <img src={cancha.image} alt={cancha.name} />
-                      : <div className="court-img-empty" />
-                    }
+                    <img
+                      src={cancha.image || LOGO_URL}
+                      alt={cancha.name}
+                      className={cancha.image ? '' : 'court-img--logo'}
+                    />
                     {canchaSeleccionada?.id === cancha.id && (
                       <div className="selected-badge">✓</div>
                     )}

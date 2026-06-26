@@ -27,21 +27,22 @@ export default function GeneralPanel({ complexId }) {
   const cargarDatos = useCallback(async () => {
     try {
       let resolvedComplexId = complexId;
+      let complexData = null;
 
       if (!resolvedComplexId) {
         try {
           const complexRes = await getMyComplex();
-          const complex = complexRes.data.complex || complexRes.data;
-          resolvedComplexId = complex?._id;
-          setComplejo(complex ?? null);
+          complexData = complexRes.data.complex || complexRes.data;
+          resolvedComplexId = complexData?._id;
+          setComplejo(complexData ?? null);
         } catch {
           // continúa sin complejo
         }
       } else {
         try {
           const complexRes = await getMyComplex(complexId);
-          const complex = complexRes.data.complex || complexRes.data;
-          setComplejo(complex ?? null);
+          complexData = complexRes.data.complex || complexRes.data;
+          setComplejo(complexData ?? null);
         } catch {}
       }
 
@@ -60,7 +61,7 @@ export default function GeneralPanel({ complexId }) {
       setCanchas(Array.isArray(courts) ? courts : []);
       setPending(Array.isArray(pendientes) ? pendientes : []);
 
-      const slots  = generarSlots();
+      const slots  = generarSlots(complexData?.openTime, complexData?.closeTime);
       const matriz = slots.map(slot => {
         const fila = { horario: slot };
         (Array.isArray(courts) ? courts : []).forEach(c => {
@@ -117,18 +118,7 @@ export default function GeneralPanel({ complexId }) {
 
       <StatCards data={statsHoy} />
 
-      <div className="pg-mid">
-        <div className="pg-card pg-card--sena">
-          <h3 className="pg-card-title">Porcentaje de Seña</h3>
-          <p className="pg-card-desc">
-            Define el porcentaje que los jugadores deben abonar para confirmar su reserva vía Mercado Pago.
-          </p>
-          <div className="sena-value">{complejo?.depositPercentage ?? '—'}%</div>
-          <button className="btn-secondary" style={{ marginTop: 12 }}>Modificar en Config. Pagos</button>
-        </div>
-
-        <PendingList pending={pending} onRefresh={cargarDatos} />
-      </div>
+      <PendingList pending={pending} onRefresh={cargarDatos} />
 
       <AgendaTable
         canchas={canchas}

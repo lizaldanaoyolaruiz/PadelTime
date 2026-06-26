@@ -158,36 +158,18 @@ export default function CourtModal({ cancha, onClose, onSave }) {
               : <span className="form-hint">{watchedName.length}/50 — mín. 3 caracteres</span>}
           </div>
 
-          <div className="form-grid" style={{ gridTemplateColumns: '1fr 1fr' }}>
-            <div className="form-group">
-              <label className="form-label">Superficie</label>
-              <select
-                className={`form-input form-select${errors.type ? ' input-error' : ''}`}
-                {...register('type')}
-              >
-                <option value="">Seleccioná...</option>
-                {SUPERFICIES.map(s => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
-              </select>
-              {errors.type && <span className="error-msg">{errors.type.message}</span>}
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Precio por hora ($)</label>
-              <input
-                type="number"
-                min="0"
-                step="100"
-                className={`form-input${errors.pricePerHour ? ' input-error' : ''}`}
-                placeholder="Ej: 3000"
-                onKeyDown={blockNonDigits}
-                {...register('pricePerHour')}
-              />
-              {errors.pricePerHour
-                ? <span className="error-msg">{errors.pricePerHour.message}</span>
-                : <span className="form-hint">Solo números — máx. $999.999</span>}
-            </div>
+          <div className="form-group">
+            <label className="form-label">Superficie</label>
+            <select
+              className={`form-input form-select${errors.type ? ' input-error' : ''}`}
+              {...register('type')}
+            >
+              <option value="">Seleccioná...</option>
+              {SUPERFICIES.map(s => (
+                <option key={s.value} value={s.value}>{s.label}</option>
+              ))}
+            </select>
+            {errors.type && <span className="error-msg">{errors.type.message}</span>}
           </div>
 
           <div className="form-group">

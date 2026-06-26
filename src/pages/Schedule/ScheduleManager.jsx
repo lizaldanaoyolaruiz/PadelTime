@@ -9,6 +9,7 @@ import {
   updateBlockout,
   deleteBlockout,
 } from '../../services/scheduleService';
+import { getMyComplex } from '../../services/complexService';
 import { confirmDelete, confirmSave, successAlert, errorAlert } from '../../utils/alerts';
 import './schedule.css';
 
@@ -299,6 +300,7 @@ function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
 export const ScheduleManager = () => {
   const [courts, setCourts]             = useState([]);
   const [blockouts, setBlockouts]       = useState([]);
+  const [complexHours, setComplexHours] = useState({ open: null, close: null });
   const [selectedCourtId, setSelectedCourtId] = useState(null);
   const [scheduleChanges, setScheduleChanges] = useState({});
   const [onlineStatus, setOnlineStatus] = useState(true);
@@ -312,14 +314,19 @@ export const ScheduleManager = () => {
     setLoading(true);
     setError(null);
     try {
-      const [schedRes, blockRes] = await Promise.all([
+      const [schedRes, blockRes, complexRes] = await Promise.all([
         getCourtsSchedule(),
         getBlockouts().catch(() => ({ data: [] })),
+        getMyComplex().catch(() => null),
       ]);
       const courtsData = Array.isArray(schedRes.data) ? schedRes.data : [];
       setCourts(courtsData);
       if (courtsData.length) setSelectedCourtId(c => c ?? courtsData[0].courtId);
       setBlockouts(Array.isArray(blockRes.data) ? blockRes.data : []);
+      if (complexRes) {
+        const cx = complexRes.data?.complex || complexRes.data;
+        setComplexHours({ open: cx?.openTime || null, close: cx?.closeTime || null });
+      }
     } catch (err) {
       setError(err?.response?.data?.message || 'Error al cargar horarios');
     } finally {
@@ -495,7 +502,11 @@ export const ScheduleManager = () => {
             <div className="sm-schedule-col">
               <div className="sm-section-header">
                 <span className="sm-section-title">Disponibilidad Semanal</span>
-                <span className="sm-section-note">Los cambios afectarán a las próximas 4 semanas</span>
+                <span className="sm-section-note">
+                  {complexHours.open && complexHours.close
+                    ? `Horario del complejo: ${complexHours.open} – ${complexHours.close}`
+                    : 'Los cambios afectarán a las próximas 4 semanas'}
+                </span>
               </div>
 
               {courtSchedule.days.map((day, idx) => {
@@ -513,6 +524,8 @@ export const ScheduleManager = () => {
                             type="time"
                             className="sm-time-input"
                             value={day.openTime === '--' ? '' : day.openTime}
+                            min={complexHours.open || undefined}
+                            max={complexHours.close || undefined}
                             onChange={e => updateDay(idx, 'openTime', e.target.value)}
                           />
                         </div>
@@ -522,6 +535,8 @@ export const ScheduleManager = () => {
                             type="time"
                             className="sm-time-input"
                             value={day.closeTime === '--' ? '' : day.closeTime}
+                            min={complexHours.open || undefined}
+                            max={complexHours.close || undefined}
                             onChange={e => updateDay(idx, 'closeTime', e.target.value)}
                           />
                         </div>

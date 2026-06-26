@@ -1,10 +1,10 @@
 import "./we.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import marisolImg from "../../assets/mar.padel.jpeg";
-import aldanaImg from "../../assets/ald.padel.jpeg";
-import facundoImg from "../../assets/fac.pdel.jpeg";
-import octavioImg from "../../assets/oc.padel.jpeg";
+const marisolImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/mar-padel.jpg';
+const aldanaImg  = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/ald-padel.jpg';
+const facundoImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/fac-padel.jpg';
+const octavioImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/oc-padel.jpg';
 
 function Nosotros() {
   return (
