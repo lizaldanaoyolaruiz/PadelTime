@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 import api from '../services/axios';
 
 const Hero = () => {
@@ -40,7 +40,7 @@ const Hero = () => {
       <h1>Lleva tu juego al <span className="highlight">siguiente nivel</span></h1>
       <p>La plataforma definitiva para jugadores que buscan la pista perfecta y clubes que exigen una gestión de alto rendimiento.</p>
       <div className="search-bar">
-        <span className="search-icon">🔍</span>
+        <span className="search-icon"><Search size={18} /></span>
 
         <div ref={dropdownRef} className="hero-dropdown" onClick={() => setOpen(o => !o)}>
           <span className="hero-dropdown-value">{labelActual}</span>

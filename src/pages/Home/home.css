@@ -47,8 +47,10 @@
 
 .search-icon {
   padding: 0 1rem;
-  opacity: 0.5;
+  opacity: 0.7;
   color: var(--color-primary);
+  flex-shrink: 0;
+  display: block;
 }
 
 .search-bar input {

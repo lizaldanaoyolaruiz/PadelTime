@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { MapPin, Star, ChevronDown } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import FiltrosAvanzados from './FiltrosAvanzados';
@@ -19,11 +19,9 @@ const mapComplex = (c) => ({
   status: c.status || c.estado || 'pendiente',
   features: c.features || [],
   price: c.precioPorHora || c.price || 0,
-  availability: c.availability || [],
-  franjas: c.franjas || [],
 });
 
-const PRECIO_INICIAL = 6000;
+const PRECIO_INICIAL = 100000;
 
 const ComplexCard = ({ complex }) => (
   <article className="complex-card">
@@ -68,16 +66,11 @@ const ComplexCard = ({ complex }) => (
 );
 
 const Complexes = () => {
-  const [searchParams] = useSearchParams();
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // Todos los filtros viven en el sidebar
-  const [ciudad,      setCiudad]      = useState(searchParams.get('ciudad') || '');
   const [searchQuery, setSearchQuery] = useState('');
+  const [ciudadSeleccionada, setCiudadSeleccionada] = useState('');
   const [precioMax, setPrecioMax] = useState(PRECIO_INICIAL);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState('');
-  const [franjasSeleccionadas, setFranjasSeleccionadas] = useState([]);
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
 
   useEffect(() => {
@@ -105,41 +98,19 @@ const Complexes = () => {
     return tipos.sort();
   }, [complexes]);
 
-  const franjasDisponibles = useMemo(() => {
-    const orden = ['Mañana', 'Tarde', 'Noche', 'Madrugada'];
-    const encontradas = [];
-    complexes.forEach(c => {
-      c.franjas.forEach(f => {
-        if (!encontradas.includes(f)) encontradas.push(f);
-      });
-    });
-    return orden.filter(f => encontradas.includes(f));
-  }, [complexes]);
-
   const filteredComplexes = useMemo(() => {
     return complexes.filter((c) => {
       const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        !q ||
-        c.name.toLowerCase().includes(q) ||
-        (c.city || '').toLowerCase().includes(q);
+      const matchesSearch = !q || c.name.toLowerCase().includes(q);
+      const matchesCiudad = !ciudadSeleccionada || (c.city || '') === ciudadSeleccionada;
       const matchesPrice = c.price <= 0 || c.price <= precioMax;
-      const matchesDate =
-        !fechaSeleccionada ||
-        !c.availability?.length ||
-        c.availability.includes(fechaSeleccionada);
-      const matchesFranja =
-        franjasSeleccionadas.length === 0 ||
-        !c.franjas?.length ||
-        franjasSeleccionadas.some((f) => c.franjas.includes(f));
       const matchesTipo =
         tiposSeleccionados.length === 0 ||
         c.surface.length === 0 ||
         tiposSeleccionados.some(t => c.surface.includes(t));
-
-      return matchesSearch && matchesPrice && matchesDate && matchesFranja && matchesTipo;
+      return matchesSearch && matchesCiudad && matchesPrice && matchesTipo;
     });
-  }, [complexes, searchQuery, precioMax, fechaSeleccionada, franjasSeleccionadas, tiposSeleccionados]);
+  }, [complexes, searchQuery, ciudadSeleccionada, precioMax, tiposSeleccionados]);
 
   const filteredFeatured = useMemo(
     () => filteredComplexes.filter((c) => c.isFeatured),
@@ -149,17 +120,11 @@ const Complexes = () => {
   const filtrosActivos = useMemo(() => {
     let count = 0;
     if (searchQuery) count++;
+    if (ciudadSeleccionada) count++;
     if (precioMax < PRECIO_INICIAL) count++;
-    if (fechaSeleccionada) count++;
-    if (franjasSeleccionadas.length > 0) count++;
     if (tiposSeleccionados.length > 0) count++;
     return count;
-  }, [searchQuery, precioMax, fechaSeleccionada, franjasSeleccionadas, tiposSeleccionados]);
-
-  const toggleFranja = (franja) =>
-    setFranjasSeleccionadas((prev) =>
-      prev.includes(franja) ? prev.filter((f) => f !== franja) : [...prev, franja]
-    );
+  }, [searchQuery, ciudadSeleccionada, precioMax, tiposSeleccionados]);
 
   const toggleTipo = (tipo) =>
     setTiposSeleccionados((prev) =>
@@ -168,9 +133,8 @@ const Complexes = () => {
 
   const resetFiltros = () => {
     setSearchQuery('');
+    setCiudadSeleccionada('');
     setPrecioMax(PRECIO_INICIAL);
-    setFechaSeleccionada('');
-    setFranjasSeleccionadas([]);
     setTiposSeleccionados([]);
   };
 
@@ -190,17 +154,14 @@ const Complexes = () => {
       <div className="catalog-layout">
         <FiltrosAvanzados
           searchQuery={searchQuery}
+          ciudadSeleccionada={ciudadSeleccionada}
           precioMax={precioMax}
-          fecha={fechaSeleccionada}
-          franjasSeleccionadas={franjasSeleccionadas}
           tiposSeleccionados={tiposSeleccionados}
           totalActivos={filtrosActivos}
           tiposDisponibles={tiposDisponibles}
-          franjasDisponibles={franjasDisponibles}
           onChangeSearch={setSearchQuery}
+          onChangeCiudad={setCiudadSeleccionada}
           onChangePrecio={setPrecioMax}
-          onChangeFecha={setFechaSeleccionada}
-          onToggleFranja={toggleFranja}
           onToggleTipo={toggleTipo}
           onReset={resetFiltros}
         />
