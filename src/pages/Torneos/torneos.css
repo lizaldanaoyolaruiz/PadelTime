@@ -588,6 +588,29 @@
   font-weight: var(--fw-medium);
 }
 
+/* ── WhatsApp button ── */
+.tp-wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: #25d366;
+  color: #fff;
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+  font-family: var(--font-base);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.tp-wa-btn:hover {
+  background: #1ebe5d;
+  transform: translateY(-1px);
+}
+
 /* ── Responsive ── */
 @media (max-width: 1024px) {
   .tp-main { padding: 2rem; }

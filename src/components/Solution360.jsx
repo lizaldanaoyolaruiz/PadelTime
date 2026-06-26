@@ -1,14 +1,39 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getTorneos } from '../services/torneosService';
 import './solutions.css';
+
+const MESES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+const CATEGORIA_LABEL = {
+  amateur: 'Amateur', intermedio: 'Intermedio', avanzado: 'Avanzado',
+  profesional: 'Profesional', mixto: 'Mixto',
+};
+
+function parseFecha(dateStr) {
+  if (!dateStr) return null;
+  const d = new Date(dateStr + 'T00:00:00');
+  return { mes: MESES[d.getMonth()], dia: d.getDate() };
+}
 
 const Solutions = () => {
   const navigate = useNavigate();
+  const [torneos, setTorneos] = useState([]);
+
+  useEffect(() => {
+    getTorneos({ estado: 'activo' })
+      .then(res => {
+        const all = res.data.torneos || res.data || [];
+        setTorneos(all.filter(t => t.estado === 'activo').slice(0, 2));
+      })
+      .catch(() => setTorneos([]));
+  }, []);
 
   return (
     <section className="solutions" id="nosotros">
       <div className="solutions-content">
         <h2>Soluciones 360° para el <span className="highlight">Ecosistema Pádel</span></h2>
-        
+
         <div className="feature-item">
           <div className="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -50,54 +75,43 @@ const Solutions = () => {
             </svg>
             <span>PRÓXIMOS EVENTOS</span>
           </div>
-          <span className="badge-zone">Tucumán</span>
         </div>
-        
+
         <div className="tournaments-list">
-          <div className="tournament-card">
-            <div className="tournament-date">
-              <span className="t-month">MAY</span>
-              <span className="t-day">18</span>
-            </div>
-            <div className="tournament-info">
-              <span className="t-title">Americana 6ta y 7ma</span>
-              <span className="t-club">Marcos Paz PADEL</span>
-              <div className="t-tags">
-                <span className="tag-cupos">Últimos 2 cupos</span>
-                <span className="tag-price">$6.000</span>
-              </div>
-            </div>
-            <button className="btn-anotarse" onClick={() => navigate('/login')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-              </svg>
-            </button>
-          </div>
-
-          <div className="tournament-card">
-            <div className="tournament-date">
-              <span className="t-month">MAY</span>
-              <span className="t-day">25</span>
-            </div>
-            <div className="tournament-info">
-              <span className="t-title">Torneo Suma 11</span>
-              <span className="t-club">Guillermina Padel</span>
-              <div className="t-tags">
-                <span className="tag-open">Abierto</span>
-                <span className="tag-price">$12.000</span>
-              </div>
-            </div>
-            <button className="btn-anotarse outline" onClick={() => navigate('/login')}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-              </svg>
-            </button>
-          </div>
+          {torneos.length === 0 ? (
+            <p style={{ color: 'var(--color-text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '1rem 0' }}>
+              No hay torneos activos próximos.
+            </p>
+          ) : (
+            torneos.map(t => {
+              const fecha = parseFecha(t.fechaInicio);
+              return (
+                <div
+                  key={t._id}
+                  className="tournament-card"
+                  onClick={() => navigate('/torneos')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <div className="tournament-date">
+                    <span className="t-month">{fecha?.mes || '—'}</span>
+                    <span className="t-day">{fecha?.dia || '—'}</span>
+                  </div>
+                  <div className="tournament-info">
+                    <span className="t-title">{t.nombre}</span>
+                    <span className="t-club">{t.complejo?.name || t.ubicacion}</span>
+                    {t.categoria && (
+                      <div className="t-tags">
+                        <span className="tag-open">{CATEGORIA_LABEL[t.categoria] || t.categoria}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        <button className="btn-view-all-tournaments" onClick={() => navigate('/complejos')}>
+        <button className="btn-view-all-tournaments" onClick={() => navigate('/torneos')}>
           VER CALENDARIO COMPLETO
         </button>
       </div>
