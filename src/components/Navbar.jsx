@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
-import logo from '../assets/padeltime_logo_white2.png';
+const logo = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
 import './navbar.css';
 
 const Navbar = () => {
