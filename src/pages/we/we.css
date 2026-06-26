@@ -18,7 +18,7 @@
   padding: 4rem 1.5rem;
   background:
     linear-gradient(rgba(7,21,47,.85), rgba(7,21,47,.95)),
-    url("../../assets/padel-fon.jpeg") center / cover no-repeat;
+    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg") center / cover no-repeat;
 }
 
 .about-hero-content {
@@ -151,7 +151,7 @@
   overflow: hidden;
   background:
     linear-gradient(to top, rgba(7,21,47,.95) 45%, rgba(7,21,47,.55) 100%),
-    url("../../assets/padel-fon.jpeg") center / cover no-repeat;
+    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg") center / cover no-repeat;
 }
 
 .vision-chart {
