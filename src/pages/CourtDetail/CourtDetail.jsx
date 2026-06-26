@@ -62,6 +62,7 @@ const CourtDetail = () => {
   if (loading) return <div className="cd-loading">Cargando detalles de la cancha...</div>;
   if (error || !cancha) return <div className="cd-loading">Cancha no encontrada.</div>;
 
+  const LOGO_URL = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
   const heroImg  = cancha.photo || cancha.photos?.[0] || null;
   const gallery  = cancha.photos?.length ? cancha.photos : (cancha.photo ? [cancha.photo] : []);
   const features = cancha.features?.filter(Boolean) || [];
@@ -70,7 +71,7 @@ const CourtDetail = () => {
     <div className="cd-page-wrapper">
       <Navbar />
 
-      <div className={`cd-hero${!heroImg ? ' cd-hero--no-img' : ''}`} style={heroImg ? { backgroundImage: `url(${heroImg})` } : {}}>
+      <div className={`cd-hero${!heroImg ? ' cd-hero--no-img' : ''}`} style={{ backgroundImage: `url(${heroImg || LOGO_URL})`, backgroundSize: heroImg ? 'cover' : 'contain', backgroundRepeat: 'no-repeat', backgroundPosition: 'center' }}>
         <div className="cd-hero-overlay" />
         <div className="cd-hero-content">
           <h1 className="cd-title">{cancha.name}</h1>
