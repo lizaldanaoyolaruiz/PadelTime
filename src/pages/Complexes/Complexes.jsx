@@ -28,10 +28,12 @@ const PRECIO_INICIAL = 6000;
 const ComplexCard = ({ complex }) => (
   <article className="complex-card">
     <div className="card-image-wrapper">
-      {complex.image
-        ? <img src={complex.image} alt={complex.name} className="card-img" loading="lazy" />
-        : <div className="card-img card-img--empty" />
-      }
+      <img
+        src={complex.image || 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png'}
+        alt={complex.name}
+        className={`card-img${complex.image ? '' : ' card-img--logo'}`}
+        loading="lazy"
+      />
       {complex.isFeatured && <span className="badge-top-rated">TOP RATED</span>}
     </div>
     <div className="card-body">
