@@ -206,3 +206,32 @@
 .icon-btn--delete:hover:not(:disabled) { background: rgba(239, 68, 68, 0.2); }
 
 /* Modal styles moved to OwnerDashboard.css */
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cancha-card {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .cancha-info {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .cancha-desc {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .cancha-thumb {
+    width: 56px;
+    height: 44px;
+  }
+
+  .cancha-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

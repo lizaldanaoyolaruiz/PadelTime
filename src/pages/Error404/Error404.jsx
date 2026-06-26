@@ -10,12 +10,12 @@ export default function Error404() {
       <Navbar />
 
       <main className="error404">
-        <div className="overlay"></div>
+        <div className="overlay" />
 
-        <div className="content">
-          <div className="ball-container">
-            <span className="number">404</span>
-            <div className="ball"></div>
+        <div className="e404-content">
+          <div className="e404-ball-container">
+            <span className="e404-number">404</span>
+            <div className="e404-ball" />
           </div>
 
           <h1>¡Esta pelota se fue de la cancha!</h1>
@@ -25,34 +25,25 @@ export default function Error404() {
             límites del recinto y no podemos recuperarla.
           </p>
 
-          <div className="buttons">
-            <button
-              className="btn-primary"
-              onClick={() => navigate("/")}
-            >
+          <div className="e404-buttons">
+            <button className="e404-btn-primary" onClick={() => navigate("/")}>
               Volver al Inicio
             </button>
-
-            <button
-              className="btn-secondary"
-              onClick={() => window.history.back()}
-            >
+            <button className="e404-btn-secondary" onClick={() => window.history.back()}>
               Regresar
             </button>
           </div>
 
-          <div className="cards">
-            <div className="card">
+          <div className="e404-cards">
+            <div className="e404-card">
               <h3>Clubes</h3>
               <p>Encuentra tu pista</p>
             </div>
-
-            <div className="card">
+            <div className="e404-card">
               <h3>Reservas</h3>
               <p>Gestiona tus partidos</p>
             </div>
-
-            <div className="card">
+            <div className="e404-card">
               <h3>Comunidad</h3>
               <p>Busca compañeros</p>
             </div>

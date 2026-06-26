@@ -732,7 +732,9 @@
 
 @media (max-width: 768px) {
   .mp-topbar { padding: 10px 16px; }
-  .mp-search { width: 100%; }
+  .mp-search { flex: 1; width: auto; min-width: 0; }
+  .mp-topbar-user-text { display: none; }
+  .mp-topbar-divider { display: none; }
   .mp-content { padding: 16px; gap: 16px; }
   .mp-stats-grid { grid-template-columns: 1fr 1fr; }
   .mp-table th, .mp-table td { padding: 12px 14px; }

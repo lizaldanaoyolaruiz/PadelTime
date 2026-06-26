@@ -3,8 +3,8 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #0F172A;
-  color: #f8fafc;
+  background: var(--color-surface-1);
+  color: var(--color-text-base);
 }
 
 .cp-layout {
@@ -21,7 +21,7 @@
 
 /* ── Cards ───────────────────────────────────────────────────────────────── */
 .cp-card {
-  background: #0e1c42;
+  background: var(--color-surface-2);
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,.07);
 }
@@ -115,6 +115,7 @@
   background: #15284f;
   border-radius: 14px;
   padding: 14px 16px;
+  text-align: center;
 }
 
 .cp-stat span {
@@ -347,7 +348,7 @@
 }
 
 .cp-booking-card {
-  background: #0e1c42;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 16px 20px;
@@ -536,7 +537,7 @@
 }
 
 .cp-fav-card {
-  background: #0e1c42;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 14px 18px;
@@ -630,7 +631,7 @@
 }
 
 .cp-modal {
-  background: #0e1c42;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 18px;
   width: 100%;
@@ -683,11 +684,11 @@
 
 .cp-modal-body input {
   width: 100%;
-  background: #0F172A;
+  background: var(--color-surface-1);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 9px;
   padding: 10px 12px;
-  color: #f8fafc;
+  color: var(--color-text-base);
   font-size: 14px;
   font-family: inherit;
   outline: none;
@@ -700,7 +701,7 @@
 
 .cp-modal-body select {
   width: 100%;
-  background: #07102a;
+  background: var(--color-surface-1);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 9px;
   padding: 10px 12px;
@@ -718,17 +719,17 @@
 }
 
 .cp-modal-body select option {
-  background: #0e1c42;
+  background: var(--color-surface-2);
   color: #f8fafc;
 }
 
 .cp-modal-body input:-webkit-autofill,
 .cp-modal-body input:-webkit-autofill:hover,
 .cp-modal-body input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #07102a inset !important;
-  -webkit-text-fill-color: #f8fafc !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-1) inset !important;
+  -webkit-text-fill-color: var(--color-text-base) !important;
   border-color: rgba(255,255,255,.1) !important;
-  caret-color: #f8fafc;
+  caret-color: var(--color-text-base);
 }
 
 .cp-form-error {
@@ -871,8 +872,9 @@
 
   .cp-card.cp-profile {
     flex-direction: column;
-    align-items: flex-start;
-    padding: 16px;
+    align-items: center;
+    text-align: center;
+    padding: 20px 16px;
     gap: 10px;
     grid-column: unset;
   }
@@ -880,8 +882,12 @@
   .cp-avatar-wrap,
   .cp-avatar,
   .cp-avatar-img {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
+  }
+
+  .cp-profile-info {
+    text-align: center;
   }
 
   .cp-profile-info h2 { font-size: 17px; }
