@@ -874,9 +874,31 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 20px 16px;
+    padding: 16px;
     gap: 10px;
     grid-column: unset;
+  }
+
+  .cp-profile-info { text-align: center; }
+
+  .cp-stats-row {
+    justify-items: center;
+    width: 100%;
+  }
+
+  .cp-stat {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cp-stat span,
+  .cp-stat strong {
+    text-align: center;
+    display: block;
+    width: 100%;
   }
 
   .cp-avatar-wrap,
