@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
 import logo from '../assets/padeltime_logo_white2.png';
-import './Navbar.css';
+import './navbar.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
