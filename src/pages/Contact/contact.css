@@ -249,7 +249,7 @@
   margin-top: 15px;
 }
 
-.socials button {
+.socials a {
   width: 48px;
   height: 48px;
   border: none;
@@ -261,9 +261,10 @@
   align-items: center;
   justify-content: center;
   transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
 }
 
-.socials button:hover {
+.socials a:hover {
   background: #9be22d;
   color: #02112d;
   transform: translateY(-3px);
