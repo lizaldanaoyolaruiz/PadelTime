@@ -1,12 +1,12 @@
 /* ── Page ────────────────────────────────────────────────────────────────── */
 .mtr-page {
-  background: #07102a;
+  background: var(--color-surface-1);
   min-height: 100vh;
-  color: #f8fafc;
+  color: var(--color-text-base);
   padding: 32px 36px 48px;
   max-width: 1280px;
   margin: 0 auto;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: var(--font-base);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -94,7 +94,7 @@
 }
 
 .mtr-custom-range input {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 9px;
   padding: 8px 12px;
@@ -131,7 +131,7 @@
 }
 
 .mtr-card {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 20px;
@@ -193,7 +193,7 @@
 }
 
 .mtr-chart-card {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 22px 20px;
@@ -294,7 +294,7 @@
 
 /* Tooltip */
 .mtr-tooltip {
-  background: #1e3a5f;
+  background: var(--color-surface-3);
   border: 1px solid rgba(190,242,100,.25);
   border-radius: 8px;
   padding: 8px 12px;
@@ -305,7 +305,7 @@
 
 /* ── Section card ────────────────────────────────────────────────────────── */
 .mtr-section-card {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 22px 24px;
@@ -463,7 +463,7 @@
 }
 
 .mtr-analysis-card {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(190,242,100,.2);
   border-radius: 16px;
   padding: 22px 24px;
@@ -501,7 +501,7 @@
 .mtr-analysis-body strong { color: #f8fafc; }
 
 .mtr-efficiency-card {
-  background: #111c32;
+  background: var(--color-surface-2);
   border: 1px solid rgba(255,255,255,.07);
   border-radius: 16px;
   padding: 24px;

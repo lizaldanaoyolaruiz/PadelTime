@@ -225,16 +225,68 @@
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .sa-sidebar { width: 64px; }
-  .sa-brand-sub,
-  .sa-sidebar-user-info,
-  .sa-nav-item span,
-  .sa-new-owner-btn span { display: none; }
-  .sa-brand { padding: 20px 12px; justify-content: center; }
-  .sa-brand-name { font-size: var(--text-sm); }
-  .sa-nav-item { justify-content: center; padding: 12px; }
-  .sa-new-owner-btn { justify-content: center; width: 40px; margin: 0 auto 12px; padding: 10px; border-radius: 10px; }
-  .sa-sidebar-footer { justify-content: center; flex-direction: column; gap: 6px; padding: 10px 6px; }
-  .sa-sidebar-user { justify-content: center; }
-  .sa-sidebar-avatar { width: 32px; height: 32px; }
+  /* Sidebar: icon-only 60px */
+  .sa-sidebar {
+    width: 60px;
+    overflow: hidden;
+  }
+
+  /* Brand: ocultar todo el texto */
+  .sa-brand {
+    padding: 12px 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sa-brand-name,
+  .sa-brand-sub {
+    display: none;
+  }
+
+  /* Nav: solo iconos centrados */
+  .sa-nav-item {
+    justify-content: center;
+    padding: 12px 0;
+    gap: 0;
+  }
+
+  .sa-nav-item span {
+    display: none;
+  }
+
+  /* Botón Nuevo Propietario: solo icono + */
+  .sa-new-owner-btn {
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 12px;
+    padding: 0;
+    border-radius: 10px;
+  }
+
+  .sa-new-owner-btn span {
+    display: none;
+  }
+
+  /* Sidebar footer: centrado, sin info de usuario */
+  .sa-sidebar-footer {
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px 0;
+  }
+
+  .sa-sidebar-user {
+    justify-content: center;
+  }
+
+  .sa-sidebar-user-info {
+    display: none;
+  }
+
+  .sa-sidebar-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 10px;
+  }
 }

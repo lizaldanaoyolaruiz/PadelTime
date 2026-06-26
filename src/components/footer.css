@@ -115,31 +115,47 @@
 @media (max-width: 576px) {
   .footer {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
-    padding: 2.5rem 1.5rem;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
     text-align: center;
   }
 
   .footer-brand {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     text-align: center;
   }
 
   .footer-brand p {
     max-width: 100%;
-    margin: 0 auto 1.5rem auto;
+    margin: 0 auto 1.25rem auto;
+  }
+
+  .logo-img-footer {
+    height: 70px;
+    margin: 0 auto 1rem auto;
   }
 
   .social-icons {
     justify-content: center;
   }
 
+  .footer h3 {
+    text-align: center;
+  }
+
+  .footer-nav,
+  .footer-legal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .footer-nav ul,
   .footer-legal ul {
     align-items: center;
+    padding: 0;
   }
 
   .newsletter-input {

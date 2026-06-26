@@ -454,13 +454,74 @@ select.form-input option {
 
 /* ── Tablet: sidebar icon-only ────────────────────── */
 @media (max-width: 768px) {
-  .owner-sidebar { width: 64px; }
-  .brand-sub, .sidebar-user-info, .nav-item span, .btn-logout span { display: none; }
-  .brand-name { font-size: var(--text-sm); }
-  .nav-item { justify-content: center; padding: 12px; }
-  .sidebar-footer { justify-content: center; padding: 10px; }
-  .panel-wrap { padding: 20px 16px; }
-  .form-grid { grid-template-columns: 1fr; }
+  .owner-sidebar {
+    width: 60px;
+    overflow: hidden;
+  }
+
+  /* Brand: solo muestra un bloque compacto, sin texto */
+  .sidebar-brand {
+    padding: 14px 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-name,
+  .brand-sub {
+    display: none;
+  }
+
+  /* Avatar reducido al ancho del sidebar */
+  .sidebar-brand .sidebar-profile-avatar-wrap {
+    width: 36px !important;
+    height: 36px !important;
+    margin: 0 auto !important;
+  }
+
+  .sidebar-brand .sidebar-profile-avatar-wrap img,
+  .sidebar-brand .sidebar-avatar {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Cámara badge - oculto en tablet */
+  .sidebar-brand .sidebar-profile-avatar-wrap > div:last-child {
+    display: none !important;
+  }
+
+  /* Nav - solo iconos */
+  .sidebar-user-info,
+  .nav-item span,
+  .btn-logout span {
+    display: none;
+  }
+
+  .nav-item {
+    justify-content: center;
+    padding: 12px 0;
+    gap: 0;
+  }
+
+  .sidebar-footer {
+    justify-content: center;
+    padding: 10px 0;
+  }
+
+  /* Contenido principal */
+  .panel-wrap {
+    padding: 20px 16px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Panel header apila en tablet */
+  .panel-header {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 /* ── Mobile: sidebar oculto, hamburger visible ─────── */
@@ -482,6 +543,7 @@ select.form-input option {
   }
 
   /* Mostrar textos dentro del sidebar en mobile (drawer completo) */
+  .owner-sidebar--open .brand-name,
   .owner-sidebar--open .brand-sub,
   .owner-sidebar--open .sidebar-user-info,
   .owner-sidebar--open .nav-item span {
@@ -489,7 +551,26 @@ select.form-input option {
   }
 
   .owner-sidebar--open .brand-name {
+    display: block;
     font-size: var(--text-lg);
+  }
+
+  /* Restaurar avatar al tamaño original en drawer abierto */
+  .owner-sidebar--open .sidebar-brand .sidebar-profile-avatar-wrap {
+    width: 64px !important;
+    height: 64px !important;
+    margin: 0 auto 10px !important;
+  }
+
+  .owner-sidebar--open .sidebar-brand .sidebar-profile-avatar-wrap img,
+  .owner-sidebar--open .sidebar-brand .sidebar-avatar {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 1.4rem !important;
+  }
+
+  .owner-sidebar--open .sidebar-brand .sidebar-profile-avatar-wrap > div:last-child {
+    display: flex !important;
   }
 
   .owner-sidebar--open .nav-item {

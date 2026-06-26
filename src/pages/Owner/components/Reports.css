@@ -234,3 +234,77 @@
   font-size: 0.875rem;
   margin: 0;
 }
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .reports-summary-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .reports-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .reports-actions {
+    width: 100%;
+  }
+
+  .btn-export-csv,
+  .btn-export-pdf {
+    flex: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .reports-container {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .reports-filters {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .filter-group {
+    flex: 1 1 calc(50% - 0.5rem);
+    min-width: 140px;
+  }
+
+  .filter-group select,
+  .filter-group input {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .btn-apply-filters {
+    width: 100%;
+  }
+
+  .reports-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem;
+  }
+
+  .reports-pagination {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 540px) {
+  .reports-summary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .reports-title-section h1 {
+    font-size: 1.5rem;
+  }
+
+  .filter-group {
+    flex: 1 1 100%;
+  }
+}

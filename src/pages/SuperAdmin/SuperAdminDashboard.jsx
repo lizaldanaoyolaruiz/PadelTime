@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  LayoutDashboard, Users, Building2,
+  Users, Building2,
   LogOut, Plus,
 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
@@ -10,9 +10,8 @@ import ManagementPanel from './ManagementPanel';
 import './SuperAdminDashboard.css';
 
 const NAV = [
-  { id: 'complejo',  label: 'Complejo',  Icon: LayoutDashboard },
-  { id: 'usuarios',  label: 'Usuarios',  Icon: Users           },
-  { id: 'complejos', label: 'Complejos', Icon: Building2       },
+  { id: 'usuarios',  label: 'Usuarios',  Icon: Users     },
+  { id: 'complejos', label: 'Complejos', Icon: Building2 },
 ];
 
 export default function SuperAdminDashboard() {
@@ -53,7 +52,7 @@ export default function SuperAdminDashboard() {
         <div className="sa-sidebar-bottom">
           <button className="sa-new-owner-btn" onClick={handleNuevoPropietario}>
             <Plus size={16} />
-            Nuevo Propietario
+            <span>Nuevo Propietario</span>
           </button>
 
           <div className="sa-sidebar-footer">
@@ -80,7 +79,7 @@ export default function SuperAdminDashboard() {
         {active === 'usuarios'  && (
           <ManagementPanel triggerCreate={triggerCreate} />
         )}
-        {(active === 'complejo' || active === 'complejos') && (
+        {active === 'complejos' && (
           <ComplexManagement />
         )}
       </main>
