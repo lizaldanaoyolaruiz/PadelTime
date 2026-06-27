@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import api from '../../services/axios';
+import { toastError } from '../../utils/toasts';
+import Swal from 'sweetalert2';
 import './BookingConfirmation.css';
 
 const MESES = [
@@ -20,8 +22,33 @@ const BookingConfirmation = () => {
   const [errorCarga, setErrorCarga]         = useState(null);
   const [procesandoPago, setProcesandoPago] = useState(false);
   const [procesandoWA, setProcesandoWA]     = useState(false);
+  const [pagoIniciado,  setPagoIniciado]    = useState(false);
+  const [pagoRechazado, setPagoRechazado]   = useState(false);
+  const [bookingId,     setBookingId]       = useState(null);
 
   const mercadopagoActive = datosReserva?.mercadopagoActive ?? false;
+
+  // Poll booking status every 5s while payment is in progress
+  useEffect(() => {
+    if (!pagoIniciado || !bookingId) return;
+
+    const check = async () => {
+      try {
+        // Ask backend to verify with MP API and auto-confirm if approved
+        await api.patch(`/bookings/${bookingId}/verify-mp`).catch(() => {});
+        const res = await api.get(`/bookings/${bookingId}`);
+        const status = res.data.booking?.status;
+        if (status === 'confirmed') navigate('/panelcliente');
+        else if (status === 'cancelled' || status === 'rejected') {
+          setPagoIniciado(false);
+          setPagoRechazado(true);
+        }
+      } catch {}
+    };
+
+    const interval = setInterval(check, 5000);
+    return () => clearInterval(interval);
+  }, [pagoIniciado, bookingId, navigate]);
 
   useEffect(() => {
     if (location.state) return; // datos ya disponibles via router navigate()
@@ -119,14 +146,27 @@ const BookingConfirmation = () => {
 
       const initPoint = res.data.payment?.initPoint;
       if (initPoint) {
+        await Swal.fire({
+          background: '#1f2937',
+          color: '#ffffff',
+          icon: 'info',
+          title: '¡Ya casi terminás!',
+          html: 'Serás redirigido a <strong>Mercado Pago</strong> para completar el pago.<br><br>Cuando el pago sea confirmado recibirás un <strong>email con los detalles de tu reserva</strong>.',
+          confirmButtonText: 'Ir a Mercado Pago',
+          confirmButtonColor: '#a3e635',
+          allowOutsideClick: false,
+        });
+        const bid = res.data.booking?._id;
+        setBookingId(bid);
         window.open(initPoint, '_blank');
+        setProcesandoPago(false);
+        setPagoIniciado(true);
       } else {
-        alert("¡Simulación: Redirigiendo a Mercado Pago!");
         setProcesandoPago(false);
       }
     } catch (err) {
       const message = err.response?.data?.message || 'Error al crear la reserva. Por favor intentá de nuevo.';
-      alert(message);
+      toastError(message);
       setProcesandoPago(false);
     }
   };
@@ -152,7 +192,7 @@ const BookingConfirmation = () => {
       window.open(`https://wa.me/${whatsappNumber}?text=${text}`, '_blank');
     } catch (err) {
       const message = err.response?.data?.message || 'Error al crear la reserva. Por favor intentá de nuevo.';
-      alert(message);
+      toastError(message);
     } finally {
       setProcesandoWA(false);
     }
@@ -272,13 +312,28 @@ const BookingConfirmation = () => {
                   </div>
                   <h3>Mercado Pago</h3>
                   <p>Confirmación Inmediata</p>
-                  <button
-                    className="btn-mp"
-                    onClick={handleMercadoPago}
-                    disabled={procesandoPago}
-                  >
-                    {procesandoPago ? 'PROCESANDO...' : 'PAGAR AHORA'}
-                  </button>
+                  {pagoIniciado ? (
+                    <div className="pago-iniciado-msg">
+                      <span>✅ Pago iniciado</span>
+                      <p>Completá el pago en la pestaña de Mercado Pago. Recibirás un email cuando tu reserva esté confirmada.</p>
+                    </div>
+                  ) : (
+                    <>
+                      {pagoRechazado && (
+                        <div className="pago-rechazado-msg">
+                          <span>❌ Pago rechazado</span>
+                          <p>Tu pago no fue aprobado. Podés intentarlo nuevamente.</p>
+                        </div>
+                      )}
+                      <button
+                        className="btn-mp"
+                        onClick={() => { setPagoRechazado(false); handleMercadoPago(); }}
+                        disabled={procesandoPago}
+                      >
+                        {procesandoPago ? 'PROCESANDO...' : pagoRechazado ? 'REINTENTAR PAGO' : 'PAGAR AHORA'}
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
 
