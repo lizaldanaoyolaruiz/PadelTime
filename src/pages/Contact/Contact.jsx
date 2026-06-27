@@ -172,7 +172,7 @@ export default function ContactPage() {
 
         {/* ── Sección mapa ── */}
         <div className="map-section">
-          <h2 className="map-title">Sede Central PadelSaaS</h2>
+          <h2 className="map-title">Sede Central PadelTime</h2>
           <p className="map-subtitle">Av. del Deporte 1234, Madrid, España</p>
           <div className="map-container">
             {/* TODO: Reemplazar por un <iframe> de Google Maps con la ubicación real */}
@@ -180,7 +180,7 @@ export default function ContactPage() {
               <div className="map-grid" />
               <div className="map-pin-label">
                 <MapPin size={30} className="map-pin-icon" />
-                <span>Sede Central PadelSaaS</span>
+                <span>Sede Central PadelTime</span>
               </div>
             </div>
           </div>
