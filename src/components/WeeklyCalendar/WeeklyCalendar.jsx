@@ -60,11 +60,7 @@ function buildMockSlots(courts, monday) {
   return slots;
 }
 
-const FALLBACK_COURTS = [
-  { _id: 'court-1', name: 'Cancha Central' },
-  { _id: 'court-2', name: 'Cancha 2' },
-  { _id: 'court-3', name: 'Cancha 3 (Cristal)' },
-];
+const FALLBACK_COURTS = [];
 
 /* ─────────────── Component ─────────────── */
 /*
