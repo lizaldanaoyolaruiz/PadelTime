@@ -446,13 +446,26 @@
     font-size: 12px;
   }
 
+  .wc-container {
+    overflow: visible;
+  }
+
+  .wc-card {
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
   .wc-grid-scroll {
-    max-height: 400px;
+    width: 100%;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
   }
 
   .wc-grid {
-    grid-template-columns: 44px repeat(7, minmax(80px, 1fr));
-    min-width: 608px;
+    grid-template-columns: 44px repeat(7, 90px);
+    min-width: unset;
+    width: max-content;
   }
 
   .wc-hour-label {
@@ -469,7 +482,6 @@
 
   .wc-slot-label {
     font-size: 8px;
-    letter-spacing: 0.04em;
   }
 
   .wc-day-header {
@@ -632,7 +644,8 @@
   }
 
   .wc-slot-label {
-    font-size: 0; /* Ocultar texto en slots, solo icono */
+    font-size: 7px;
+    letter-spacing: 0;
   }
 
   .wc-slot-icon {
