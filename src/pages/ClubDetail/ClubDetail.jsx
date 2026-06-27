@@ -290,6 +290,7 @@ const ClubDetail = () => {
         </div>
 
         <div ref={reservaWrapRef}>
+        {canchas.length > 0 && (
         <div className="cd-calendar-section">
           <WeeklyCalendar
             courts={calendarCourts}
@@ -305,6 +306,7 @@ const ClubDetail = () => {
             }}
           />
         </div>
+        )}
 
         {canchaSeleccionada && (
           <div className="cd-booking-summary">
