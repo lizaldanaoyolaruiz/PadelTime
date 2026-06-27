@@ -518,27 +518,29 @@ export const ScheduleManager = () => {
 
                     {day.active ? (
                       <>
-                        <div className="sm-time-group">
-                          <span className="sm-time-label">APERTURA</span>
-                          <input
-                            type="time"
-                            className="sm-time-input"
-                            value={day.openTime === '--' ? '' : day.openTime}
-                            min={complexHours.open || undefined}
-                            max={complexHours.close || undefined}
-                            onChange={e => updateDay(idx, 'openTime', e.target.value)}
-                          />
-                        </div>
-                        <div className="sm-time-group">
-                          <span className="sm-time-label">CIERRE</span>
-                          <input
-                            type="time"
-                            className="sm-time-input"
-                            value={day.closeTime === '--' ? '' : day.closeTime}
-                            min={complexHours.open || undefined}
-                            max={complexHours.close || undefined}
-                            onChange={e => updateDay(idx, 'closeTime', e.target.value)}
-                          />
+                        <div className="sm-time-row">
+                          <div className="sm-time-group">
+                            <span className="sm-time-label">APERTURA</span>
+                            <input
+                              type="time"
+                              className="sm-time-input"
+                              value={day.openTime === '--' ? '' : day.openTime}
+                              min={complexHours.open || undefined}
+                              max={complexHours.close || undefined}
+                              onChange={e => updateDay(idx, 'openTime', e.target.value)}
+                            />
+                          </div>
+                          <div className="sm-time-group">
+                            <span className="sm-time-label">CIERRE</span>
+                            <input
+                              type="time"
+                              className="sm-time-input"
+                              value={day.closeTime === '--' ? '' : day.closeTime}
+                              min={complexHours.open || undefined}
+                              max={complexHours.close || undefined}
+                              onChange={e => updateDay(idx, 'closeTime', e.target.value)}
+                            />
+                          </div>
                         </div>
                         <div className="sm-day-status">
                           <span className="sm-status-text sm-status-text--on">Activo</span>
