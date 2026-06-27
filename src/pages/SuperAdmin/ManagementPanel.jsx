@@ -22,6 +22,7 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
   const [modal, setModal]             = useState(null);
   const [selectedOwner, setSelectedOwner] = useState(null);
+  const [detailOwner, setDetailOwner] = useState(null);
   const [form, setForm]               = useState({ name: '', email: '', password: '', location: '' });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError]     = useState('');
@@ -312,7 +313,8 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
             <div className="mp-state">No se encontraron propietarios.</div>
           ) : (
             <div className="mp-table-wrapper">
-              <table className="mp-table">
+              {/* Tabla desktop: 6 columnas completas */}
+              <table className="mp-table mp-table--desktop">
                 <thead>
                   <tr>
                     <th>OWNER / AVATAR</th>
@@ -335,9 +337,7 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                           </div>
                           <div>
                             <p className="mp-owner-name">{owner.name}</p>
-                            <p className="mp-owner-loc">
-                              {owner.location || owner.city || '—'}
-                            </p>
+                            <p className="mp-owner-loc">{owner.location || owner.city || '—'}</p>
                           </div>
                         </div>
                       </td>
@@ -356,18 +356,10 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                       </td>
                       <td>
                         <div className="mp-actions">
-                          <button
-                            className="mp-action-icon"
-                            title="Editar"
-                            onClick={() => openEdit(owner)}
-                          >
+                          <button className="mp-action-icon" title="Editar" onClick={() => openEdit(owner)}>
                             <Pencil size={14} />
                           </button>
-                          <button
-                            className="mp-action-icon danger"
-                            title="Eliminar"
-                            onClick={() => openDelete(owner)}
-                          >
+                          <button className="mp-action-icon danger" title="Eliminar" onClick={() => openDelete(owner)}>
                             <Trash2 size={14} />
                           </button>
                           <button
@@ -377,6 +369,39 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                             {isActive(owner) ? 'Suspender' : 'Activar'}
                           </button>
                         </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+
+              {/* Tabla mobile: 2 columnas + fila clickeable para ver detalle */}
+              <table className="mp-table mp-table--mobile">
+                <thead>
+                  <tr>
+                    <th>OWNER</th>
+                    <th>ESTADO</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginated.map(owner => (
+                    <tr key={owner._id} onClick={() => setDetailOwner(owner)} style={{ cursor: 'pointer' }}>
+                      <td>
+                        <div className="mp-owner-cell">
+                          <div className="mp-owner-avatar">
+                            {owner.avatar ? <img src={owner.avatar} alt={owner.name} /> : <UserCircle size={30} />}
+                          </div>
+                          <div>
+                            <p className="mp-owner-name">{owner.name}</p>
+                            <p className="mp-owner-loc">{owner.location || owner.city || '—'}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`mp-status-badge ${isActive(owner) ? 'active' : 'suspended'}`}>
+                          <span className="mp-dot" />
+                          {isActive(owner) ? 'ACTIVO' : 'SUSPENDIDO'}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -474,6 +499,43 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                 {formLoading
                   ? 'Guardando...'
                   : modal === 'create' ? 'Crear Propietario' : 'Guardar Cambios'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Detail modal ── */}
+      {detailOwner && (
+        <div className="mp-detail-overlay" onClick={() => setDetailOwner(null)}>
+          <div className="mp-detail-modal" onClick={e => e.stopPropagation()}>
+            <div className="mp-detail-header">
+              <div className="mp-owner-cell">
+                <div className="mp-owner-avatar" style={{ width: 48, height: 48 }}>
+                  {detailOwner.avatar ? <img src={detailOwner.avatar} alt={detailOwner.name} /> : <UserCircle size={40} />}
+                </div>
+                <div>
+                  <p className="mp-owner-name" style={{ fontSize: 16 }}>{detailOwner.name}</p>
+                  <span className={`mp-status-badge ${isActive(detailOwner) ? 'active' : 'suspended'}`}>
+                    <span className="mp-dot" />{isActive(detailOwner) ? 'ACTIVO' : 'SUSPENDIDO'}
+                  </span>
+                </div>
+              </div>
+              <button className="mp-detail-close" onClick={() => setDetailOwner(null)}><X size={18} /></button>
+            </div>
+
+            <div className="mp-detail-body">
+              <div className="mp-detail-row"><span>Email</span><strong>{detailOwner.email}</strong></div>
+              <div className="mp-detail-row"><span>Registro</span><strong>{formatDate(detailOwner.createdAt)}</strong></div>
+              <div className="mp-detail-row"><span>Complejos</span><strong>{detailOwner.complexesCount ?? detailOwner.complexes?.length ?? 0}</strong></div>
+              <div className="mp-detail-row"><span>Ciudad</span><strong>{detailOwner.location || detailOwner.city || '—'}</strong></div>
+            </div>
+
+            <div className="mp-detail-actions">
+              <button className="mp-action-icon" onClick={() => { setDetailOwner(null); openEdit(detailOwner); }}><Pencil size={14} /> Editar</button>
+              <button className="mp-action-icon danger" onClick={() => { setDetailOwner(null); openDelete(detailOwner); }}><Trash2 size={14} /> Eliminar</button>
+              <button className={`mp-action-btn ${isActive(detailOwner) ? 'suspend' : 'activate'}`} onClick={() => { handleToggleStatus(detailOwner); setDetailOwner(null); }}>
+                {isActive(detailOwner) ? 'Suspender' : 'Activar'}
               </button>
             </div>
           </div>

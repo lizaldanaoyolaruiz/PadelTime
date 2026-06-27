@@ -23,15 +23,58 @@ export default function PadelBot() {
   const [input, setInput]         = useState('');
   const [loading, setLoading]     = useState(false);
   const [sessionId, setSessionId] = useState(null);
-  const bottomRef = useRef(null);
-  const inputRef  = useRef(null);
+  const bottomRef  = useRef(null);
+  const inputRef   = useRef(null);
+  const widgetRef  = useRef(null);
 
   useEffect(() => {
     if (open) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-      inputRef.current?.focus();
+      if (window.innerWidth > 640) {
+        inputRef.current?.focus();
+      }
     }
   }, [open, messages]);
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const isMobile = window.innerWidth <= 640;
+    if (!isMobile || !window.visualViewport) return;
+
+    const handleResize = () => {
+      if (widgetRef.current) {
+        const vh = window.visualViewport.height;
+        widgetRef.current.style.height = `${vh}px`;
+        widgetRef.current.style.top = `${window.visualViewport.offsetTop}px`;
+      }
+    };
+
+    window.visualViewport.addEventListener('resize', handleResize);
+    window.visualViewport.addEventListener('scroll', handleResize);
+    handleResize();
+
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleResize);
+      window.visualViewport.removeEventListener('scroll', handleResize);
+    };
+  }, [open]);
 
   const resetChat = () => {
     setMessages([makeWelcome()]);
@@ -90,7 +133,7 @@ export default function PadelBot() {
   return (
     <div className="pb-root">
       {open && (
-        <div className="pb-widget">
+        <div className="pb-widget" ref={widgetRef}>
           {/* Header */}
           <div className="pb-header">
             <div className="pb-header-left">
