@@ -223,70 +223,83 @@
   margin-bottom: 8px;
 }
 
+/* ── Hamburger oculto en desktop ── */
+.sa-hamburger {
+  display: none;
+}
+
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  /* Sidebar: icon-only 60px */
-  .sa-sidebar {
-    width: 60px;
-    overflow: hidden;
+  .sa-layout {
+    position: relative;
   }
 
-  /* Brand: ocultar todo el texto */
-  .sa-brand {
-    padding: 12px 8px;
+  /* Sidebar oculto por defecto, slide-in */
+  .sa-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 220px;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 200;
+  }
+
+  .sa-sidebar--open {
+    transform: translateX(0);
+  }
+
+  /* Main ocupa todo el ancho */
+  .sa-main {
+    width: 100%;
+    padding: 16px;
+  }
+
+  /* Hamburger */
+  .sa-hamburger {
+    display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-text-base);
+    cursor: pointer;
+    margin-bottom: 16px;
   }
 
+  /* Overlay oscuro */
+  .sa-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 199;
+  }
+
+  /* Sidebar vuelve a mostrar texto completo cuando está abierto */
   .sa-brand-name,
-  .sa-brand-sub {
-    display: none;
-  }
-
-  /* Nav: solo iconos centrados */
-  .sa-nav-item {
-    justify-content: center;
-    padding: 12px 0;
-    gap: 0;
-  }
-
-  .sa-nav-item span {
-    display: none;
-  }
-
-  /* Botón Nuevo Propietario: solo icono + */
-  .sa-new-owner-btn {
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin: 0 auto 12px;
-    padding: 0;
-    border-radius: 10px;
-  }
-
-  .sa-new-owner-btn span {
-    display: none;
-  }
-
-  /* Sidebar footer: centrado, sin info de usuario */
-  .sa-sidebar-footer {
-    justify-content: center;
-    flex-direction: column;
-    gap: 8px;
-    padding: 10px 0;
-  }
-
-  .sa-sidebar-user {
-    justify-content: center;
-  }
-
+  .sa-brand-sub,
+  .sa-nav-item span,
+  .sa-new-owner-btn span,
   .sa-sidebar-user-info {
-    display: none;
+    display: flex;
   }
 
-  .sa-sidebar-avatar {
-    width: 32px;
-    height: 32px;
-    font-size: 10px;
+  .sa-nav-item {
+    justify-content: flex-start;
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .sa-new-owner-btn {
+    width: calc(100% - 20px);
+    height: auto;
+    padding: 10px 16px;
+    border-radius: 10px;
+    justify-content: flex-start;
+    gap: 8px;
   }
 }
