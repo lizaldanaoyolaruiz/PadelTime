@@ -18,7 +18,7 @@ const NosotrosPage = () => {
           </h1>
           <p className="nos-hero-text">
             Nacimos de la intersección entre la pasión por el deporte y la obsesión por la
-            eficiencia tecnológica. En PadelSaaS, eliminamos las fricciones operativas para
+            eficiencia tecnológica. En PadelTime, eliminamos las fricciones operativas para
             que los clubes crezcan y los jugadores nunca dejen de competir.
           </p>
         </section>
