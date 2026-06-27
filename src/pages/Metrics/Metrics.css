@@ -552,18 +552,50 @@
 }
 
 @media (max-width: 768px) {
-  .mtr-page { padding: 20px 16px 40px; gap: 16px; }
-  .mtr-header { flex-direction: column; }
+  .mtr-page { padding: 16px 12px 40px; gap: 14px; }
+  .mtr-header { flex-direction: column; gap: 12px; }
   .mtr-period-bar { width: 100%; }
-  .mtr-period-btn { flex: 1; text-align: center; padding: 8px 10px; }
+  .mtr-period-btn { flex: 1; text-align: center; padding: 8px 6px; font-size: 12px; }
   .mtr-ranking-grid { grid-template-columns: 1fr; }
   .mtr-bottom-row { grid-template-columns: 1fr; }
   .mtr-analysis-body { flex-direction: column; }
   .mtr-analysis-body img { width: 100%; height: 140px; }
+  .mtr-chart-card { overflow: hidden; width: 100%; box-sizing: border-box; }
+  .mtr-heatmap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* Evitar texto cortado en ranking */
+  .mtr-ranking-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .mtr-ranking-header span:last-child {
+    font-size: 11px;
+    white-space: normal;
+  }
+
+  /* Filas del ranking: texto completo */
+  .mtr-ranking-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .mtr-ranking-count {
+    white-space: nowrap;
+  }
 }
 
 @media (max-width: 540px) {
+  .mtr-cards { grid-template-columns: 1fr 1fr; }
+  .mtr-card-value { font-size: 1.3rem; }
+  .mtr-card { padding: 14px; }
+
+  .mtr-heat-cell { height: 18px; min-width: 10px; }
+  .mtr-heat-hour { font-size: 8px; min-width: 10px; }
+  .mtr-heat-day { font-size: 10px; min-width: 26px; }
+
+  .recharts-cartesian-axis-tick-value { font-size: 10px; }
+}
+
+@media (max-width: 380px) {
   .mtr-cards { grid-template-columns: 1fr; }
-  .mtr-card-value { font-size: 1.5rem; }
-  .mtr-heat-cell { height: 22px; min-width: 14px; }
 }

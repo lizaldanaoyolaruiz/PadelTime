@@ -56,7 +56,7 @@ export default function Login() {
   };
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-wrapper auth-wrapper--login">
       <div className="auth-card">
         {/* ── Tabs ── */}
         <div className="auth-tabs">
@@ -119,18 +119,6 @@ export default function Login() {
           </button>
         </form>
 
-        {import.meta.env.DEV && (
-          <div className="dev-access">
-            <span className="dev-access-label">Acceso rápido (solo dev)</span>
-            <div className="dev-access-btns">
-              {DEV_USERS.map((u) => (
-                <button key={u.label} className="dev-btn" onClick={() => devLogin(u)}>
-                  {u.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
