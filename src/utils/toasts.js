@@ -18,3 +18,6 @@ export const toastError = (texto) =>
 
 export const toastWarning = (texto) =>
   Swal.fire({ ...baseToast, icon: 'warning', title: texto });
+
+export const toastInfo = (texto, timer = 6000) =>
+  Swal.fire({ ...baseToast, icon: 'info', title: texto, timer, timerProgressBar: true });
