@@ -142,22 +142,22 @@ export default function Reports({ complexId }) {
               <tr><td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#8892a4' }}>Sin reservas para los filtros seleccionados</td></tr>
             ) : data.map(row => (
               <tr key={row._id}>
-                <td>
+                <td data-label="Cliente">
                   <div className="client-info">
                     <div className="avatar placeholder-avatar"></div>
                     <div><strong>{row.nombre}</strong><span>{row.email}</span></div>
                   </div>
                 </td>
-                <td>{row.cancha}</td>
-                <td>
+                <td data-label="Cancha">{row.cancha}</td>
+                <td data-label="Fecha y Hora">
                   <div className="date-time-info">
                     <strong>{formatFecha(row.fecha)}</strong>
                     <span className="time-accent">{row.horario}</span>
                   </div>
                 </td>
-                <td><span className={`status-badge ${STATUS_CLASS[row.status] || row.status}`}>{row.statusLabel}</span></td>
-                <td className="payment-method">{row.pago}</td>
-                <td><strong>${row.total?.toLocaleString('es-AR')}</strong></td>
+                <td data-label="Estado"><span className={`status-badge ${STATUS_CLASS[row.status] || row.status}`}>{row.statusLabel}</span></td>
+                <td data-label="Pago" className="payment-method">{row.pago}</td>
+                <td data-label="Total"><strong>${row.total?.toLocaleString('es-AR')}</strong></td>
               </tr>
             ))}
           </tbody>
