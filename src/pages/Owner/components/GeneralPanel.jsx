@@ -59,7 +59,11 @@ export default function GeneralPanel({ complexId }) {
       const reservasHoy = agendaRes.data.bookings     || agendaRes.data    || [];
 
       setCanchas(Array.isArray(courts) ? courts : []);
-      setPending(Array.isArray(pendientes) ? pendientes : []);
+      // MP bookings auto-confirm via payment — only show non-MP pending for admin action
+      const pendientesAdmin = Array.isArray(pendientes)
+        ? pendientes.filter(r => r.confirmationMethod !== 'mercadopago')
+        : [];
+      setPending(pendientesAdmin);
 
       const slots  = generarSlots(complexData?.openTime, complexData?.closeTime);
       const matriz = slots.map(slot => {
