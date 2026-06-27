@@ -94,6 +94,13 @@ export default function ClientPanel() {
 
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
+  // Refresh bookings when user returns to this tab (e.g. after MP payment in another tab)
+  useEffect(() => {
+    const handleVisibility = () => { if (!document.hidden) fetchBookings(); };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [fetchBookings]);
+
   useEffect(() => {
     if (tab === 'favoritos') fetchFavoritos();
   }, [tab, fetchFavoritos]);
