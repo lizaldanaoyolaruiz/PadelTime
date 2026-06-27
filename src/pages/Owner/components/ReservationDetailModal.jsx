@@ -124,7 +124,12 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
         )}
 
         {/* Actions */}
-        {reserva.status === 'pending' && (
+        {reserva.status === 'pending' && reserva.confirmationMethod === 'mercadopago' && (
+          <div className="rdm-mp-pending">
+            <span>⏳ Esperando confirmación de pago por Mercado Pago</span>
+          </div>
+        )}
+        {reserva.status === 'pending' && reserva.confirmationMethod !== 'mercadopago' && (
           <div className="rdm-actions">
             <button className="rdm-btn rdm-btn--confirm" onClick={handleConfirmar} disabled={cargando || confirmAction !== null}>
               Confirmar
