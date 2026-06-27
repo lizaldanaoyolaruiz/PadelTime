@@ -168,6 +168,18 @@
   padding-top: 2px;
 }
 
+.torneo-actions button,
+.torneo-actions a {
+  min-width: 36px;
+  min-height: 36px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* Empty state icon */
 .torneos-empty-icon {
   color: var(--color-text-muted);
