@@ -110,10 +110,6 @@ export default function Login() {
             {errors.password && <span className="error-msg">{errors.password.message}</span>}
           </div>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-          </div>
-
           <button type="submit" className="btn-auth" disabled={isSubmitting}>
             {isSubmitting ? 'ENTRANDO...' : 'ENTRAR A LA PISTA'}
           </button>
