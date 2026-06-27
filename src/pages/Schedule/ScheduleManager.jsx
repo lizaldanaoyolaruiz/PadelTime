@@ -60,7 +60,6 @@ const BLOCK_REASONS = [
   'Clase / Entrenamiento',
   'Evento privado',
   'Limpieza',
-  'Siesta técnica',
   'Otro',
 ];
 
@@ -70,7 +69,7 @@ const EMPTY_FORM = {
 
 const NAME_REGEX = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s\-\/]+$/;
 
-function validateForm(form, todayStr, currentTime) {
+function validateForm(form, todayStr, currentTime, complexHours) {
   const errors = {};
 
   // Motivo
@@ -103,11 +102,21 @@ function validateForm(form, todayStr, currentTime) {
     errors.dayOfWeek = 'Seleccioná un día de la semana.';
   }
 
+  // Court closed on the selected day
+  if (complexHours?.closed) {
+    errors.startTime = 'La cancha está cerrada ese día. No se puede crear un bloqueo.';
+    return errors;
+  }
+
   // Horario inicio
   if (!form.startTime) {
     errors.startTime = 'Ingresá la hora de inicio.';
   } else if (form.recurrence === 'once' && form.date === todayStr && form.startTime < currentTime) {
     errors.startTime = 'La hora de inicio no puede ser en el pasado.';
+  } else if (complexHours?.open && form.startTime < complexHours.open) {
+    errors.startTime = `No puede ser antes de las ${complexHours.open} (apertura del complejo).`;
+  } else if (complexHours?.close && form.startTime >= complexHours.close) {
+    errors.startTime = `No puede ser a las ${complexHours.close} o después (cierre del complejo).`;
   }
 
   // Horario fin
@@ -115,6 +124,8 @@ function validateForm(form, todayStr, currentTime) {
     errors.endTime = 'Ingresá la hora de fin.';
   } else if (form.startTime && form.endTime <= form.startTime) {
     errors.endTime = 'El fin debe ser posterior al inicio.';
+  } else if (complexHours?.close && form.endTime > complexHours.close) {
+    errors.endTime = `No puede superar las ${complexHours.close} (cierre del complejo).`;
   } else if (form.startTime && form.endTime) {
     const [sh, sm] = form.startTime.split(':').map(Number);
     const [eh, em] = form.endTime.split(':').map(Number);
@@ -140,7 +151,53 @@ function mapBlockToForm(block) {
   };
 }
 
-function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
+const DAY_KEY_MAP = {
+  lunes: 'monday', martes: 'tuesday', miercoles: 'wednesday',
+  jueves: 'thursday', viernes: 'friday', sabado: 'saturday', domingo: 'sunday',
+};
+const JS_TO_KEY = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
+function getTimeRange(courts, complexHours, courtId, recurrence, date, dayOfWeek) {
+  const complexOpen  = complexHours?.open  || '00:00';
+  const complexClose = complexHours?.close || '23:59';
+
+  const intersect = (courtOpen, courtClose) => ({
+    open:  courtOpen  > complexOpen  ? courtOpen  : complexOpen,
+    close: courtClose < complexClose ? courtClose : complexClose,
+  });
+
+  const court = courts.find(c => String(c.courtId) === String(courtId));
+  if (!court) return { open: complexOpen, close: complexClose };
+
+  if (recurrence === 'once' && date) {
+    const dayKey = JS_TO_KEY[new Date(date + 'T12:00:00').getDay()];
+    const dayData = court.days?.find(d => d.day === dayKey);
+    if (dayData && !dayData.active) return { closed: true };
+    if (dayData?.active && dayData.openTime && dayData.openTime !== '--')
+      return intersect(dayData.openTime, dayData.closeTime);
+  }
+
+  if (recurrence === 'weekly' && dayOfWeek) {
+    const dayKey = DAY_KEY_MAP[dayOfWeek];
+    const dayData = court.days?.find(d => d.day === dayKey);
+    if (dayData && !dayData.active) return { closed: true };
+    if (dayData?.active && dayData.openTime && dayData.openTime !== '--')
+      return intersect(dayData.openTime, dayData.closeTime);
+  }
+
+  if (recurrence === 'daily') {
+    const activeDays = court.days?.filter(d => d.active && d.openTime && d.openTime !== '--') || [];
+    if (activeDays.length) {
+      const open  = activeDays.reduce((max, d) => d.openTime  > max ? d.openTime  : max, '00:00');
+      const close = activeDays.reduce((min, d) => d.closeTime < min ? d.closeTime : min, '23:59');
+      return intersect(open, close);
+    }
+  }
+
+  return { open: complexOpen, close: complexClose };
+}
+
+function BlockModal({ isOpen, onClose, onSave, courts, editingBlock, complexHours }) {
   const isEditing = !!editingBlock;
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
@@ -156,8 +213,12 @@ function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
   const todayStr = now.toISOString().split('T')[0];
   const currentTime = now.toTimeString().slice(0, 5);
   const isToday = form.date === todayStr;
-  const minStartTime = isToday ? currentTime : undefined;
-  const minEndTime = form.startTime || (isToday ? currentTime : undefined);
+
+  const timeRange = getTimeRange(courts, complexHours, form.courtId, form.recurrence, form.date, form.dayOfWeek);
+  const minStartTime = isToday ? currentTime : timeRange.open;
+  const maxStartTime = timeRange.close;
+  const minEndTime = form.startTime || (isToday ? currentTime : timeRange.open);
+  const maxEndTime = timeRange.close;
 
   const maxDateStr = (() => {
     const d = new Date();
@@ -171,7 +232,7 @@ function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
   };
 
   const handleSave = async () => {
-    const errs = validateForm(form, todayStr, currentTime);
+    const errs = validateForm(form, todayStr, currentTime, timeRange);
     if (Object.keys(errs).length) { setErrors(errs); return; }
     const finalName = form.name === 'Otro' ? form.customName.trim() : form.name;
 
@@ -261,18 +322,24 @@ function BlockModal({ isOpen, onClose, onSave, courts, editingBlock }) {
             </>
           )}
 
+          {timeRange.closed && (
+            <div style={{ background: '#7f1d1d', color: '#fca5a5', borderRadius: 8, padding: '10px 14px', marginBottom: 8, fontSize: 13 }}>
+              La cancha está cerrada ese día. Elegí otra fecha o cancha.
+            </div>
+          )}
+
           <div className="sm-row2">
             <div>
               <label className="sm-label">Inicio <span className="sm-required">*</span></label>
               <input required type="time" className={ic('startTime')}
-                value={form.startTime} min={minStartTime}
+                value={form.startTime} min={minStartTime} max={maxStartTime}
                 onChange={e => set('startTime', e.target.value)} />
               {errors.startTime && <span className="sm-error-msg">{errors.startTime}</span>}
             </div>
             <div>
               <label className="sm-label">Fin <span className="sm-required">*</span></label>
               <input required type="time" className={ic('endTime')}
-                value={form.endTime} min={minEndTime}
+                value={form.endTime} min={minEndTime} max={maxEndTime}
                 onChange={e => set('endTime', e.target.value)} />
               {errors.endTime && <span className="sm-error-msg">{errors.endTime}</span>}
             </div>
@@ -398,7 +465,23 @@ export const ScheduleManager = () => {
       await loadData();
       await successAlert(editingBlock ? 'Bloqueo actualizado correctamente.' : 'Bloqueo creado correctamente.');
     } catch (err) {
-      await errorAlert(err?.response?.data?.message || err?.message || 'Error al guardar el bloqueo.');
+      if (err?.response?.status === 409 && err?.response?.data?.bookings?.length) {
+        const reservas = err.response.data.bookings;
+        const lista = reservas.map(b =>
+          `<li style="margin-bottom:6px">📅 <strong>${b.date}</strong> · ${b.startTime}–${b.endTime} · ${b.court?.name || 'Cancha'} · ${b.player?.name || 'Sin jugador'}</li>`
+        ).join('');
+        await Swal.fire({
+          background: '#1f2937',
+          color: '#ffffff',
+          icon: 'warning',
+          title: 'No se puede bloquear',
+          html: `<p style="margin-bottom:10px">Hay <strong>${reservas.length}</strong> reserva${reservas.length > 1 ? 's' : ''} en ese horario. Cancelalas primero.</p><ul style="text-align:left;padding-left:16px;max-height:200px;overflow-y:auto">${lista}</ul>`,
+          confirmButtonColor: '#a3e635',
+          confirmButtonText: 'Entendido',
+        });
+      } else {
+        await errorAlert(err?.response?.data?.message || err?.message || 'Error al guardar el bloqueo.');
+      }
     }
   };
 
@@ -518,7 +601,7 @@ export const ScheduleManager = () => {
 
                     {day.active ? (
                       <>
-                        <div className="sm-time-row">
+                        <div className="sm-day-times">
                           <div className="sm-time-group">
                             <span className="sm-time-label">APERTURA</span>
                             <input
@@ -554,7 +637,7 @@ export const ScheduleManager = () => {
                       </>
                     ) : (
                       <>
-                        <span className="sm-closed-label">Cerrado por mantenimiento</span>
+                        <span className="sm-closed-label">Cerrado</span>
                         <div className="sm-day-status">
                           <span className="sm-status-text">Inactivo</span>
                           <button
@@ -660,6 +743,7 @@ export const ScheduleManager = () => {
         onSave={handleSaveBlock}
         courts={courts}
         editingBlock={editingBlock}
+        complexHours={complexHours}
       />
     </div>
   );

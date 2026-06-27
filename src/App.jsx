@@ -107,6 +107,8 @@ function App() {
         />
 
         <Route path="/booking/success" element={<BookingSuccess />} />
+        <Route path="/booking/failure" element={<BookingSuccess />} />
+        <Route path="/booking/pending" element={<BookingSuccess />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

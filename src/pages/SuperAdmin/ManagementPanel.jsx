@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Search, Bell, Settings, Building2, CalendarDays, Users,
-  DollarSign, TrendingUp, TrendingDown, Pencil, Trash2,
+  DollarSign, Pencil, Trash2,
   ChevronLeft, ChevronRight, X, UserCircle, Filter, Download,
 } from 'lucide-react';
 import api from '../../services/axios';
@@ -182,32 +182,28 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     {
       label: 'TOTAL COMPLEJOS',
       value: stats?.totalComplexes ?? '—',
-      trend: '+12%', up: true,
-      Icon: Building2, color: '#60A5FA', bar: 75,
+      Icon: Building2, color: '#60A5FA',
     },
     {
       label: 'RESERVAS MES',
       value: stats?.monthlyReservations
         ? stats.monthlyReservations.toLocaleString('es-ES')
         : '—',
-      trend: '+8%', up: true,
-      Icon: CalendarDays, color: '#34D399', bar: 60,
+      Icon: CalendarDays, color: '#34D399',
     },
     {
       label: 'USUARIOS ACTIVOS',
       value: stats?.activeUsers
         ? `${(stats.activeUsers / 1000).toFixed(1)}k`
         : activeCount,
-      trend: '-2%', up: false,
-      Icon: Users, color: '#94A3B8', bar: 40,
+      Icon: Users, color: '#94A3B8',
     },
     {
       label: 'REVENUE ANUAL',
       value: stats?.annualRevenue
         ? `$${(stats.annualRevenue / 1000).toFixed(1)}k`
         : '—',
-      trend: '+24%', up: true,
-      Icon: DollarSign, color: '#A78BFA', bar: 85,
+      Icon: DollarSign, color: '#A78BFA',
     },
   ];
 
@@ -247,39 +243,17 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
       <div className="mp-content">
 
-        {/* ── Banner ── */}
-        <div className="mp-banner">
-          <p className="mp-banner-text">
-            Bienvenido al panel de control de <strong>PadelSaaS</strong>.
-            Gestioná owners, complejos y estadísticas del sistema.
-          </p>
-          <button className="mp-export-btn">
-            <Download size={15} />
-            Exportar Reporte
-          </button>
-        </div>
-
         {/* ── Stats ── */}
         <div className="mp-stats-grid">
-          {statCards.map(({ label, value, trend, up, Icon, color, bar }) => (
+          {statCards.map(({ label, value, Icon, color }) => (
             <div key={label} className="mp-stat-card">
               <div className="mp-stat-top">
                 <div className="mp-stat-icon" style={{ background: `${color}22`, color }}>
                   <Icon size={20} />
                 </div>
-                <span className={`mp-stat-trend ${up ? 'up' : 'down'}`}>
-                  {up ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
-                  {trend}
-                </span>
               </div>
               <p className="mp-stat-label">{label}</p>
               <p className="mp-stat-value">{value}</p>
-              <div className="mp-stat-bar">
-                <div
-                  className="mp-stat-bar-fill"
-                  style={{ width: `${bar}%`, background: up ? '#bef264' : '#475569' }}
-                />
-              </div>
             </div>
           ))}
         </div>

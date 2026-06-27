@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, Download, Plus, Shield } from 'lucide-react';
+import { Search, Plus, Shield } from 'lucide-react';
 import { getAllComplexes } from '../../services/complexService';
 import { FILTERS, STATUS_MAP } from './utils/constants';
 import { StatCards }         from './components/StatCards';
@@ -86,10 +86,6 @@ export default function ComplexManagement() {
           </p>
         </div>
         <div className="gc-header-actions">
-          <button className="gc-btn-outline">
-            <Download size={15} />
-            <span>Exportar Reporte</span>
-          </button>
           <button className="gc-btn-primary" onClick={() => setShowNewModal(true)}>
             <Plus size={15} />
             <span>Nuevo Club</span>

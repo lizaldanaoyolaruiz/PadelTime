@@ -358,7 +358,7 @@ export default function MyComplex() {
 
         {!complejo && (
           <div className="info-notice">
-            Al crear el complejo quedará en estado <strong>pendiente de aprobación</strong> hasta que el equipo de PadelSaaS lo active.
+            Al crear el complejo quedará en estado <strong>pendiente de aprobación</strong> hasta que el equipo de PadelTime lo active.
           </div>
         )}
 

@@ -43,7 +43,7 @@ export default function SuperAdminDashboard() {
       {/* ── Sidebar ── */}
       <aside className={`sa-sidebar${menuOpen ? ' sa-sidebar--open' : ''}`}>
         <div className="sa-brand">
-          <span className="sa-brand-name">PadelSaaS</span>
+          <span className="sa-brand-name">PadelTime</span>
           <span className="sa-brand-sub">PANEL DE CONTROL</span>
         </div>
 
