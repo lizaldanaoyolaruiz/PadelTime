@@ -138,9 +138,9 @@ export default function WeeklyCalendar({
     return false;
   };
 
-  // Notificar al padre el estado inicial
+  // Notificar al padre el estado inicial (solo si hay canchas reales, no fallback)
   useEffect(() => { onWeekChange?.(weekStart); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { if (activeCourt) onCourtChange?.(activeCourt); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (courts.length && activeCourt) onCourtChange?.(activeCourt); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fix race condition: si courts cambia y el court seleccionado ya no existe, resetear al primero
   useEffect(() => {
