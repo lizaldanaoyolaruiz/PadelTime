@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../store/authStore';
+import { confirmLogout } from '../utils/alerts';
 const logo = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
 import './navbar.css';
 
@@ -24,10 +25,11 @@ const Navbar = () => {
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const result = await confirmLogout();
+    if (!result.isConfirmed) return;
     if (logout) logout();
     navigate('/');
-    closeMenu();
   };
 
   const Avatar = () => (
