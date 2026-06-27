@@ -854,12 +854,19 @@
   /* Next match y settings uno al lado del otro */
   .cp-next-match { grid-column: 1; }
   .cp-card.cp-settings { grid-column: 2; }
+
+  .cp-right {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
 }
 
 /* ── Mobile (≤ 600px) ── */
 @media (max-width: 600px) {
   .cp-layout {
-    padding: 12px;
+    padding: 12px 16px;
     gap: 12px;
   }
 
@@ -868,6 +875,26 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .cp-right {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .cp-booking-card {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .cp-booking-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 
   .cp-card.cp-profile {
@@ -1000,4 +1027,16 @@
 
   /* Settings list */
   .cp-settings li { padding: 11px 0; font-size: 13px; }
+
+  .cp-stats-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .cp-stat {
+    text-align: center;
+    align-items: center;
+  }
 }
