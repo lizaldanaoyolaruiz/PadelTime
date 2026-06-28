@@ -17,7 +17,6 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Bloquear scroll del body cuando el menú móvil está abierto
   useEffect(() => {
     document.body.style.overflow = isMenuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -44,14 +43,12 @@ const Navbar = () => {
   return (
     <>
       <nav className={`navbar ${isScrolled ? 'navbar-scrolled' : ''}`}>
-        {/* Logo */}
         <div className="navbar-logo">
           <NavLink to="/" onClick={closeMenu}>
             <img src={logo} alt="Logo" className="logo-img" />
           </NavLink>
         </div>
 
-        {/* Links desktop */}
         <ul className="navbar-links">
           <li><NavLink to="/" end>Inicio</NavLink></li>
           <li><NavLink to="/complejos">Clubes</NavLink></li>
@@ -59,7 +56,6 @@ const Navbar = () => {
           <li><NavLink to="/contact">Contacto</NavLink></li>
         </ul>
 
-        {/* Acciones desktop */}
         <div className="navbar-actions">
           {isAuthenticated ? (
             <div className="user-menu">
@@ -91,7 +87,6 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Hamburger — solo mobile */}
         <button
           className={`navbar-hamburger${isMenuOpen ? ' navbar-hamburger--open' : ''}`}
           onClick={() => setIsMenuOpen(v => !v)}
@@ -102,17 +97,14 @@ const Navbar = () => {
         </button>
       </nav>
 
-      {/* Overlay oscuro */}
       <div
         className={`mobile-overlay${isMenuOpen ? ' mobile-overlay--open' : ''}`}
         onClick={closeMenu}
         aria-hidden="true"
       />
 
-      {/* Panel deslizante */}
       <div className={`mobile-menu${isMenuOpen ? ' mobile-menu--open' : ''}`} role="dialog" aria-modal="true">
 
-        {/* Cabecera del panel */}
         <div className="mobile-menu-header">
           <img src={logo} alt="PadelTime" className="mobile-menu-logo" />
           <button className="mobile-menu-close" onClick={closeMenu} aria-label="Cerrar menú">
@@ -122,7 +114,6 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Links de navegación */}
         <nav className="mobile-menu-nav">
           <NavLink to="/" end onClick={closeMenu}>Inicio</NavLink>
           <NavLink to="/complejos" onClick={closeMenu}>Clubes</NavLink>
@@ -130,10 +121,8 @@ const Navbar = () => {
           <NavLink to="/contact" onClick={closeMenu}>Contacto</NavLink>
         </nav>
 
-        {/* Divisor */}
         <div className="mobile-menu-divider" />
 
-        {/* Acciones */}
         <div className="mobile-menu-actions">
           {isAuthenticated ? (
             <>

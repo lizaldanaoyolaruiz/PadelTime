@@ -7,7 +7,6 @@ const Footer = () => {
   return (
     <footer className="footer">
 
-      {/* ── Columnas principales ── */}
       <div className="footer-main">
 
         <div className="footer-col">
@@ -62,7 +61,6 @@ const Footer = () => {
 
       </div>
 
-      {/* ── Barra inferior ── */}
       <div className="footer-bottom">
         <span className="footer-copy">© 2026 PadelTime. Elevando tu juego.</span>
 
