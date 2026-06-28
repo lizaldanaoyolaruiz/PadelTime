@@ -150,6 +150,7 @@
 .owner-main {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   min-width: 0;
