@@ -10,7 +10,6 @@ const NosotrosPage = () => {
 
       <main className="nosotros-main">
 
-        {/* ── Hero ── */}
         <section className="nos-hero">
           <span className="nos-eyebrow">EL FUTURO DEL PÁDEL</span>
           <h1 className="nos-h1">
@@ -23,7 +22,6 @@ const NosotrosPage = () => {
           </p>
         </section>
 
-        {/* ── Stat cards ── */}
         <section className="nos-stats-grid">
           <div className="nos-card">
             <h2 className="nos-stat-num"><Counter end={404} suffix="+" /></h2>
@@ -49,7 +47,6 @@ const NosotrosPage = () => {
           </div>
         </section>
 
-        {/* ── Features ── */}
         <section className="nos-features-grid">
           <div className="nos-card">
             <h3 className="nos-card-title">Precisión Técnica</h3>
@@ -65,7 +62,6 @@ const NosotrosPage = () => {
           </div>
         </section>
 
-        {/* ── Team ── */}
         <section className="nos-team-section">
           <h2 className="nos-section-title">El Equipo</h2>
           <p className="nos-section-sub">Talento experto en SaaS y apasionados del deporte.</p>

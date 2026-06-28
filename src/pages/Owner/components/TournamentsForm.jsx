@@ -1,16 +1,16 @@
 import { X } from 'lucide-react';
-import { useTorneoForm } from '../utils/hooks/useTorneoForm';
-import { CATEGORIAS, ESTADOS } from '../utils/schemas/torneoSchema';
-import './Torneos.css';
+import { useTournamentForm } from '../utils/hooks/useTournamentForm';
+import { CATEGORIAS, ESTADOS } from '../utils/schemas/tournamentSchema';
+import './Tournaments.css';
 
-export default function TorneosForm({ torneo, onClose, onSave }) {
+export default function TournamentsForm({ torneo, onClose, onSave }) {
   const isEdit = Boolean(torneo?._id);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useTorneoForm(torneo);
+  } = useTournamentForm(torneo);
 
   const today             = new Date().toISOString().split('T')[0];
   const watchedNombre     = watch('nombre', '');
@@ -27,7 +27,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
 
         <form onSubmit={handleSubmit(onSave)} noValidate className="modal-form">
 
-          {/* Nombre */}
           <div className="form-group">
             <label className="form-label">Nombre del torneo</label>
             <input
@@ -41,7 +40,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
               : <span className="form-hint">{watchedNombre.length}/100 — mín. 3 caracteres</span>}
           </div>
 
-          {/* Fechas */}
           <div className="form-grid">
             <div className="form-group">
               <label className="form-label">Fecha de inicio</label>
@@ -67,7 +65,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
             </div>
           </div>
 
-          {/* Ubicación + Cupo */}
           <div className="form-grid">
             <div className="form-group">
               <label className="form-label">Ubicación</label>
@@ -93,7 +90,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
             </div>
           </div>
 
-          {/* Categoría + Estado */}
           <div className="form-grid">
             <div className="form-group">
               <label className="form-label">Categoría</label>
@@ -122,7 +118,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
             </div>
           </div>
 
-          {/* WhatsApp de contacto */}
           <div className="form-group">
             <label className="form-label">
               WhatsApp de contacto
@@ -140,7 +135,6 @@ export default function TorneosForm({ torneo, onClose, onSave }) {
               : <span className="form-hint">Número sin espacios ni guiones — se usará para el botón de reserva</span>}
           </div>
 
-          {/* Descripción */}
           <div className="form-group">
             <label className="form-label">
               Descripción y reglas

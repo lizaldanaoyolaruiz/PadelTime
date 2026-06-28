@@ -1,10 +1,8 @@
 import api from "./api";
 
-// Público — catálogo de complejos
 export const getPublicComplexes   = ()   => api.get('/complexes/public');
 export const getPublicComplexById = (id) => api.get(`/complexes/public/${id}`);
 
-// Admin — sus complejos
 export const getMyComplexes = ()            => api.get('/complexes/me/all');
 export const getMyComplex   = (complexId)   =>
   api.get('/complexes/me', complexId ? { params: { complexId } } : undefined);
@@ -25,11 +23,11 @@ export const deleteComplexPhoto = (id, url) =>
 export const setComplexPrincipalPhoto = (id, url) =>
   api.patch(`/complexes/${id}/photos/principal`, { url });
 
-// Superadmin — todos los complejos
 export const createComplexByAdmin = (data) => api.post('/complexes/admin', data);
 export const getAdminComplexes    = (params) => api.get('/complexes/admin', { params });
 export const getAllComplexes    = ()       => api.get("/complexes/admin");
 
+export const toggleFeatured = (id)               => api.patch(`/complexes/${id}/featured`);
 export const approveComplex = (id)               => api.patch(`/complexes/${id}/approve`);
 export const rejectComplex  = (id, reason = "")  => api.patch(`/complexes/${id}/reject`, { reason });
 export const suspendComplex = (id, reason = "")  => api.patch(`/complexes/${id}/suspend`, { reason });

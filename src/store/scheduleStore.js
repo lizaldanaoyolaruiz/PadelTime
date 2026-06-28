@@ -9,9 +9,6 @@ import {
     deleteBlockout
 } from '../services/scheduleService';
 
-
-
-
 export const useScheduleStore = create((set, get) => ({
   courts: [],
   onlineStatus: true,
@@ -21,7 +18,7 @@ export const useScheduleStore = create((set, get) => ({
   hasUnsavedChanges: false,
   isLoading:false,
   error: null,
-  
+
   loadSchedule: async (complexId) => {
         set({isLoading: true, error: null})
         try {
@@ -44,7 +41,6 @@ export const useScheduleStore = create((set, get) => ({
         }
   },
 
-  
   updateCourtDay: (courtId, dayIndex, field, value) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.courtId !== courtId) return c;
@@ -54,7 +50,6 @@ export const useScheduleStore = create((set, get) => ({
     }),
     hasUnsavedChanges: true
   })),
-
 
   toggleCourtActive: (courtId) => set((state) => ({
     courts: state.courts.map(c =>
@@ -71,7 +66,6 @@ export const useScheduleStore = create((set, get) => ({
     hasUnsavedChanges: true
   })),
 
-  
   updateBlockInCourt: (courtId, blockId, data) => set((state) => ({
     courts: state.courts.map(c => {
       if (c.courts !== courtId) return c;
@@ -93,7 +87,6 @@ export const useScheduleStore = create((set, get) => ({
   setOnlineStatus: (value) => set({onlineStatus: value, hasUnsavedChanges: true}),
   setPublicBooking: (value) => set({publicBookingEnabled: value, hasUnsavedChanges: true}),
 
-  
   saveChanges: async (complexId) => {
     set({isLoading: true, error: null})
     const state = get()
@@ -142,7 +135,6 @@ export const useScheduleStore = create((set, get) => ({
     }
   },
 
-  
   discardChanges: async (complexId) => {
     set({ isLoading: true });
     await get().loadSchedule(complexId);

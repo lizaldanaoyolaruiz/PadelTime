@@ -52,7 +52,6 @@ export default function Register() {
   return (
     <div className="auth-wrapper">
       <div className="auth-card">
-        {/* ── Tabs ── */}
         <div className="auth-tabs">
           <Link to="/login" className="auth-tab">Iniciar Sesión</Link>
           <span className="auth-tab active">Crear Cuenta</span>
@@ -63,7 +62,6 @@ export default function Register() {
           <p>Gestiona y reserva como un profesional.</p>
         </div>
 
-        {/* ── Selector de rol ── */}
         <div className="auth-tabs" style={{ marginBottom: '20px' }}>
           <button
             type="button"

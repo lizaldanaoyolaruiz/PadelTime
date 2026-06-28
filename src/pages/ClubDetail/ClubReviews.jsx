@@ -52,14 +52,13 @@ const ClubReviews = ({ complexId }) => {
       setAlreadyReviewed(!!data.alreadyReviewed);
       setMyReview(data.review || null);
     } catch {
-      // si falla, se asume que el usuario puede valorar
+
     }
   }, [complexId, isAuthenticated, user]);
 
   useEffect(() => { cargarReviews(); }, [cargarReviews]);
   useEffect(() => { cargarCanReview(); }, [cargarCanReview]);
 
-  // si el backend no devuelve la review propia en can-review, la buscamos en la lista pública
   useEffect(() => {
     if (alreadyReviewed && !myReview && user) {
       const userId = user._id || user.id;

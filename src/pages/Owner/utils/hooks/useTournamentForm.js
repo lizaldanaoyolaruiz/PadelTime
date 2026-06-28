@@ -1,15 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { torneoSchema } from '../schemas/torneoSchema';
+import { tournamentSchema } from '../schemas/tournamentSchema';
 
 const DEFAULTS = {
   nombre: '', descripcion: '', fechaInicio: '', fechaFin: '',
   ubicacion: '', cupoMaximo: '', categoria: '', estado: 'activo', whatsapp: '',
 };
 
-export function useTorneoForm(torneo = null) {
+export function useTournamentForm(torneo = null) {
   return useForm({
-    resolver: zodResolver(torneoSchema),
+    resolver: zodResolver(tournamentSchema),
     defaultValues: torneo
       ? {
           nombre:      torneo.nombre,

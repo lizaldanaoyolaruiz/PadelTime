@@ -1,12 +1,31 @@
+import { useState } from 'react';
 import {
   X, MapPin, Calendar, Users, Mail, Phone, Building2,
-  CheckCircle, XCircle, PauseCircle,
+  CheckCircle, XCircle, PauseCircle, Star,
 } from 'lucide-react';
 import { StatusBadge }   from './StatusBadge';
 import { ComplexAvatar } from './ComplexAvatar';
 import { formatDate }    from '../utils/utils';
+import { toggleFeatured } from '../../../services/complexService';
 
-export function DetailDrawer({ complex, onClose, onAction }) {
+export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
+  const [featured,        setFeatured]        = useState(!!complex.isFeatured);
+  const [loadingFeatured, setLoadingFeatured] = useState(false);
+
+  const handleFeatured = async () => {
+    try {
+      setLoadingFeatured(true);
+      const res = await toggleFeatured(complex._id);
+      const next = res.data.isFeatured;
+      setFeatured(next);
+      onFeaturedToggle?.(complex._id, next);
+    } catch (err) {
+      console.error('Error al cambiar destacado:', err);
+    } finally {
+      setLoadingFeatured(false);
+    }
+  };
+
   return (
     <>
       <div className="gc-overlay" onClick={onClose} aria-hidden="true" />
@@ -111,12 +130,26 @@ export function DetailDrawer({ complex, onClose, onAction }) {
             </>
           )}
           {complex.status === 'approved' && (
-            <button
-              className="gc-drawer-action-btn gc-drawer-action-btn--suspend"
-              onClick={() => onAction('suspend', complex)}
-            >
-              <PauseCircle size={15} /> Suspender
-            </button>
+            <>
+              <button
+                className="gc-drawer-action-btn gc-drawer-action-btn--suspend"
+                onClick={() => onAction('suspend', complex)}
+              >
+                <PauseCircle size={15} /> Suspender
+              </button>
+              <button
+                className="gc-drawer-action-btn"
+                style={{
+                  color: featured ? '#facc15' : undefined,
+                  borderColor: featured ? '#facc15' : undefined,
+                }}
+                onClick={handleFeatured}
+                disabled={loadingFeatured}
+              >
+                <Star size={15} fill={featured ? '#facc15' : 'none'} />
+                {featured ? 'Quitar destacado' : 'Marcar destacado'}
+              </button>
+            </>
           )}
           <button className="gc-drawer-action-btn gc-drawer-action-btn--close" onClick={onClose}>
             Cerrar

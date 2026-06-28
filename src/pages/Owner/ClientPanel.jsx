@@ -37,7 +37,7 @@ function PanelCliente() {
              <img
               src="https://i.pravatar.cc/150"
               alt="perfil"/>
-             
+
                 <div>
                     <h2>Facundo Camaño</h2>
                     <p>Nivel: 2.2 • Jugador Novato</p>
@@ -49,7 +49,7 @@ function PanelCliente() {
               <span>PARTIDOS</span>
               <h3>12</h3>
             </div>
-            
+
             <div className="stat-box">
               <span>VICTORIAS</span>
               <h3>1</h3>
@@ -71,7 +71,7 @@ function PanelCliente() {
               <h2>22</h2>
               <span>HORAS</span>
             </div>
-            
+
             <div>
               <h2>14</h2>
               <span>MINS</span>
@@ -91,7 +91,6 @@ function PanelCliente() {
           </ul>
         </div>
       </div>
-
 
       <div className="right-column">
 

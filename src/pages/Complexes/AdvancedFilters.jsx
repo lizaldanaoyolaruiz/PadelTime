@@ -4,7 +4,7 @@ const PRECIO_MIN_ARS = 1000;
 const PRECIO_MAX_ARS = 100000;
 const CIUDADES = ['San Miguel de Tucumán', 'Yerba Buena', 'Tafí Viejo'];
 
-const FiltrosAvanzados = ({
+const AdvancedFilters = ({
   searchQuery,
   ciudadSeleccionada,
   precioMax,
@@ -34,7 +34,6 @@ const FiltrosAvanzados = ({
         )}
       </div>
 
-      {/* Ciudad */}
       <div className="filtro-seccion">
         <p className="filtro-seccion-titulo">Ciudad</p>
         <div className="filtro-ciudad-wrapper">
@@ -52,7 +51,6 @@ const FiltrosAvanzados = ({
         </div>
       </div>
 
-      {/* Precio por hora */}
       <div className="filtro-seccion">
         <p className="filtro-seccion-titulo">Precio por hora ($)</p>
         <div className="precio-valor-row">
@@ -80,7 +78,6 @@ const FiltrosAvanzados = ({
         </div>
       </div>
 
-      {/* Tipo de Pista — solo se muestra si hay tipos en los datos */}
       {tiposDisponibles.length > 0 && (
         <div className="filtro-seccion">
           <p className="filtro-seccion-titulo">Tipo de Pista</p>
@@ -107,4 +104,4 @@ const FiltrosAvanzados = ({
   );
 };
 
-export default FiltrosAvanzados;
+export default AdvancedFilters;

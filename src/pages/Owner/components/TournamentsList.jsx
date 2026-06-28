@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Trophy, CalendarDays, MapPin, Users } from 'lucide-react';
-import { getTorneos, createTorneo, updateTorneo, deleteTorneo } from '../../../services/torneosService';
+import { getTournaments, createTournament, updateTournament, deleteTournament } from '../../../services/tournamentsService';
 import { confirmDelete, successAlert, errorAlert } from '../../../utils/alerts';
-import { CATEGORIAS, ESTADOS } from '../utils/schemas/torneoSchema';
-import TorneosForm from './TorneosForm';
-import './Torneos.css';
+import { CATEGORIAS, ESTADOS } from '../utils/schemas/tournamentSchema';
+import TournamentsForm from './TournamentsForm';
+import './Tournaments.css';
 
 const ESTADO_BADGE = {
   activo:     'torneo-badge--activo',
@@ -19,7 +19,7 @@ function fmtDate(dateStr) {
   });
 }
 
-export default function TorneosList() {
+export default function TournamentsList() {
   const [torneos,    setTorneos]    = useState([]);
   const [loading,    setLoading]    = useState(true);
   const [modal,      setModal]      = useState(null);
@@ -31,7 +31,7 @@ export default function TorneosList() {
   const fetchTorneos = async () => {
     try {
       setLoading(true);
-      const res = await getTorneos();
+      const res = await getTournaments();
       setTorneos(res.data.torneos || res.data || []);
     } catch (err) {
       await errorAlert(err.response?.data?.message || 'Error cargando torneos.');
@@ -43,13 +43,13 @@ export default function TorneosList() {
   const handleSave = async (data) => {
     try {
       if (modal?.torneo?._id) {
-        const res = await updateTorneo(modal.torneo._id, data);
+        const res = await updateTournament(modal.torneo._id, data);
         const updated = res.data.torneo || res.data;
         setTorneos(prev => prev.map(t => t._id === updated._id ? updated : t));
         setModal(null);
         await successAlert('Torneo actualizado correctamente.');
       } else {
-        const res = await createTorneo(data);
+        const res = await createTournament(data);
         const created = res.data.torneo || res.data;
         setTorneos(prev => [...prev, created]);
         setModal(null);
@@ -65,7 +65,7 @@ export default function TorneosList() {
     if (!result.isConfirmed) return;
     setDeletingId(id);
     try {
-      await deleteTorneo(id);
+      await deleteTournament(id);
       setTorneos(prev => prev.filter(t => t._id !== id));
       await successAlert('Torneo eliminado.');
     } catch {
@@ -98,7 +98,6 @@ export default function TorneosList() {
         </button>
       </div>
 
-      {/* Filtros */}
       <div className="torneos-filters">
         {[
           { key: 'todos',     label: 'Todos'     },
@@ -192,7 +191,7 @@ export default function TorneosList() {
       )}
 
       {modal !== null && (
-        <TorneosForm
+        <TournamentsForm
           torneo={modal.torneo}
           onClose={() => setModal(null)}
           onSave={handleSave}

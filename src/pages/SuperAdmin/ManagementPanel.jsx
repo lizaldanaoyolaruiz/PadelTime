@@ -55,7 +55,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
   useEffect(() => { fetchOwners(); fetchStats(); }, [fetchOwners, fetchStats]);
 
-  // Open create modal when parent triggers it
   useEffect(() => {
     if (triggerCreate !== prevTriggerRef.current) {
       prevTriggerRef.current = triggerCreate;
@@ -63,9 +62,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     }
   }, [triggerCreate]);
 
-  // ── Derived ───────────────────────────────────────────────────────────────────
-
-  // 'approved' = activo, cualquier otro (pending/rejected/suspended) = inactivo
   const isActive = (o) => o.status === 'approved';
 
   const filtered = owners.filter(o => {
@@ -82,8 +78,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
-
-  // ── Handlers ──────────────────────────────────────────────────────────────────
 
   const closeModal = () => { setModal(null); setSelectedOwner(null); setFormError(''); };
 
@@ -174,8 +168,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
-  // ── Stats cards data ──────────────────────────────────────────────────────────
-
   const activeCount = owners.filter(isActive).length;
 
   const statCards = [
@@ -211,12 +203,9 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     ? authUser.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
     : 'SA';
 
-  // ── Render ────────────────────────────────────────────────────────────────────
-
   return (
     <div className="mp-wrapper">
 
-      {/* ── Top bar ── */}
       <header className="mp-topbar">
         <div className="mp-search">
           <Search size={15} />
@@ -243,7 +232,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
       <div className="mp-content">
 
-        {/* ── Stats ── */}
         <div className="mp-stats-grid">
           {statCards.map(({ label, value, Icon, color }) => (
             <div key={label} className="mp-stat-card">
@@ -258,7 +246,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
           ))}
         </div>
 
-        {/* ── Table section ── */}
         <div className="mp-table-section">
           <div className="mp-table-header">
             <div className="mp-table-title">
@@ -287,7 +274,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
             <div className="mp-state">No se encontraron propietarios.</div>
           ) : (
             <div className="mp-table-wrapper">
-              {/* Tabla desktop: 6 columnas completas */}
               <table className="mp-table mp-table--desktop">
                 <thead>
                   <tr>
@@ -349,7 +335,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                 </tbody>
               </table>
 
-              {/* Tabla mobile: 2 columnas + fila clickeable para ver detalle */}
               <table className="mp-table mp-table--mobile">
                 <thead>
                   <tr>
@@ -384,7 +369,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
             </div>
           )}
 
-          {/* Pagination */}
           {!loading && totalPages > 1 && (
             <div className="mp-pagination">
               <span className="mp-pagination-info">
@@ -421,7 +405,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
         </div>
       </div>
 
-      {/* ── Create / Edit modal ── */}
       {(modal === 'create' || modal === 'edit') && (
         <div className="mp-overlay" onClick={closeModal}>
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
@@ -479,7 +462,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
         </div>
       )}
 
-      {/* ── Detail modal ── */}
       {detailOwner && (
         <div className="mp-detail-overlay" onClick={() => setDetailOwner(null)}>
           <div className="mp-detail-modal" onClick={e => e.stopPropagation()}>
@@ -516,7 +498,6 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
         </div>
       )}
 
-      {/* ── Delete modal ── */}
       {modal === 'delete' && (
         <div className="mp-overlay" onClick={closeModal}>
           <div className="mp-modal mp-modal--sm" onClick={e => e.stopPropagation()}>

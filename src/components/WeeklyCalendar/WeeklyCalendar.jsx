@@ -2,15 +2,13 @@ import { useState, useMemo, useEffect, Fragment, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Lock, Settings2, Clock, CalendarDays, BadgeDollarSign, Users } from 'lucide-react';
 import './WeeklyCalendar.css';
 
-/* ─────────────── Constants ─────────────── */
-const HOURS = Array.from({ length: 16 }, (_, i) => i + 7); // 07:00 → 22:00
+const HOURS = Array.from({ length: 16 }, (_, i) => i + 7);
 const DAY_LABELS = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'];
 const MONTHS = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
 ];
 
-/* ─────────────── Date helpers ─────────────── */
 function getMondayOf(date) {
   const d = new Date(date);
   const day = d.getDay();
@@ -39,12 +37,6 @@ function fmtWeekRange(monday) {
     : `${d1} ${MONTHS[m1]} - ${d2} ${MONTHS[m2]}, ${y}`;
 }
 
-/* ─────────────── Mock data (replace with API response) ─────────────── */
-/*
-  API esperada: GET /bookings/slots?courtId=X&from=YYYY-MM-DD&to=YYYY-MM-DD
-  Respuesta: [{ courtId, date, hour, status }]
-  status: 'disponible' | 'reservado' | 'mantenimiento'
-*/
 function buildMockSlots(courts, monday) {
   const slots = [];
   courts.forEach(({ _id: courtId }, ci) => {
@@ -62,15 +54,6 @@ function buildMockSlots(courts, monday) {
 
 const FALLBACK_COURTS = [];
 
-/* ─────────────── Component ─────────────── */
-/*
-  Props:
-  - courts:       [{ _id, name }]               - lista de pistas del complejo
-  - slots:        [{ courtId, date, hour, status }] | null  - null usa mock data
-  - onSlotClick:  (courtId, date, hour) => void  - callback al seleccionar un slot libre
-  - stats:        { occupancyRate, estimatedRevenue, newPlayers } | null
-  - loading:      boolean
-*/
 export default function WeeklyCalendar({
   courts        = [],
   slots         = null,
@@ -118,7 +101,6 @@ export default function WeeklyCalendar({
     return map;
   }, [slots, activeCourt]);
 
-  // Cuando slots viene de la API, solo mostramos las horas que realmente existen
   const visibleHours = useMemo(() => {
     if (!slots) return HOURS;
     const hoursSet = new Set();
@@ -138,18 +120,16 @@ export default function WeeklyCalendar({
     return false;
   };
 
-  // Notificar al padre el estado inicial (solo si hay canchas reales, no fallback)
-  useEffect(() => { onWeekChange?.(weekStart); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { if (courts.length && activeCourt) onCourtChange?.(activeCourt); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { onWeekChange?.(weekStart); }, []);
+  useEffect(() => { if (courts.length && activeCourt) onCourtChange?.(activeCourt); }, []);
 
-  // Fix race condition: si courts cambia y el court seleccionado ya no existe, resetear al primero
   useEffect(() => {
     if (!courts.length) return;
     if (courts.find(c => c._id === selectedCourt)) return;
     const primerCourt = courts[0]._id;
     setSelectedCourt(primerCourt);
     onCourtChange?.(primerCourt);
-  }, [courts]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [courts]);
 
   const prevWeek = () => setWeekStart(d => { const next = addDays(d, -7); onWeekChange?.(next); return next; });
   const nextWeek = () => setWeekStart(d => { const next = addDays(d,  7); onWeekChange?.(next); return next; });
@@ -167,7 +147,6 @@ export default function WeeklyCalendar({
     }
   };
 
-  // Compute display stats from slot map if not provided via prop
   const displayStats = useMemo(() => {
     if (stats) return stats;
     const source = slots ?? buildMockSlots(activeCourts, weekStart);
@@ -183,7 +162,6 @@ export default function WeeklyCalendar({
 
   return (
     <section className="wc-container">
-      {/* Page header */}
       <div className="wc-page-header">
         <div className="wc-page-header-text">
           <h2 className="wc-title">Agenda de Pistas</h2>
@@ -204,9 +182,7 @@ export default function WeeklyCalendar({
         </div>
       </div>
 
-      {/* Calendar card */}
       <div className="wc-card">
-        {/* Week navigation */}
         <div className="wc-nav">
           <div className="wc-nav-controls">
             <button className="wc-nav-btn" onClick={prevWeek} aria-label="Semana anterior">
@@ -226,13 +202,10 @@ export default function WeeklyCalendar({
           </div>
         </div>
 
-        {/* Grid */}
         <div className="wc-grid-scroll" role="grid" aria-label="Calendario semanal">
           <div className="wc-grid">
-            {/* Corner */}
             <div className="wc-corner" />
 
-            {/* Day headers */}
             {weekDays.map(({ date, label, num }) => (
               <div
                 key={date}
@@ -245,7 +218,6 @@ export default function WeeklyCalendar({
               </div>
             ))}
 
-            {/* Rows: one per hour */}
             {loading
               ? HOURS.map(hour => (
                   <Fragment key={hour}>

@@ -40,7 +40,6 @@ export default function SuperAdminDashboard() {
         <div className="sa-overlay" onClick={() => setMenuOpen(false)} />
       )}
 
-      {/* ── Sidebar ── */}
       <aside className={`sa-sidebar${menuOpen ? ' sa-sidebar--open' : ''}`}>
         <div className="sa-brand">
           <span className="sa-brand-name">PadelTime</span>
@@ -85,7 +84,6 @@ export default function SuperAdminDashboard() {
         </div>
       </aside>
 
-      {/* ── Main ── */}
       <main className="sa-main">
         <button
           className="sa-hamburger"

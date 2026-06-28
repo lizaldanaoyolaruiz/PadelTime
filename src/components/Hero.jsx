@@ -16,7 +16,6 @@ const Hero = () => {
       .catch(() => {});
   }, []);
 
-  // Cerrar al click afuera
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {

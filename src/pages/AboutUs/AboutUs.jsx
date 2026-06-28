@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./we.css";
+import "./AboutUs.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 const marisolImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/mar-padel.jpg';
@@ -23,7 +23,7 @@ function useCounter(target, duration = 1800, startCounting) {
   return count;
 }
 
-function Nosotros() {
+function AboutUs() {
   const statsRef = useRef(null);
   const [started, setStarted] = useState(false);
 
@@ -157,4 +157,4 @@ function Nosotros() {
   );
 }
 
-export default Nosotros;
+export default AboutUs;

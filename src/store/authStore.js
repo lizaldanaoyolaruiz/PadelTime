@@ -19,7 +19,7 @@ const useAuthStore = create((set) => ({
 
   login: async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
-    // soporta { token, user } o { accessToken, user }
+
     const token = res.data.token || res.data.accessToken;
     const user  = res.data.user  || res.data;
     localStorage.setItem('token', token);
@@ -28,7 +28,6 @@ const useAuthStore = create((set) => ({
     return user;
   },
 
-  // usado solo para acceso rápido dev
   setAuth: (user, token) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));

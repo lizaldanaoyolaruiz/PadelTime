@@ -9,7 +9,6 @@ export const parseTimeToMinutes = (timeStr) => {
   return hours * 60 + minutes;
 };
 
-
 export const getWeeklyHoursForCourt = (court) => {
   if (!court.active || !court.days || court.days.length === 0) return 0;
   let totalMinutes = 0;
@@ -43,7 +42,6 @@ export const getBlockedHoursForCourt = (court) => {
   });
   return totalBlockedMinutes / 60;
 };
-
 
 export const getGlobalMetrics = (courts) => {
   let totalHours = 0;

@@ -3,7 +3,7 @@ import { MapPin, Star, ChevronDown } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import FiltrosAvanzados from './FiltrosAvanzados';
+import AdvancedFilters from './AdvancedFilters';
 import { getPublicComplexes } from '../../services/complexService';
 import './complexes.css';
 
@@ -153,7 +153,7 @@ const Complexes = () => {
       </section>
 
       <div className="catalog-layout">
-        <FiltrosAvanzados
+        <AdvancedFilters
           searchQuery={searchQuery}
           ciudadSeleccionada={ciudadSeleccionada}
           precioMax={precioMax}

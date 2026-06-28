@@ -79,7 +79,6 @@ export default function CourtModal({ cancha, onClose, onSave }) {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} noValidate className="modal-form">
-          {/* Fotos */}
           <div className="form-group">
             <label className="form-label">Fotos de la cancha</label>
             <div className="images-grid images-grid--sm">

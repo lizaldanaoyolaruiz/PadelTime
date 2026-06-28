@@ -27,8 +27,6 @@ export default function ComplexManagement() {
       .finally(() => setLoading(false));
   }, []);
 
-  // ── Derived ──────────────────────────────────────────────────────────────────
-
   const pendingCount = complexes.filter(c => c.status === 'pending').length;
 
   const filtered = complexes.filter(c => {
@@ -42,8 +40,6 @@ export default function ComplexManagement() {
     const matchesFilter = activeFilter === 'ALL' || c.status === activeFilter;
     return matchesSearch && matchesFilter;
   });
-
-  // ── Handlers ─────────────────────────────────────────────────────────────────
 
   const openDetail  = (complex) => { setSelectedComplex(complex); setShowDetail(true); };
   const closeDetail = () => setShowDetail(false);
@@ -62,12 +58,9 @@ export default function ComplexManagement() {
   const handleComplexDeleted = (id) =>
     setComplexes(prev => prev.filter(c => String(c._id) !== String(id)));
 
-  // ── Render ───────────────────────────────────────────────────────────────────
-
   return (
     <div className="gc-wrap">
 
-      {/* Header */}
       <div className="gc-header">
         <div className="gc-header-left">
           <div className="gc-super-badge">
@@ -160,12 +153,14 @@ export default function ComplexManagement() {
         )}
       </div>
 
-      {/* Overlays */}
       {showDetail && selectedComplex && (
         <DetailDrawer
           complex={selectedComplex}
           onClose={closeDetail}
           onAction={handleDrawerAction}
+          onFeaturedToggle={(id, isFeatured) =>
+            setComplexes(prev => prev.map(c => String(c._id) === String(id) ? { ...c, isFeatured } : c))
+          }
         />
       )}
 

@@ -5,10 +5,9 @@ import {
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { getTorneos } from '../../services/torneosService';
-import './torneos.css';
+import { getTournaments } from '../../services/tournamentsService';
+import './Tournaments.css';
 
-/* ── Helpers ── */
 const MONTHS = [
   'Enero','Febrero','Marzo','Abril','Mayo','Junio',
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre',
@@ -41,13 +40,11 @@ function getFirstDayOfMonth(year, month) {
   return new Date(year, month, 1).getDay();
 }
 
-/* Returns true if isoDate string falls within [start, end] range */
 function dateInRange(dateIso, startIso, endIso) {
   return dateIso >= startIso && dateIso <= endIso;
 }
 
-/* ── Component ── */
-export default function Torneos() {
+export default function Tournaments() {
   const [torneos,      setTorneos]      = useState([]);
   const [loading,      setLoading]      = useState(true);
   const [year,         setYear]         = useState(() => new Date().getFullYear());
@@ -57,13 +54,12 @@ export default function Torneos() {
   const [detailTorneo, setDetailTorneo] = useState(null);
 
   useEffect(() => {
-    getTorneos()
+    getTournaments()
       .then(res => setTorneos(res.data.torneos || res.data || []))
       .catch(() => setTorneos([]))
       .finally(() => setLoading(false));
   }, []);
 
-  /* Build calendar grid */
   const calendarDays = useMemo(() => {
     const daysInMonth  = getDaysInMonth(year, month);
     const firstWeekDay = getFirstDayOfMonth(year, month);
@@ -73,7 +69,6 @@ export default function Torneos() {
     return days;
   }, [year, month]);
 
-  /* Map: isoDate → list of torneos active that day */
   const tournamentsByDay = useMemo(() => {
     const map = {};
     torneos.forEach(t => {
@@ -92,10 +87,8 @@ export default function Torneos() {
     return map;
   }, [torneos, year, month]);
 
-  /* Selected day's tournaments */
   const selectedTorneos = selected ? (tournamentsByDay[selected] || []) : [];
 
-  /* Sidebar list filtered */
   const today = isoDate(new Date());
   const listedTorneos = useMemo(() => {
     const base = filter === 'todos' ? torneos : torneos.filter(t => t.estado === filter);
@@ -319,7 +312,6 @@ export default function Torneos() {
 
       <Footer />
 
-      {/* ── Detail modal ── */}
       {detailTorneo && (
         <div className="tp-detail-overlay" onClick={() => setDetailTorneo(null)}>
           <div className="tp-detail-modal" onClick={e => e.stopPropagation()}>

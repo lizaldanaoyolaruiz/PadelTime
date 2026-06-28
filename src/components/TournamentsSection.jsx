@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CalendarDays, MapPin, Users, Trophy, ArrowRight, X, Building2 } from 'lucide-react';
-import { getTorneos } from '../services/torneosService';
-import './torneosSection.css';
+import { getTournaments } from '../services/tournamentsService';
+import './tournamentsSection.css';
 
 const CATEGORIA_LABEL = {
   amateur:     'Amateur',
@@ -21,14 +21,14 @@ function fmtDate(dateStr) {
   });
 }
 
-export default function TorneosSection() {
+export default function TournamentsSection() {
   const [torneos,  setTorneos]  = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [selected, setSelected] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getTorneos({ estado: 'activo' })
+    getTournaments({ estado: 'activo' })
       .then(res => {
         const all = res.data.torneos || res.data || [];
         setTorneos(all.filter(t => t.estado === 'activo').slice(0, 3));

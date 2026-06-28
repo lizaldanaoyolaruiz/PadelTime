@@ -6,7 +6,7 @@ import NewReservationModal from './NewReservationModal';
 import ReservationDetailModal from './ReservationDetailModal';
 import MaintenanceModal from './MaintenanceModal';
 
-export default function ReservasHoyPanel({ complexId }) {
+export default function TodayReservationsPanel({ complexId }) {
   const [canchas,         setCanchas]         = useState([]);
   const [calendarSlots,   setCalendarSlots]   = useState(null);
   const [loadingSlots,    setLoadingSlots]    = useState(false);
@@ -31,7 +31,7 @@ export default function ReservasHoyPanel({ complexId }) {
         const res = await getMyCourts(complexId);
         const courts = res.data.courts || res.data || [];
         setCanchas(Array.isArray(courts) ? courts : []);
-      } catch { /* silencia errores */ }
+      } catch {  }
     })();
   }, [complexId]);
 

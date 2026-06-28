@@ -14,7 +14,7 @@ export const ESTADOS = [
   { value: 'cancelado',  label: 'Cancelado'  },
 ];
 
-export const torneoSchema = z
+export const tournamentSchema = z
   .object({
     nombre:      z.string().min(3, 'Mínimo 3 caracteres').max(100, 'Máximo 100 caracteres'),
     descripcion: z.string().max(500, 'Máximo 500 caracteres').optional(),

@@ -28,13 +28,12 @@ const BookingConfirmation = () => {
 
   const mercadopagoActive = datosReserva?.mercadopagoActive ?? false;
 
-  // Poll booking status every 5s while payment is in progress
   useEffect(() => {
     if (!pagoIniciado || !bookingId) return;
 
     const check = async () => {
       try {
-        // Ask backend to verify with MP API and auto-confirm if approved
+
         await api.patch(`/bookings/${bookingId}/verify-mp`).catch(() => {});
         const res = await api.get(`/bookings/${bookingId}`);
         const status = res.data.booking?.status;
@@ -51,7 +50,7 @@ const BookingConfirmation = () => {
   }, [pagoIniciado, bookingId, navigate]);
 
   useEffect(() => {
-    if (location.state) return; // datos ya disponibles via router navigate()
+    if (location.state) return;
 
     const courtId   = searchParams.get('courtId');
     const complexId = searchParams.get('complexId');

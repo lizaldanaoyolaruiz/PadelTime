@@ -83,7 +83,6 @@ function validateForm(form, todayStr, currentTime, complexHours) {
     else if (!NAME_REGEX.test(cn)) errors.customName = 'Solo letras, números, espacios y guiones.';
   }
 
-  // Fecha específica
   if (form.recurrence === 'once') {
     if (!form.date) {
       errors.date = 'Seleccioná una fecha.';
@@ -97,18 +96,15 @@ function validateForm(form, todayStr, currentTime, complexHours) {
     }
   }
 
-  // Día semana
   if (form.recurrence === 'weekly' && !form.dayOfWeek) {
     errors.dayOfWeek = 'Seleccioná un día de la semana.';
   }
 
-  // Court closed on the selected day
   if (complexHours?.closed) {
     errors.startTime = 'La cancha está cerrada ese día. No se puede crear un bloqueo.';
     return errors;
   }
 
-  // Horario inicio
   if (!form.startTime) {
     errors.startTime = 'Ingresá la hora de inicio.';
   } else if (form.recurrence === 'once' && form.date === todayStr && form.startTime < currentTime) {
@@ -119,7 +115,6 @@ function validateForm(form, todayStr, currentTime, complexHours) {
     errors.startTime = `No puede ser a las ${complexHours.close} o después (cierre del complejo).`;
   }
 
-  // Horario fin
   if (!form.endTime) {
     errors.endTime = 'Ingresá la hora de fin.';
   } else if (form.startTime && form.endTime <= form.startTime) {
@@ -543,7 +538,6 @@ export const ScheduleManager = () => {
 
   return (
     <div className="sm-root">
-      {/* Header */}
       <div className="sm-header">
         <div className="sm-header-text">
           <h1 className="sm-title">Gestión de Horarios</h1>
@@ -563,7 +557,6 @@ export const ScheduleManager = () => {
         </div>
       </div>
 
-      {/* Court tabs */}
       <div className="sm-tabs">
         {courts.map(c => (
           <button
@@ -579,9 +572,7 @@ export const ScheduleManager = () => {
 
       {selectedCourt && (
         <>
-          {/* Two-column body */}
           <div className="sm-body">
-            {/* Left: schedule */}
             <div className="sm-schedule-col">
               <div className="sm-section-header">
                 <span className="sm-section-title">Disponibilidad Semanal</span>
@@ -654,7 +645,6 @@ export const ScheduleManager = () => {
               })}
             </div>
 
-            {/* Right: blockouts */}
             <div className="sm-blocks-col">
               <div className="sm-blocks-head">
                 <Clock size={16} className="sm-blocks-icon" />
@@ -694,7 +684,6 @@ export const ScheduleManager = () => {
             </div>
           </div>
 
-          {/* Save bar */}
           <div className={`sm-save-bar ${hasChanges ? 'sm-save-bar--active' : 'sm-save-bar--idle'}`}>
             <div className="sm-save-info">
               <span className="sm-save-title">
@@ -722,7 +711,6 @@ export const ScheduleManager = () => {
             </div>
           </div>
 
-          {/* Metrics */}
           <div className="sm-metrics">
             <span>Horas semanales: <strong>{Math.round(weeklyHours)}h</strong></span>
             <span>Tiempo bloqueado: <strong>{Math.round(blockedHours)}h</strong></span>

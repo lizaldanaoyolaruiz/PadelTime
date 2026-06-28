@@ -67,7 +67,6 @@ export default function ContactPage() {
         </div>
 
         <div className="contact-grid">
-          {/* ── Columna izquierda: formulario ── */}
           <div className="form-card">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
@@ -115,7 +114,6 @@ export default function ContactPage() {
             </form>
           </div>
 
-          {/* ── Columna derecha: tarjetas info ── */}
           <div className="sidebar">
             <div className="info-card support">
               <h3>Soporte Técnico</h3>
@@ -170,12 +168,10 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* ── Sección mapa ── */}
         <div className="map-section">
           <h2 className="map-title">Sede Central PadelTime</h2>
           <p className="map-subtitle">Av. del Deporte 1234, Madrid, España</p>
           <div className="map-container">
-            {/* TODO: Reemplazar por un <iframe> de Google Maps con la ubicación real */}
             <div className="map-mock" aria-label="Mapa de ubicación">
               <div className="map-grid" />
               <div className="map-pin-label">

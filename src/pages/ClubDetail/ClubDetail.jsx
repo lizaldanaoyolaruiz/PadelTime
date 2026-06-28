@@ -13,16 +13,19 @@ import './ClubDetail.css';
 
 const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
 
-const mapCourt = (court) => ({
-  id: court._id,
-  name: court.name,
-  price: `$${court.pricePerHour}/h`,
-  precioNumerico: court.pricePerHour,
-  status: court.enabled ? 'Habilitada' : 'Deshabilitada',
-  description: court.description || '',
-  tags: [TYPE_LABELS[court.type] || court.type, ...(court.features || [])].filter(Boolean),
-  image: court.photo || court.photos?.[0] || null,
-});
+const mapCourt = (court, fallbackPrice = 0) => {
+  const precio = court.pricePerHour || fallbackPrice || 0;
+  return {
+    id: court._id,
+    name: court.name,
+    price: precio ? `$${Number(precio).toLocaleString('es-AR')}/h` : 'Consultar precio',
+    precioNumerico: precio,
+    status: court.enabled ? 'Habilitada' : 'Deshabilitada',
+    description: court.description || '',
+    tags: [TYPE_LABELS[court.type] || court.type, ...(court.features || [])].filter(Boolean),
+    image: court.photo || court.photos?.[0] || null,
+  };
+};
 
 const ClubDetail = () => {
   const { id } = useParams();
@@ -80,7 +83,7 @@ const ClubDetail = () => {
           fotos: fotosOrdenadas,
         });
 
-        const lista = (courtsRes.data?.courts || []).map(mapCourt);
+        const lista = (courtsRes.data?.courts || []).map(c => mapCourt(c, complex?.price));
         setCanchas(lista);
         setCanchaSeleccionada(lista[0] || null);
 
