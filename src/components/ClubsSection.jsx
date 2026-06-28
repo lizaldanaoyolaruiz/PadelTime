@@ -21,7 +21,8 @@ const ClubsSection = () => {
     getPublicComplexes()
       .then(res => {
         const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
-        setClubs(data.slice(0, 3).map(mapClub));
+        const featured = data.filter(c => c.isFeatured);
+        setClubs((featured.length ? featured : data).slice(0, 3).map(mapClub));
       })
       .catch(() => setClubs([]))
       .finally(() => setLoading(false));
