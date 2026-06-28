@@ -158,6 +158,9 @@ export default function ComplexManagement() {
           complex={selectedComplex}
           onClose={closeDetail}
           onAction={handleDrawerAction}
+          onFeaturedToggle={(id, isFeatured) =>
+            setComplexes(prev => prev.map(c => String(c._id) === String(id) ? { ...c, isFeatured } : c))
+          }
         />
       )}
 
