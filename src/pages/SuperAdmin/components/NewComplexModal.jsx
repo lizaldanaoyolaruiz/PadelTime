@@ -67,7 +67,6 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">{watchedName.length}/80 — mín. 3 caracteres</span>}
           </div>
 
-          {/* Nombre del owner */}
           <div className="gc-new-field">
             <label className="gc-new-label">Nombre del owner <span className="gc-required">*</span></label>
             <input
@@ -82,7 +81,6 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">{watchedOwner.length}/60 — solo letras</span>}
           </div>
 
-          {/* Email */}
           <div className="gc-new-field">
             <label className="gc-new-label">Email del owner <span className="gc-required">*</span></label>
             <input
@@ -95,7 +93,6 @@ export function NewComplexModal({ onClose, onCreated }) {
             {errors.email && <span className="gc-new-error">{errors.email.message}</span>}
           </div>
 
-          {/* Teléfono */}
           <div className="gc-new-field">
             <label className="gc-new-label">Teléfono <span className="gc-required">*</span></label>
             <input
@@ -111,7 +108,6 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">Mín. 10 dígitos — solo números y +</span>}
           </div>
 
-          {/* Número de pistas */}
           <div className="gc-new-field">
             <label className="gc-new-label">Número de pistas <span className="gc-required">*</span></label>
             <input
@@ -128,7 +124,6 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">Entre 1 y 50</span>}
           </div>
 
-          {/* Ciudad */}
           <div className="gc-new-field">
             <label className="gc-new-label">Ciudad <span className="gc-required">*</span></label>
             <select
@@ -141,7 +136,6 @@ export function NewComplexModal({ onClose, onCreated }) {
             {errors.city && <span className="gc-new-error">{errors.city.message}</span>}
           </div>
 
-          {/* Dirección */}
           <div className="gc-new-field gc-new-field--full">
             <label className="gc-new-label">Dirección <span className="gc-required">*</span></label>
             <input
@@ -155,7 +149,6 @@ export function NewComplexModal({ onClose, onCreated }) {
               : <span className="gc-new-hint">Mín. 5 caracteres — máx. 120</span>}
           </div>
 
-          {/* Observaciones */}
           <div className="gc-new-field gc-new-field--full">
             <label className="gc-new-label">
               Observaciones <span className="gc-optional">(opcional)</span>
