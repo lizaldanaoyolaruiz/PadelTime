@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const FeaturedClubs = () => {
   const clubs = [
     {
@@ -29,14 +31,14 @@ const FeaturedClubs = () => {
     }
   ];
 
- return (
+  return (
     <section className="featured-clubs" id="clubes">
       <div className="section-header">
         <div className="section-title">
           <h2>Clubes Destacados</h2>
           <p>Seleccionados por su excelencia y calidad técnica.</p>
         </div>
-        <a href="#todos" className="view-all">Ver todos los clubes →</a>
+        <Link to="/complejos" className="view-all">Ver todos los clubes →</Link>
       </div>
 
       <div className="clubs-grid">
@@ -48,9 +50,8 @@ const FeaturedClubs = () => {
                 className="badge-admin"
                 title="Este club ha sido verificado y certificado por nuestro equipo."
               >
-                ✓ APROBADO POR ADMIN
+                ✓ VERIFICADO
               </span>
-              <span className="badge-rating">☆ {club.rating}</span>
             </div>
             <div className="club-info">
               <div className="club-title-row">
@@ -61,7 +62,7 @@ const FeaturedClubs = () => {
                 <p><span>📍</span> {club.location}</p>
                 <p><span>🕒</span> {club.time}</p>
               </div>
-              <button className="btn-detail">VER DETALLE</button>
+              <Link to={`/complejo/${club.id}`} className="btn-detail">VER DETALLE</Link>
             </div>
           </div>
         ))}

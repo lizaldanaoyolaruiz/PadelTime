@@ -2,16 +2,21 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
+import { toastSuccess, toastError, toastWarning } from '../../utils/toasts';
 import { loginSchema } from '../../utils/authValidations';
 import { EyeIcon, EyeOffIcon } from '../../components/ui/EyeIcons';
 import useAuthStore from '../../store/authStore';
-import { loginUser } from '../../services/authService';
 import './Auth.css';
+
+const DEV_USERS = [
+  { label: 'Admin',       user: { id: '1', name: 'Marcos Padel', role: 'admin',      isVerified: true }, token: 'dev-admin-token'      },
+  { label: 'Jugador',     user: { id: '3', name: 'Juan Pérez',   role: 'player',     isVerified: true }, token: 'dev-player-token'     },
+  { label: 'Super Admin', user: { id: '9', name: 'Juan Delgado', role: 'superadmin', isVerified: true }, token: 'dev-superadmin-token' },
+];
 
 export default function Login() {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { login, setAuth } = useAuthStore();
   const [showPw, setShowPw] = useState(false);
 
   const {
@@ -22,32 +27,42 @@ export default function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await loginUser(data);
-      setAuth(res.user, res.token);
-      toast.success('¡Bienvenido de nuevo!');
-      const role = res.user?.role;
-      if (role === 'admin') navigate('/admin');
-      else if (role === 'owner') navigate('/owner');
+      const user = await login(data.email, data.password);
+      await toastSuccess('¡Bienvenido de nuevo!');
+      const role = user?.role;
+      if (role === 'superadmin') navigate('/superadmin');
+      else if (role === 'admin') navigate('/admin');
       else navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Credenciales incorrectas. Intenta de nuevo.');
+      const msg = err.response?.data?.message || '';
+      if (msg.toLowerCase().includes('pendiente') || msg.toLowerCase().includes('aprobaci')) {
+        await toastWarning('Tu cuenta está pendiente de aprobación.');
+      } else {
+        await toastError('Email o contraseña incorrectos.');
+      }
     }
   };
 
   const onInvalid = () => {
-    toast.error('Completá todos los campos correctamente.');
+    toastWarning('Completá todos los campos.');
+  };
+
+  const devLogin = ({ user, token, label }) => {
+    setAuth(user, token);
+    toastSuccess(`Acceso dev: ${label}`);
+    if (user.role === 'superadmin') navigate('/superadmin');
+    else if (user.role === 'admin') navigate('/admin');
+    else navigate('/');
   };
 
   return (
-    <div className="auth-wrapper">
+    <div className="auth-wrapper auth-wrapper--login">
       <div className="auth-card">
-        {/* ── Tabs ── */}
         <div className="auth-tabs">
           <span className="auth-tab active">Iniciar Sesión</span>
           <Link to="/register" className="auth-tab">Crear Cuenta</Link>
         </div>
 
-        {/* ── Avatar ── */}
         <div className="auth-avatar">
           <div className="auth-avatar-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
@@ -93,14 +108,11 @@ export default function Login() {
             {errors.password && <span className="error-msg">{errors.password.message}</span>}
           </div>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-          </div>
-
           <button type="submit" className="btn-auth" disabled={isSubmitting}>
             {isSubmitting ? 'ENTRANDO...' : 'ENTRAR A LA PISTA'}
           </button>
         </form>
+
       </div>
     </div>
   );

@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
+import { toastSuccess, toastError, toastWarning } from '../../utils/toasts';
 import { registerSchema } from '../../utils/authValidations';
 import { EyeIcon, EyeOffIcon } from '../../components/ui/EyeIcons';
 import useAuthStore from '../../store/authStore';
-import { registerUser } from '../../services/authService';
 import './Auth.css';
 
 export default function Register() {
   const navigate = useNavigate();
-  const setAuth = useAuthStore((s) => s.setAuth);
+  const { register: registerInStore } = useAuthStore();
   const [showPw, setShowPw] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [role, setRole] = useState('player');
 
   const {
     register,
@@ -23,23 +23,35 @@ export default function Register() {
 
   const onSubmit = async ({ nombre, apellido, email, password }) => {
     try {
-      const res = await registerUser({ nombre, apellido, email, password });
-      setAuth(res.user, res.token);
-      toast.success('¡Registro exitoso! Bienvenido a PadelTime 🎾');
-      navigate('/');
+      await registerInStore({ nombre, apellido, email, password, role });
+      if (role === 'admin') {
+        await toastSuccess('¡Cuenta creada! Ya podés gestionar tu complejo.');
+        navigate('/admin');
+      } else {
+        await toastSuccess('¡Cuenta creada! Verificá tu email antes de ingresar.');
+        navigate('/login');
+      }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al registrarse. Intenta de nuevo.');
+      const msg = err.response?.data?.message || '';
+      if (msg.toLowerCase().includes('email') || msg.toLowerCase().includes('registrado') || msg.toLowerCase().includes('exist')) {
+        await toastError('Este email ya está registrado.');
+      } else {
+        await toastError('Error al registrarse. Intentá de nuevo.');
+      }
     }
   };
 
-  const onInvalid = () => {
-    toast.error('Completá todos los campos correctamente.');
+  const onInvalid = (errors) => {
+    if (errors.confirmPassword) {
+      toastWarning('Las contraseñas no coinciden.');
+    } else {
+      toastWarning('Completá todos los campos.');
+    }
   };
 
   return (
     <div className="auth-wrapper">
       <div className="auth-card">
-        {/* ── Tabs ── */}
         <div className="auth-tabs">
           <Link to="/login" className="auth-tab">Iniciar Sesión</Link>
           <span className="auth-tab active">Crear Cuenta</span>
@@ -48,6 +60,23 @@ export default function Register() {
         <div className="auth-header">
           <h2>Únete a la élite</h2>
           <p>Gestiona y reserva como un profesional.</p>
+        </div>
+
+        <div className="auth-tabs" style={{ marginBottom: '20px' }}>
+          <button
+            type="button"
+            className={`auth-tab${role === 'player' ? ' active' : ''}`}
+            onClick={() => setRole('player')}
+          >
+            Jugador
+          </button>
+          <button
+            type="button"
+            className={`auth-tab${role === 'admin' ? ' active' : ''}`}
+            onClick={() => setRole('admin')}
+          >
+            Dueño de complejo
+          </button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit, onInvalid)} className="auth-form" noValidate>
