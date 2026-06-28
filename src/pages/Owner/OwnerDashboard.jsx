@@ -16,8 +16,8 @@ import PaymentConfig  from './components/PaymentConfig';
 import Reviews        from './components/Reviews';
 import Reports        from './components/Reports';
 import MetricsPanel    from '../Metrics/Metrics';
-import ReservasHoyPanel from './components/ReservasHoyPanel';
-import TorneosList      from './components/TorneosList';
+import TodayReservationsPanel from './components/TodayReservationsPanel';
+import TournamentsList        from './components/TournamentsList';
 import { ScheduleManager } from '../Schedule/ScheduleManager';
 import './OwnerDashboard.css';
 
@@ -85,8 +85,8 @@ export default function OwnerDashboard() {
     panel:        <GeneralPanel    key={complexId} complexId={complexId} />,
     complejo:     <MyComplex />,
     canchas:      <MyCourts />,
-    reservas:     <ReservasHoyPanel key={complexId} complexId={complexId} />,
-    torneos:      <TorneosList />,
+    reservas:     <TodayReservationsPanel key={complexId} complexId={complexId} />,
+    torneos:      <TournamentsList />,
     reportes:     <Reports         key={complexId} complexId={complexId} />,
     metricas:     <MetricsPanel />,
     pagos:        <PaymentConfig />,
@@ -152,7 +152,6 @@ export default function OwnerDashboard() {
       </aside>
 
       <main className="owner-main">
-        {/* Hamburger button — solo visible en mobile */}
         <button
           className="sidebar-hamburger"
           onClick={() => setMenuOpen(o => !o)}

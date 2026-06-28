@@ -15,7 +15,7 @@ export default function MyComplex() {
   const [loading,        setLoading]        = useState(true);
   const [saving,         setSaving]         = useState(false);
   const [images,         setImages]         = useState([]);
-  const [newFiles,       setNewFiles]       = useState([]);   // solo para complejo NUEVO aún sin _id
+  const [newFiles,       setNewFiles]       = useState([]);
   const [uploadingImg,   setUploadingImg]   = useState(false);
   const [principalUrl,   setPrincipalUrl]   = useState(null);
   const [deletingImgUrl, setDeletingImgUrl] = useState(null);
@@ -168,12 +168,10 @@ export default function MyComplex() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        {/* Fotos */}
         <div className="form-section">
           <h3 className="section-title">Fotos del complejo</h3>
           <p className="section-desc">Subí hasta 5 fotos. Serán visibles en el portal público de reservas.</p>
           <div className="images-grid">
-            {/* Fotos guardadas en Cloudinary */}
             {images.map((url, i) => {
               const isPrincipal = principalUrl === url;
               return (
@@ -204,7 +202,6 @@ export default function MyComplex() {
               );
             })}
 
-            {/* Archivos pendientes (solo para complejo nuevo aún sin _id) */}
             {newFiles.map((file, i) => (
               <div key={`new-${i}`} className="img-thumb img-thumb--pending">
                 <img src={URL.createObjectURL(file)} alt={file.name} />
@@ -215,7 +212,6 @@ export default function MyComplex() {
               </div>
             ))}
 
-            {/* Botón agregar */}
             {images.length + newFiles.length < 5 && (
               <button
                 type="button"
@@ -231,7 +227,6 @@ export default function MyComplex() {
           <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={handleFiles} />
         </div>
 
-        {/* Información general */}
         <div className="form-section">
           <h3 className="section-title">Información general</h3>
           <div className="form-grid">

@@ -36,7 +36,7 @@ export default function GeneralPanel({ complexId }) {
           resolvedComplexId = complexData?._id;
           setComplejo(complexData ?? null);
         } catch {
-          // continúa sin complejo
+
         }
       } else {
         try {
@@ -59,7 +59,7 @@ export default function GeneralPanel({ complexId }) {
       const reservasHoy = agendaRes.data.bookings     || agendaRes.data    || [];
 
       setCanchas(Array.isArray(courts) ? courts : []);
-      // MP bookings auto-confirm via payment — only show non-MP pending for admin action
+
       const pendientesAdmin = Array.isArray(pendientes)
         ? pendientes.filter(r => r.confirmationMethod !== 'mercadopago')
         : [];
@@ -89,7 +89,7 @@ export default function GeneralPanel({ complexId }) {
           jugadores: s.newPlayers,
           ocupacion: `${s.occupancyRate}%`,
         });
-      } catch { /* silencia errores */ }
+      } catch {  }
     } catch (err) {
       const status = err.response?.status;
       if (status && ![404, 401, 403].includes(status)) console.error('Error cargando panel:', err);

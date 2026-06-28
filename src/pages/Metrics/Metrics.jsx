@@ -9,12 +9,10 @@ import {
 import { getMetrics } from '../../services/metricsService';
 import './Metrics.css';
 
-// ── Constants ─────────────────────────────────────────────────────────────────
 const COLORS   = ['#bef264', '#1e3a5f'];
 const PIE_DAYS = ['', 'Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sáb'];
 const HOURS    = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
 const fmt = (n) =>
   n >= 1000
     ? `$${(n / 1000).toFixed(1)}k`
@@ -29,7 +27,6 @@ const getIntensity = (reservas, max) => {
   return 'low';
 };
 
-// ── Custom tooltip ────────────────────────────────────────────────────────────
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
@@ -40,7 +37,6 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-// ── Component ─────────────────────────────────────────────────────────────────
 export default function OwnerStats() {
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +79,6 @@ export default function OwnerStats() {
     );
   }
 
-  // ── Derived ──────────────────────────────────────────────────────────────
   const m            = metrics || {};
   const rankingMax   = m.rankingCanchas?.[0]?.reservas || 1;
   const chartData    = m.reservasPorPeriodo || [];
@@ -131,14 +126,12 @@ export default function OwnerStats() {
     },
   ];
 
-  // Heatmap: rows = Mon–Sun (dow 2–1), cols = hours
-  const HEATMAP_DAYS = [2, 3, 4, 5, 6, 7, 1]; // Lun→Dom
+  const HEATMAP_DAYS = [2, 3, 4, 5, 6, 7, 1];
   const HOUR_LABELS  = ['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00'];
 
   return (
     <div className="mtr-page">
 
-      {/* ── Header ── */}
       <div className="mtr-header">
         <div>
           <h1>Estadísticas del Complejo</h1>
@@ -157,7 +150,6 @@ export default function OwnerStats() {
         </div>
       </div>
 
-      {/* Custom date range */}
       {periodo === 'personalizado' && (
         <div className="mtr-custom-range">
           <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)} />
@@ -167,7 +159,6 @@ export default function OwnerStats() {
         </div>
       )}
 
-      {/* ── Stat cards ── */}
       <div className="mtr-cards">
         {statCards.map(({ icon, label, value, trend, up }) => (
           <div key={label} className="mtr-card">
@@ -186,10 +177,8 @@ export default function OwnerStats() {
         ))}
       </div>
 
-      {/* ── Charts row ── */}
       <div className="mtr-charts-row">
 
-        {/* Area chart */}
         <div className="mtr-chart-card large">
           <div className="mtr-chart-head">
             <div>
@@ -226,7 +215,6 @@ export default function OwnerStats() {
           )}
         </div>
 
-        {/* Donut chart */}
         <div className="mtr-chart-card donut">
           <h3>Ingresos por Tipo</h3>
           <div className="mtr-donut-wrap">
@@ -263,7 +251,6 @@ export default function OwnerStats() {
         </div>
       </div>
 
-      {/* ── Ranking de canchas ── */}
       <div className="mtr-section-card">
         <div className="mtr-section-head">
           <h3>Ranking de Canchas</h3>
@@ -293,7 +280,6 @@ export default function OwnerStats() {
         )}
       </div>
 
-      {/* ── Heatmap ── */}
       <div className="mtr-section-card">
         <div className="mtr-section-head">
           <div>
@@ -310,7 +296,6 @@ export default function OwnerStats() {
         </div>
 
         <div className="mtr-heatmap">
-          {/* Hour labels */}
           <div className="mtr-heat-hour-row">
             <div className="mtr-heat-day-label" />
             {HOURS.filter((_, i) => i % 2 === 0).map(h => (
@@ -320,7 +305,6 @@ export default function OwnerStats() {
             ))}
           </div>
 
-          {/* Day rows */}
           {HEATMAP_DAYS.map(dow => (
             <div key={dow} className="mtr-heat-row">
               <div className="mtr-heat-day-label">{PIE_DAYS[dow]}</div>
@@ -339,7 +323,6 @@ export default function OwnerStats() {
         </div>
       </div>
 
-      {/* ── Bottom cards ── */}
       <div className="mtr-bottom-row">
 
         <div className="mtr-analysis-card">

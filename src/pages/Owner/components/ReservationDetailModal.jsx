@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { confirmarReserva, rechazarReserva, cancelarReserva } from '../../../services/reservationService';
 import './ReservationDetailModal.css';
 
-
 const STATUS_CONFIG = {
   pending:   { label: 'Pendiente',  cls: 'rdm-badge--pending'   },
   confirmed: { label: 'Confirmada', cls: 'rdm-badge--confirmed' },
@@ -49,7 +48,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box rdm-box" onClick={e => e.stopPropagation()}>
 
-        {/* Header */}
         <div className="rdm-header">
           <div className="rdm-header-left">
             <span className="rdm-title">Detalle de Reserva</span>
@@ -58,7 +56,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
           <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
-        {/* Player hero */}
         <div className="rdm-player-row">
           <div className="rdm-avatar">
             {jugador.charAt(0).toUpperCase()}
@@ -74,7 +71,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
           </div>
         </div>
 
-        {/* Info grid */}
         <div className="rdm-grid">
           <div className="rdm-field">
             <span className="rdm-label">Cancha</span>
@@ -90,7 +86,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
           </div>
         </div>
 
-        {/* Medio de pago con ícono */}
         <div className="detail-row">
           <span>Medio de pago</span>
           <strong>
@@ -100,7 +95,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
           </strong>
         </div>
 
-        {/* Desglose de pago */}
         {reserva.confirmationMethod === 'mercadopago' ? (
           <>
             <div className="detail-row">
@@ -123,7 +117,6 @@ export default function ReservationDetailModal({ reserva, onClose, onRefresh }) 
           </div>
         )}
 
-        {/* Actions */}
         {reserva.status === 'pending' && reserva.confirmationMethod === 'mercadopago' && (
           <div className="rdm-mp-pending">
             <span>⏳ Esperando confirmación de pago por Mercado Pago</span>

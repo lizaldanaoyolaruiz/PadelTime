@@ -143,12 +143,10 @@ export default function NewReservationModal({ slotData = null, onClose, onCreate
           </div>
         </div>
 
-        {/* ── MODO RESERVA ── */}
         {modo === 'reserva' && (
           <form onSubmit={handleSubmit(onSubmitReserva)} noValidate className="modal-form">
             <p className="modal-section-title">Datos del turno</p>
 
-            {/* Cancha */}
             <div className="form-group">
               <label className="form-label">Cancha</label>
               <select
@@ -166,7 +164,6 @@ export default function NewReservationModal({ slotData = null, onClose, onCreate
                 : <span className="form-hint">Campo requerido</span>}
             </div>
 
-            {/* Fecha + Horario: texto si slotData, inputs si no */}
             {slotData ? (
               <div className="form-group">
                 <label className="form-label">Turno seleccionado</label>
@@ -290,12 +287,10 @@ export default function NewReservationModal({ slotData = null, onClose, onCreate
           </form>
         )}
 
-        {/* ── MODO MANTENIMIENTO ── */}
         {modo === 'mantenimiento' && (
           <form onSubmit={onSubmitMantenimiento} noValidate className="modal-form">
             <p className="modal-section-title">Bloqueo de horario</p>
 
-            {/* Cancha */}
             <div className="form-group">
               <label className="form-label">Cancha</label>
               <select
