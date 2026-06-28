@@ -218,22 +218,24 @@ export default function OwnerStats() {
         <div className="mtr-chart-card donut">
           <h3>Ingresos por Tipo</h3>
           <div className="mtr-donut-wrap">
-            <PieChart width={200} height={200}>
-              <Pie
-                data={incomeData}
-                cx="50%"
-                cy="50%"
-                innerRadius={62}
-                outerRadius={90}
-                dataKey="value"
-                startAngle={90}
-                endAngle={-270}
-              >
-                {incomeData.map((_, i) => (
-                  <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                ))}
-              </Pie>
-            </PieChart>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart>
+                <Pie
+                  data={incomeData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={62}
+                  outerRadius={90}
+                  dataKey="value"
+                  startAngle={90}
+                  endAngle={-270}
+                >
+                  {incomeData.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
             <div className="mtr-donut-center">
               <span className="mtr-donut-label">Total</span>
               <span className="mtr-donut-val">{fmt(m.totalIngresos || 0)}</span>
