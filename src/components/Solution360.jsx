@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTorneos } from '../services/torneosService';
+import { getTournaments } from '../services/tournamentsService';
 import './solutions.css';
 
 const MESES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
@@ -21,7 +21,7 @@ const Solutions = () => {
   const [torneos, setTorneos] = useState([]);
 
   useEffect(() => {
-    getTorneos({ estado: 'activo' })
+    getTournaments({ estado: 'activo' })
       .then(res => {
         const all = res.data.torneos || res.data || [];
         setTorneos(all.filter(t => t.estado === 'activo').slice(0, 2));
