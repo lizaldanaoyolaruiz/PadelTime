@@ -17,9 +17,9 @@ import Error404 from "./pages/Error404/Error404";
 import CourtDetail from "./pages/CourtDetail/CourtDetail";
 import ClientPanel from "./pages/ClientPanel/ClientPanel";
 import ManagementPanel from "./pages/SuperAdmin/ManagementPanel";
-import Torneos from "./pages/Torneos/Torneos";
+import Tournaments from "./pages/Tournaments/Tournaments";
 import Metrics from "./pages/Metrics/Metrics";
-import Nosotros from "./pages/we/we";
+import AboutUs from "./pages/AboutUs/AboutUs";
 import "./App.css";
 import { ScheduleManager } from "./pages/Schedule/ScheduleManager";
 
@@ -56,11 +56,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/nosotros" element={<AboutUs />} />
         <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route path="/complejos" element={<Complexes />} />
         <Route path="/schedule" element={<ScheduleManager />} />
-        <Route path="/torneos" element={<Torneos />} />
+        <Route path="/torneos" element={<Tournaments />} />
         <Route path="/404" element={<Error404 />} />
         <Route path="/cancha/:id" element={<CourtDetail />} />
         <Route
