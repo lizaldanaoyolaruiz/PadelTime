@@ -1,19 +1,18 @@
 .auth-wrapper {
-  position: fixed;
-  inset: 0;
+  min-height: 100vh;
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 16px;
-  overflow-y: auto;
+  padding: 40px 16px 24px;
   background: #050a14;
   z-index: 100;
   isolation: isolate;
+  position: relative;
 }
 
 .auth-wrapper::before {
   content: '';
-  position: absolute;
+  position: fixed;
   inset: 0;
   background-image: url('https://res.cloudinary.com/dabikk5ei/image/upload/v1780864371/screen_qjbrfd.png');
   background-size: cover;
@@ -31,7 +30,7 @@
   border-radius: 16px;
   padding: 32px 32px 28px;
   overflow: hidden;
-  margin: auto;
+  margin: 0 auto;
 }
 
 .auth-tabs {
@@ -111,6 +110,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  align-items: start;
 }
 
 .form-row .form-group {
@@ -284,15 +284,20 @@
   text-decoration: underline;
 }
 
-/* Login: nunca scrollea — el card siempre cabe en pantalla */
+/* Login: card centrado verticalmente */
 .auth-wrapper--login {
-  overflow: hidden;
+  align-items: center;
+  padding: 16px;
 }
 
 @media (max-width: 480px) {
   .auth-card {
     padding: 24px 20px 20px;
     border-radius: 12px;
+  }
+
+  .input-wrapper input {
+    font-size: 16px;
   }
 
   /* Login: reducir espaciados en mobile para que entre sin scroll */
