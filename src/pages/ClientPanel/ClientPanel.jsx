@@ -10,8 +10,6 @@ import api from '../../services/axios';
 import Swal from 'sweetalert2';
 import './ClientPanel.css';
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 const STATUS_MAP = {
   pending:   { label: 'Pendiente',  cls: 'pendiente'  },
   confirmed: { label: 'Confirmado', cls: 'confirmado'  },
@@ -94,7 +92,6 @@ export default function ClientPanel() {
 
   useEffect(() => { fetchBookings(); }, [fetchBookings]);
 
-  // Refresh bookings when user returns to this tab (e.g. after MP payment in another tab)
   useEffect(() => {
     const handleVisibility = () => { if (!document.hidden) fetchBookings(); };
     document.addEventListener('visibilitychange', handleVisibility);
@@ -104,8 +101,6 @@ export default function ClientPanel() {
   useEffect(() => {
     if (tab === 'favoritos') fetchFavoritos();
   }, [tab, fetchFavoritos]);
-
-  // ── Derived ─────────────────────────────────────────────────────────────────
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -120,8 +115,6 @@ export default function ClientPanel() {
   const filtered = filter === 'activos'
     ? bookings.filter(b => ['pending', 'confirmed'].includes(b.status))
     : bookings;
-
-  // ── Handlers ────────────────────────────────────────────────────────────────
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
@@ -403,15 +396,12 @@ export default function ClientPanel() {
     navigate('/');
   };
 
-  // ── Render ──────────────────────────────────────────────────────────────────
-
   return (
     <div className="cp-page">
       <Navbar />
 
       <div className="cp-layout">
 
-        {/* ── Left ── */}
         <aside className="cp-left">
 
           <div className="cp-card cp-profile">
@@ -485,7 +475,6 @@ export default function ClientPanel() {
           </div>
         </aside>
 
-        {/* ── Right ── */}
         <main className="cp-right">
 
           <div className="cp-tabs">
@@ -542,7 +531,6 @@ export default function ClientPanel() {
                         <div className="cp-booking-actions">
                           <span className={`cp-status ${st.cls}`}>{st.label}</span>
 
-                          {/* Editar — solo si está pendiente o confirmada */}
                           {['pending', 'confirmed'].includes(b.status) && (
                             <button
                               className="cp-edit-btn"
@@ -552,7 +540,6 @@ export default function ClientPanel() {
                             </button>
                           )}
 
-                          {/* Cancelar — solo si está pendiente o confirmada */}
                           {['pending', 'confirmed'].includes(b.status) && (
                             <button
                               className="cp-cancel-btn"
@@ -562,7 +549,6 @@ export default function ClientPanel() {
                             </button>
                           )}
 
-                          {/* Eliminar — solo si está cancelada, rechazada o finalizada */}
                           {['cancelled', 'rejected', 'completed'].includes(b.status) && (
                             <button
                               className="cp-delete-btn"
@@ -572,7 +558,6 @@ export default function ClientPanel() {
                             </button>
                           )}
 
-                          {/* Reservar de nuevo — si fue cancelada o finalizada */}
                           {['cancelled', 'completed', 'rejected'].includes(b.status) && b.complex?._id && (
                             <button
                               className="cp-rebook-btn"
@@ -643,7 +628,6 @@ export default function ClientPanel() {
 
       <Footer />
 
-      {/* ── Edit booking modal ── */}
       {editingBooking && (
         <div className="cp-overlay" onClick={closeEditBooking}>
           <div className="cp-modal" onClick={e => e.stopPropagation()}>
@@ -694,7 +678,6 @@ export default function ClientPanel() {
         </div>
       )}
 
-      {/* ── Edit modal ── */}
       {modal === 'edit' && (
         <div className="cp-overlay" onClick={closeModal}>
           <div className="cp-modal" onClick={e => e.stopPropagation()}>
@@ -732,7 +715,6 @@ export default function ClientPanel() {
         </div>
       )}
 
-      {/* ── Delete modal ── */}
       {modal === 'delete' && (
         <div className="cp-overlay" onClick={closeModal}>
           <div className="cp-modal cp-modal--sm" onClick={e => e.stopPropagation()}>
