@@ -27,6 +27,7 @@ export const createComplexByAdmin = (data) => api.post('/complexes/admin', data)
 export const getAdminComplexes    = (params) => api.get('/complexes/admin', { params });
 export const getAllComplexes    = ()       => api.get("/complexes/admin");
 
+export const toggleFeatured = (id)               => api.patch(`/complexes/${id}/featured`);
 export const approveComplex = (id)               => api.patch(`/complexes/${id}/approve`);
 export const rejectComplex  = (id, reason = "")  => api.patch(`/complexes/${id}/reject`, { reason });
 export const suspendComplex = (id, reason = "")  => api.patch(`/complexes/${id}/suspend`, { reason });
