@@ -134,7 +134,6 @@ export default function PadelBot() {
     <div className="pb-root">
       {open && (
         <div className="pb-widget" ref={widgetRef}>
-          {/* Header */}
           <div className="pb-header">
             <div className="pb-header-left">
               <div className="pb-avatar">
@@ -158,7 +157,6 @@ export default function PadelBot() {
             </div>
           </div>
 
-          {/* Messages */}
           <div className="pb-messages">
             {messages.map(msg => (
               <div key={msg.id} className={`pb-row pb-row--${msg.role}`}>
@@ -250,7 +248,6 @@ export default function PadelBot() {
             <div ref={bottomRef} />
           </div>
 
-          {/* Input */}
           <div className="pb-input-wrap">
             <input
               ref={inputRef}
@@ -273,7 +270,6 @@ export default function PadelBot() {
         </div>
       )}
 
-      {/* FAB trigger */}
       <button className={`pb-fab${open ? ' pb-fab--open' : ''}`} onClick={() => setOpen(o => !o)}>
         {open ? <X size={22} /> : <MessageCircle size={22} />}
       </button>

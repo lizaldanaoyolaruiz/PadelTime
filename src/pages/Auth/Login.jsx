@@ -58,13 +58,11 @@ export default function Login() {
   return (
     <div className="auth-wrapper auth-wrapper--login">
       <div className="auth-card">
-        {/* ── Tabs ── */}
         <div className="auth-tabs">
           <span className="auth-tab active">Iniciar Sesión</span>
           <Link to="/register" className="auth-tab">Crear Cuenta</Link>
         </div>
 
-        {/* ── Avatar ── */}
         <div className="auth-avatar">
           <div className="auth-avatar-icon">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
