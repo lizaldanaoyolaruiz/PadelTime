@@ -8,6 +8,7 @@ import Footer from '../../components/Footer';
 import useAuthStore from '../../store/authStore';
 import api from '../../services/axios';
 import Swal from 'sweetalert2';
+import { confirmLogout } from '../../utils/alerts';
 import './ClientPanel.css';
 
 const STATUS_MAP = {
@@ -379,19 +380,8 @@ export default function ClientPanel() {
   };
 
   const handleLogout = async () => {
-    const confirm = await Swal.fire({
-      title: '¿Cerrar sesión?',
-      text: 'Vas a salir de tu cuenta.',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, cerrar sesión',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#ef4444',
-      cancelButtonColor: '#334155',
-      background: '#0e1c42',
-      color: '#f8fafc',
-    });
-    if (!confirm.isConfirmed) return;
+    const result = await confirmLogout();
+    if (!result.isConfirmed) return;
     logout();
     navigate('/');
   };
