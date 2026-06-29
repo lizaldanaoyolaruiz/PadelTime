@@ -58,57 +58,81 @@ La aplicación permite a usuarios buscar complejos de pádel, consultar disponib
 ## 📁 Estructura del Proyecto
 
 ```
-PadelTime/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   ├── common/
-│   │   ├── layout/
-│   │   └── ui/
-│   ├── pages/
-│   │   ├── public/
-│   │   │   ├── Home/
-│   │   │   │   ├── Home.jsx
-│   │   │   │   └── Home.css
-│   │   │   ├── ComplexDetail/
-│   │   │   │   ├── ComplexDetail.jsx
-│   │   │   │   └── ComplexDetail.css
-│   │   │   └── CourtDetail/
-│   │   │       ├── CourtDetail.jsx
-│   │   │       └── CourtDetail.css
-│   │   ├── auth/
-│   │   │   ├── Login/
-│   │   │   └── Register/
-│   │   ├── client/
-│   │   │   ├── Dashboard/
-│   │   │   └── Reservations/
-│   │   ├── owner/
-│   │   │   ├── Dashboard/
-│   │   │   ├── Complex/
-│   │   │   ├── Courts/
-│   │   │   ├── Tournaments/
-│   │   │   └── Calendar/
-│   │   └── superadmin/
-│   │       ├── Dashboard/
-│   │       ├── Complexes/
-│   │       └── Users/
-│   ├── store/
-│   │   └── useAuthStore.js
-│   ├── services/
-│   │   └── api.js
-│   ├── router/
-│   │   └── AppRouter.jsx
-│   └── utils/
-│       ├── hooks/
-│       ├── schemas/
-│       ├── constants/
-│       └── validations/
-├── .env
-├── .gitignore
+📁 FRONTEND — PadelTime
+│
 ├── index.html
 ├── vite.config.js
-└── package.json
+├── eslint.config.js
+├── vercel.json
+├── package.json
+│
+└── src/
+    ├── main.jsx
+    ├── App.jsx
+    ├── index.css
+    │
+    ├── assets/
+    │
+    ├── components/
+    │   ├── ClubsSection.jsx
+    │   ├── CounterNumber.jsx
+    │   ├── FeaturedClubs.jsx
+    │   ├── Footer.jsx
+    │   ├── Hero.jsx
+    │   ├── Navbar.jsx
+    │   ├── PadelBot.jsx
+    │   ├── Solution360.jsx
+    │   ├── TournamentsSection.jsx
+    │   ├── WeeklyCalendar/
+    │   └── ui/
+    │
+    ├── config/
+    │   └── axios.js
+    │
+    ├── constants/
+    │   └── cities.js
+    │
+    ├── pages/
+    │   ├── Auth/           → Login, Register
+    │   ├── Home/
+    │   ├── Complexes/
+    │   ├── ClubDetail/
+    │   ├── CourtDetail/
+    │   ├── BookingConfirmation/
+    │   ├── BookingSuccess/
+    │   ├── Tournaments/
+    │   ├── Schedule/
+    │   ├── ClientPanel/
+    │   ├── Metrics/
+    │   ├── Owner/
+    │   │   └── components/     → AgendaTable, CourtModal, MyCourts, Reports...
+    │   ├── SuperAdmin/
+    │   │   └── components/     → ComplexTable, DetailDrawer, EditComplexModal...
+    │   ├── AboutUs/
+    │   ├── Contact/
+    │   └── Error404/
+    │
+    ├── services/
+    │   ├── authService.js
+    │   ├── complexService.js
+    │   ├── courtService.js
+    │   ├── reservationService.js
+    │   ├── reviewService.js
+    │   ├── scheduleService.js
+    │   ├── tournamentsService.js
+    │   ├── metricsService.js
+    │   └── favoriteService.js
+    │
+    ├── store/
+    │   ├── authStore.js
+    │   └── scheduleStore.js
+    │
+    └── utils/
+        ├── alerts.js
+        ├── authValidations.js
+        ├── timeHelpers.js
+        └── toasts.js
+
 ```
 
 ---
