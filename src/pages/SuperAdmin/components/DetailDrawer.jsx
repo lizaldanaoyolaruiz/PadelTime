@@ -3,6 +3,7 @@ import {
   X, MapPin, Calendar, Users, Mail, Phone, Building2,
   CheckCircle, XCircle, PauseCircle, Star,
 } from 'lucide-react';
+import Swal from 'sweetalert2';
 import { StatusBadge }   from './StatusBadge';
 import { ComplexAvatar } from './ComplexAvatar';
 import { formatDate }    from '../utils/utils';
@@ -13,6 +14,27 @@ export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
   const [loadingFeatured, setLoadingFeatured] = useState(false);
 
   const handleFeatured = async () => {
+    if (featured) {
+      const result = await Swal.fire({
+        title: '¿Quitar destacado?',
+        text: `"${complex.name}" dejará de aparecer como complejo destacado en la página principal.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, quitar',
+        cancelButtonText: 'Cancelar',
+        background: '#1E293B',
+        color: '#F8FAFC',
+        iconColor: '#F59E0B',
+        confirmButtonColor: '#BEF264',
+        cancelButtonColor: '#334155',
+        customClass: {
+          confirmButton: 'swal-confirm-dark',
+          cancelButton: 'swal-cancel-dark',
+        },
+      });
+      if (!result.isConfirmed) return;
+    }
+
     try {
       setLoadingFeatured(true);
       const res = await toggleFeatured(complex._id);
