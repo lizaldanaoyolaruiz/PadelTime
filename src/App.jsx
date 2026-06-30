@@ -57,8 +57,22 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/nosotros" element={<AboutUs />} />
-        <Route path="/complejo/:id" element={<ClubDetail />} />
-        <Route path="/complejos" element={<Complexes />} />
+        <Route
+          path="/complejo/:id"
+          element={
+            <ProtectedRoute>
+              <ClubDetail />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complejos"
+          element={
+            <ProtectedRoute>
+              <Complexes />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/schedule" element={<ScheduleManager />} />
         <Route path="/torneos" element={<Tournaments />} />
         <Route path="/404" element={<Error404 />} />
@@ -87,7 +101,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/Metrics" element={<Metrics />} />
+        <Route
+          path="/Metrics"
+          element={
+            <ProtectedRoute>
+              <Metrics />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/superadmin/*"
