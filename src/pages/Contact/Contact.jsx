@@ -30,7 +30,7 @@ export default function ContactPage() {
     setStatus({ type: null, message: '' });
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
