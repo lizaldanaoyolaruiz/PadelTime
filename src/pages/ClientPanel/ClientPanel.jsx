@@ -471,7 +471,6 @@ export default function ClientPanel() {
             {[
               { id: 'reservas',    label: 'Mis Reservas'        },
               { id: 'favoritos',   label: 'Mis Favoritos'       },
-              { id: 'facturacion', label: 'Datos de Facturación'},
             ].map(t => (
               <button
                 key={t.id}
@@ -609,9 +608,6 @@ export default function ClientPanel() {
                 </div>
               )}
             </>
-          )}
-          {tab === 'facturacion' && (
-            <div className="cp-coming"><p>Tus datos de facturación aparecerán aquí.</p></div>
           )}
         </main>
       </div>

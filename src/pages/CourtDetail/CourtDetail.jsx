@@ -100,9 +100,10 @@ const CourtDetail = () => {
               <svg viewBox="0 0 24 24" fill="none" stroke="#bef264" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="24" height="24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
               <span className="cd-spec-label">PRECIO / HORA</span>
               <span className="cd-spec-value">
-                {cancha.pricePerHour
-                  ? `$${Number(cancha.pricePerHour).toLocaleString('es-AR')}`
-                  : '—'}
+                {(() => {
+                  const precio = cancha.pricePerHour || cancha.complex?.price || 0;
+                  return precio ? `$${Number(precio).toLocaleString('es-AR')}` : '—';
+                })()}
               </span>
             </div>
             <div className="cd-spec-card">
@@ -163,7 +164,7 @@ const CourtDetail = () => {
         <div className="cd-action-bottom" style={{ marginBottom: '4rem' }}>
           <button
             className="cd-btn-play"
-            onClick={() => navigate(`/complejo/${cancha.complex}`)}
+            onClick={() => navigate(`/complejo/${cancha.complex?._id || cancha.complex}`)}
           >
             JUGAR EN ESTA CANCHA
           </button>
