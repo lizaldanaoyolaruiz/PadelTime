@@ -1,11 +1,11 @@
-import { useState, useMemo, useEffect } from 'react';
-import { MapPin, Star, ChevronDown } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import AdvancedFilters from './AdvancedFilters';
-import { getPublicComplexes } from '../../services/complexService';
-import './complexes.css';
+import { useState, useMemo, useEffect } from "react";
+import { MapPin, Star, ChevronDown } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import AdvancedFilters from "./AdvancedFilters";
+import { getPublicComplexes } from "../../services/complexService";
+import "./complexes.css";
 
 const mapComplex = (c) => ({
   id: c._id,
@@ -16,7 +16,7 @@ const mapComplex = (c) => ({
   surface: c.courtTypes || [],
   rating: c.ratingAverage || 0,
   isFeatured: (c.ratingAverage || 0) >= 4.5 && (c.ratingCount || 0) > 0,
-  status: c.status || c.estado || 'pendiente',
+  status: c.status || c.estado || "pendiente",
   features: c.features || [],
   price: c.precioPorHora || c.price || 0,
 });
@@ -27,9 +27,12 @@ const ComplexCard = ({ complex }) => (
   <article className="complex-card">
     <div className="card-image-wrapper">
       <img
-        src={complex.image || 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png'}
+        src={
+          complex.image ||
+          "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png"
+        }
         alt={complex.name}
-        className={`card-img${complex.image ? '' : ' card-img--logo'}`}
+        className={`card-img${complex.image ? "" : " card-img--logo"}`}
         loading="lazy"
       />
       {complex.isFeatured && <span className="badge-top-rated">TOP RATED</span>}
@@ -39,7 +42,7 @@ const ComplexCard = ({ complex }) => (
         <h3 className="card-name">{complex.name}</h3>
         <span className="card-rating">
           <Star size={14} fill="currentColor" />
-          {complex.rating > 0 ? complex.rating.toFixed(1) : '—'}
+          {complex.rating > 0 ? complex.rating.toFixed(1) : "—"}
         </span>
       </div>
       <p className="card-location">
@@ -48,13 +51,17 @@ const ComplexCard = ({ complex }) => (
       </p>
       {complex.price > 0 && (
         <p className="card-price">
-          <span className="card-price-amount">${complex.price.toLocaleString('es-AR')}</span>
+          <span className="card-price-amount">
+            ${complex.price.toLocaleString("es-AR")}
+          </span>
           <span className="card-price-label">/hr</span>
         </p>
       )}
       <div className="card-features">
         {complex.features.map((f) => (
-          <span key={f} className="feature-tag">{f}</span>
+          <span key={f} className="feature-tag">
+            {f}
+          </span>
         ))}
       </div>
       <Link to={`/complejo/${complex.id}`} className="btn-disponibilidad">
@@ -69,8 +76,10 @@ const Complexes = () => {
   const [searchParams] = useSearchParams();
   const [complexes, setComplexes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [ciudadSeleccionada, setCiudadSeleccionada] = useState(searchParams.get('ciudad') || '');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [ciudadSeleccionada, setCiudadSeleccionada] = useState(
+    searchParams.get("ciudad") || "",
+  );
   const [precioMax, setPrecioMax] = useState(PRECIO_INICIAL);
   const [tiposSeleccionados, setTiposSeleccionados] = useState([]);
 
@@ -78,7 +87,8 @@ const Complexes = () => {
     const cargarComplejos = async () => {
       try {
         const res = await getPublicComplexes();
-        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
+        const data =
+          res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
         setComplexes(data.map(mapComplex));
       } catch {
         setComplexes([]);
@@ -91,8 +101,8 @@ const Complexes = () => {
 
   const tiposDisponibles = useMemo(() => {
     const tipos = [];
-    complexes.forEach(c => {
-      c.surface.forEach(tipo => {
+    complexes.forEach((c) => {
+      c.surface.forEach((tipo) => {
         if (!tipos.includes(tipo)) tipos.push(tipo);
       });
     });
@@ -103,19 +113,26 @@ const Complexes = () => {
     return complexes.filter((c) => {
       const q = searchQuery.toLowerCase();
       const matchesSearch = !q || c.name.toLowerCase().includes(q);
-      const matchesCiudad = !ciudadSeleccionada || (c.city || '') === ciudadSeleccionada;
+      const matchesCiudad =
+        !ciudadSeleccionada || (c.city || "") === ciudadSeleccionada;
       const matchesPrice = c.price <= 0 || c.price <= precioMax;
       const matchesTipo =
         tiposSeleccionados.length === 0 ||
         c.surface.length === 0 ||
-        tiposSeleccionados.some(t => c.surface.includes(t));
+        tiposSeleccionados.some((t) => c.surface.includes(t));
       return matchesSearch && matchesCiudad && matchesPrice && matchesTipo;
     });
-  }, [complexes, searchQuery, ciudadSeleccionada, precioMax, tiposSeleccionados]);
+  }, [
+    complexes,
+    searchQuery,
+    ciudadSeleccionada,
+    precioMax,
+    tiposSeleccionados,
+  ]);
 
   const filteredFeatured = useMemo(
     () => filteredComplexes.filter((c) => c.isFeatured),
-    [filteredComplexes]
+    [filteredComplexes],
   );
 
   const filtrosActivos = useMemo(() => {
@@ -129,12 +146,12 @@ const Complexes = () => {
 
   const toggleTipo = (tipo) =>
     setTiposSeleccionados((prev) =>
-      prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo]
+      prev.includes(tipo) ? prev.filter((t) => t !== tipo) : [...prev, tipo],
     );
 
   const resetFiltros = () => {
-    setSearchQuery('');
-    setCiudadSeleccionada('');
+    setSearchQuery("");
+    setCiudadSeleccionada("");
     setPrecioMax(PRECIO_INICIAL);
     setTiposSeleccionados([]);
   };
@@ -169,11 +186,16 @@ const Complexes = () => {
 
         <div className="catalog-main">
           {filteredFeatured.length > 0 && (
-            <section className="catalog-section featured-section" id="destacados">
+            <section
+              className="catalog-section featured-section"
+              id="destacados"
+            >
               <div className="section-header">
                 <div>
                   <h2 className="section-title">Complejos Destacados</h2>
-                  <p className="section-subtitle">Seleccionados por su excelencia y calidad.</p>
+                  <p className="section-subtitle">
+                    Seleccionados por su excelencia y calidad.
+                  </p>
                 </div>
               </div>
               <div className="complexes-grid">
@@ -189,8 +211,9 @@ const Complexes = () => {
               <div>
                 <h2 className="section-title">Catálogo Completo</h2>
                 <p className="section-subtitle">
-                  {filteredComplexes.length} complejo{filteredComplexes.length !== 1 ? 's' : ''}{' '}
-                  disponible{filteredComplexes.length !== 1 ? 's' : ''}
+                  {filteredComplexes.length} complejo
+                  {filteredComplexes.length !== 1 ? "s" : ""} disponible
+                  {filteredComplexes.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </div>

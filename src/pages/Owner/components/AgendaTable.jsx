@@ -4,7 +4,7 @@ function SlotCell({ reserva, courtId, horario, onSlotClick }) {
       <div
         className="slot slot--libre"
         onClick={() => onSlotClick?.(courtId, horario)}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
       >
         <span>Turno Libre</span>
         <span className="slot-sub">Click para reservar</span>
@@ -13,20 +13,25 @@ function SlotCell({ reserva, courtId, horario, onSlotClick }) {
   }
 
   const cls =
-    reserva.status === 'confirmed' ? 'slot--confirmado'
-    : reserva.status === 'pending'  ? 'slot--pendiente'
-    : 'slot--libre';
+    reserva.status === "confirmed"
+      ? "slot--confirmado"
+      : reserva.status === "pending"
+        ? "slot--pendiente"
+        : "slot--libre";
 
-  const nombre = reserva.player?.name ??
+  const nombre =
+    reserva.player?.name ??
     (reserva.jugadorExterno
       ? `${reserva.jugadorExterno.nombre} ${reserva.jugadorExterno.apellido}`
-      : '—');
+      : "—");
 
   return (
     <div className={`slot ${cls}`}>
       <span className="slot-name">{nombre}</span>
       <span className="slot-sub">
-        {reserva.status === 'confirmed' ? 'Confirmado' : 'Esperando confirmación'}
+        {reserva.status === "confirmed"
+          ? "Confirmado"
+          : "Esperando confirmación"}
       </span>
     </div>
   );
@@ -37,9 +42,18 @@ export default function AgendaTable({ canchas, agenda, onSlotClick }) {
     return (
       <div className="agenda-card">
         <div className="agenda-header">
-          <h3 className="pg-card-title" style={{ margin: 0 }}>Agenda de Canchas - Hoy</h3>
+          <h3 className="pg-card-title" style={{ margin: 0 }}>
+            Agenda de Canchas - Hoy
+          </h3>
         </div>
-        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)', padding: '24px 0', textAlign: 'center' }}>
+        <p
+          style={{
+            color: "var(--color-text-muted)",
+            fontSize: "var(--text-sm)",
+            padding: "24px 0",
+            textAlign: "center",
+          }}
+        >
           No hay canchas configuradas aún.
         </p>
       </div>
@@ -49,7 +63,9 @@ export default function AgendaTable({ canchas, agenda, onSlotClick }) {
   return (
     <div className="agenda-card">
       <div className="agenda-header">
-        <h3 className="pg-card-title" style={{ margin: 0 }}>Agenda de Canchas - Hoy</h3>
+        <h3 className="pg-card-title" style={{ margin: 0 }}>
+          Agenda de Canchas - Hoy
+        </h3>
         <div className="agenda-header-actions">
           <button className="btn-icon-text">Filtrar</button>
           <button className="btn-icon-text">Imprimir</button>
@@ -60,7 +76,7 @@ export default function AgendaTable({ canchas, agenda, onSlotClick }) {
           <thead>
             <tr>
               <th>Horario</th>
-              {canchas.map(c => (
+              {canchas.map((c) => (
                 <th key={c._id}>
                   <span className="cancha-name">{c.name?.toUpperCase()}</span>
                   <span className="cancha-sub">{c.type}</span>
@@ -69,10 +85,10 @@ export default function AgendaTable({ canchas, agenda, onSlotClick }) {
             </tr>
           </thead>
           <tbody>
-            {agenda.map(fila => (
+            {agenda.map((fila) => (
               <tr key={fila.horario}>
                 <td className="horario-cell">{fila.horario}</td>
-                {canchas.map(c => (
+                {canchas.map((c) => (
                   <td key={c._id}>
                     <SlotCell
                       reserva={fila[c._id]}

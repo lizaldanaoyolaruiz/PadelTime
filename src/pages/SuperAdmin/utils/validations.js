@@ -1,8 +1,13 @@
-
 const NAV_KEYS = [
-  'Backspace', 'Delete', 'Tab',
-  'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
-  'Home', 'End',
+  "Backspace",
+  "Delete",
+  "Tab",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+  "Home",
+  "End",
 ];
 const isCtrl = (e) => e.ctrlKey || e.metaKey || e.altKey;
 

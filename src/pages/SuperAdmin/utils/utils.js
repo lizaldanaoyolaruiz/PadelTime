@@ -1,4 +1,4 @@
-import { AVATAR_COLORS } from './constants';
+import { AVATAR_COLORS } from "./constants";
 
 export function avatarColor(name) {
   let h = 0;
@@ -7,7 +7,7 @@ export function avatarColor(name) {
 }
 
 export function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  const [y, m, d] = dateStr.split('-');
+  if (!dateStr) return "—";
+  const [y, m, d] = dateStr.split("-");
   return `${d}/${m}/${y}`;
 }

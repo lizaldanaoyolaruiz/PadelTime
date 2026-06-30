@@ -1,11 +1,9 @@
-/* ── Wrapper ─────────────────────────────────────────────────────────────── */
 .mp-wrapper {
   background: #08101e;
   color: var(--color-text-base);
   min-height: 100%;
 }
 
-/* ── Top bar ─────────────────────────────────────────────────────────────── */
 .mp-topbar {
   display: flex;
   align-items: center;
@@ -116,7 +114,6 @@
   letter-spacing: .5px;
 }
 
-/* ── Content area ────────────────────────────────────────────────────────── */
 .mp-content {
   padding: 24px 28px 32px;
   display: flex;
@@ -124,7 +121,6 @@
   gap: 24px;
 }
 
-/* ── Banner ──────────────────────────────────────────────────────────────── */
 .mp-banner {
   background: linear-gradient(135deg, #0f1f3d 0%, #12244a 100%);
   border: 1px solid rgba(255,255,255,.08);

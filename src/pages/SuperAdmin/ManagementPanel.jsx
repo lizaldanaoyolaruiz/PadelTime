@@ -1,31 +1,48 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  Search, Bell, Settings, Building2, CalendarDays, Users,
-  DollarSign, Pencil, Trash2,
-  ChevronLeft, ChevronRight, X, UserCircle, Filter, Download,
-} from 'lucide-react';
-import api from '../../services/axios';
-import useAuthStore from '../../store/authStore';
-import './ManagementPanel.css';
+  Search,
+  Bell,
+  Settings,
+  Building2,
+  CalendarDays,
+  Users,
+  DollarSign,
+  Pencil,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  UserCircle,
+  Filter,
+  Download,
+} from "lucide-react";
+import api from "../../services/axios";
+import useAuthStore from "../../store/authStore";
+import "./ManagementPanel.css";
 
 const PER_PAGE = 10;
 
 export default function ManagementPanel({ triggerCreate = 0 }) {
   const { user: authUser } = useAuthStore();
 
-  const [owners, setOwners]           = useState([]);
-  const [stats, setStats]             = useState(null);
-  const [loading, setLoading]         = useState(true);
-  const [search, setSearch]           = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [page, setPage]               = useState(1);
+  const [owners, setOwners] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [page, setPage] = useState(1);
 
-  const [modal, setModal]             = useState(null);
+  const [modal, setModal] = useState(null);
   const [selectedOwner, setSelectedOwner] = useState(null);
   const [detailOwner, setDetailOwner] = useState(null);
-  const [form, setForm]               = useState({ name: '', email: '', password: '', location: '' });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    location: "",
+  });
   const [formLoading, setFormLoading] = useState(false);
-  const [formError, setFormError]     = useState('');
+  const [formError, setFormError] = useState("");
 
   const prevTriggerRef = useRef(0);
 
@@ -34,11 +51,11 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
   const fetchOwners = useCallback(async () => {
     try {
       setLoading(true);
-      const res  = await api.get('/admin/users');
-      const all  = res.data.users || res.data || [];
-      setOwners(all.filter(u => u.role !== 'superadmin'));
+      const res = await api.get("/admin/users");
+      const all = res.data.users || res.data || [];
+      setOwners(all.filter((u) => u.role !== "superadmin"));
     } catch (err) {
-      console.error('Error cargando owners:', err);
+      console.error("Error cargando owners:", err);
     } finally {
       setLoading(false);
     }
@@ -46,14 +63,17 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
   const fetchStats = useCallback(async () => {
     try {
-      const res = await api.get('/admin/stats');
+      const res = await api.get("/admin/stats");
       setStats(res.data);
     } catch {
       setStats({});
     }
   }, []);
 
-  useEffect(() => { fetchOwners(); fetchStats(); }, [fetchOwners, fetchStats]);
+  useEffect(() => {
+    fetchOwners();
+    fetchStats();
+  }, [fetchOwners, fetchStats]);
 
   useEffect(() => {
     if (triggerCreate !== prevTriggerRef.current) {
@@ -62,57 +82,69 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     }
   }, [triggerCreate]);
 
-  const isActive = (o) => o.status === 'approved';
+  const isActive = (o) => o.status === "approved";
 
-  const filtered = owners.filter(o => {
+  const filtered = owners.filter((o) => {
     const term = search.toLowerCase();
-    const matchSearch = !term ||
-      (o.name  || '').toLowerCase().includes(term) ||
-      (o.email || '').toLowerCase().includes(term);
+    const matchSearch =
+      !term ||
+      (o.name || "").toLowerCase().includes(term) ||
+      (o.email || "").toLowerCase().includes(term);
     const matchStatus =
-      filterStatus === 'all'      ? true :
-      filterStatus === 'active'   ? isActive(o) :
-      !isActive(o);
+      filterStatus === "all"
+        ? true
+        : filterStatus === "active"
+          ? isActive(o)
+          : !isActive(o);
     return matchSearch && matchStatus;
   });
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
-  const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  const closeModal = () => { setModal(null); setSelectedOwner(null); setFormError(''); };
+  const closeModal = () => {
+    setModal(null);
+    setSelectedOwner(null);
+    setFormError("");
+  };
 
   const openCreate = () => {
-    setForm({ name: '', email: '', password: '', location: '' });
-    setFormError('');
-    setModal('create');
+    setForm({ name: "", email: "", password: "", location: "" });
+    setFormError("");
+    setModal("create");
   };
 
   const openEdit = (owner) => {
     setSelectedOwner(owner);
     setForm({
-      name:     owner.name     || '',
-      email:    owner.email    || '',
-      password: '',
-      location: owner.location || owner.city || '',
+      name: owner.name || "",
+      email: owner.email || "",
+      password: "",
+      location: owner.location || owner.city || "",
     });
-    setFormError('');
-    setModal('edit');
+    setFormError("");
+    setModal("edit");
   };
 
-  const openDelete = (owner) => { setSelectedOwner(owner); setModal('delete'); };
+  const openDelete = (owner) => {
+    setSelectedOwner(owner);
+    setModal("delete");
+  };
 
   const handleCreate = async () => {
     if (!form.name || !form.email || !form.password) {
-      setFormError('Nombre, email y contraseña son obligatorios.');
+      setFormError("Nombre, email y contraseña son obligatorios.");
       return;
     }
     try {
       setFormLoading(true);
-      const res = await api.post('/admin/users', { ...form, role: 'admin' });
-      setOwners(prev => [res.data.user || res.data, ...prev]);
+      const res = await api.post("/admin/users", { ...form, role: "admin" });
+      setOwners((prev) => [res.data.user || res.data, ...prev]);
       closeModal();
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Error al crear el propietario.');
+      setFormError(
+        err.response?.data?.message || "Error al crear el propietario.",
+      );
     } finally {
       setFormLoading(false);
     }
@@ -120,19 +152,27 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
   const handleEdit = async () => {
     if (!form.name || !form.email) {
-      setFormError('Nombre y email son obligatorios.');
+      setFormError("Nombre y email son obligatorios.");
       return;
     }
     try {
       setFormLoading(true);
-      const payload = { name: form.name, email: form.email, location: form.location };
+      const payload = {
+        name: form.name,
+        email: form.email,
+        location: form.location,
+      };
       if (form.password) payload.password = form.password;
       const res = await api.put(`/admin/users/${selectedOwner._id}`, payload);
       const updated = res.data.user || res.data;
-      setOwners(prev => prev.map(o => o._id === selectedOwner._id ? { ...o, ...updated } : o));
+      setOwners((prev) =>
+        prev.map((o) =>
+          o._id === selectedOwner._id ? { ...o, ...updated } : o,
+        ),
+      );
       closeModal();
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Error al actualizar.');
+      setFormError(err.response?.data?.message || "Error al actualizar.");
     } finally {
       setFormLoading(false);
     }
@@ -142,70 +182,86 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     try {
       setFormLoading(true);
       await api.delete(`/admin/users/${selectedOwner._id}`);
-      setOwners(prev => prev.filter(o => o._id !== selectedOwner._id));
+      setOwners((prev) => prev.filter((o) => o._id !== selectedOwner._id));
       closeModal();
     } catch (err) {
-      setFormError(err.response?.data?.message || 'Error al eliminar.');
+      setFormError(err.response?.data?.message || "Error al eliminar.");
     } finally {
       setFormLoading(false);
     }
   };
 
   const handleToggleStatus = async (owner) => {
-    const newStatus = isActive(owner) ? 'suspended' : 'approved';
+    const newStatus = isActive(owner) ? "suspended" : "approved";
     try {
-      await api.patch(`/admin/users/${owner._id}/status`, { status: newStatus });
-      setOwners(prev =>
-        prev.map(o => o._id === owner._id ? { ...o, status: newStatus } : o)
+      await api.patch(`/admin/users/${owner._id}/status`, {
+        status: newStatus,
+      });
+      setOwners((prev) =>
+        prev.map((o) =>
+          o._id === owner._id ? { ...o, status: newStatus } : o,
+        ),
       );
     } catch (err) {
-      console.error('Error cambiando estado:', err);
+      console.error("Error cambiando estado:", err);
     }
   };
 
   const formatDate = (d) => {
-    if (!d) return '—';
-    return new Date(d).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    if (!d) return "—";
+    return new Date(d).toLocaleDateString("es-ES", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   const activeCount = owners.filter(isActive).length;
 
   const statCards = [
     {
-      label: 'TOTAL COMPLEJOS',
-      value: stats?.totalComplexes ?? '—',
-      Icon: Building2, color: '#60A5FA',
+      label: "TOTAL COMPLEJOS",
+      value: stats?.totalComplexes ?? "—",
+      Icon: Building2,
+      color: "#60A5FA",
     },
     {
-      label: 'RESERVAS MES',
+      label: "RESERVAS MES",
       value: stats?.monthlyReservations
-        ? stats.monthlyReservations.toLocaleString('es-ES')
-        : '—',
-      Icon: CalendarDays, color: '#34D399',
+        ? stats.monthlyReservations.toLocaleString("es-ES")
+        : "—",
+      Icon: CalendarDays,
+      color: "#34D399",
     },
     {
-      label: 'USUARIOS ACTIVOS',
+      label: "USUARIOS ACTIVOS",
       value: stats?.activeUsers
         ? `${(stats.activeUsers / 1000).toFixed(1)}k`
         : activeCount,
-      Icon: Users, color: '#94A3B8',
+      Icon: Users,
+      color: "#94A3B8",
     },
     {
-      label: 'REVENUE ANUAL',
+      label: "REVENUE ANUAL",
       value: stats?.annualRevenue
         ? `$${(stats.annualRevenue / 1000).toFixed(1)}k`
-        : '—',
-      Icon: DollarSign, color: '#A78BFA',
+        : "—",
+      Icon: DollarSign,
+      color: "#A78BFA",
     },
   ];
 
   const initials = authUser?.name
-    ? authUser.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
-    : 'SA';
+    ? authUser.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "SA";
 
   return (
     <div className="mp-wrapper">
-
       <header className="mp-topbar">
         <div className="mp-search">
           <Search size={15} />
@@ -213,16 +269,25 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
             type="text"
             placeholder="Buscar propietarios, complejos..."
             value={search}
-            onChange={e => { setSearch(e.target.value); setPage(1); }}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
           />
         </div>
         <div className="mp-topbar-right">
-          <button className="mp-icon-btn" title="Notificaciones"><Bell size={17} /></button>
-          <button className="mp-icon-btn" title="Configuración"><Settings size={17} /></button>
+          <button className="mp-icon-btn" title="Notificaciones">
+            <Bell size={17} />
+          </button>
+          <button className="mp-icon-btn" title="Configuración">
+            <Settings size={17} />
+          </button>
           <div className="mp-topbar-divider" />
           <div className="mp-topbar-user">
             <div className="mp-topbar-user-text">
-              <span className="mp-topbar-name">{authUser?.name || 'Admin Master'}</span>
+              <span className="mp-topbar-name">
+                {authUser?.name || "Admin Master"}
+              </span>
               <span className="mp-topbar-role">SUPER ADMIN</span>
             </div>
             <div className="mp-topbar-avatar">{initials}</div>
@@ -231,12 +296,14 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
       </header>
 
       <div className="mp-content">
-
         <div className="mp-stats-grid">
           {statCards.map(({ label, value, Icon, color }) => (
             <div key={label} className="mp-stat-card">
               <div className="mp-stat-top">
-                <div className="mp-stat-icon" style={{ background: `${color}22`, color }}>
+                <div
+                  className="mp-stat-icon"
+                  style={{ background: `${color}22`, color }}
+                >
                   <Icon size={20} />
                 </div>
               </div>
@@ -256,7 +323,10 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
               <select
                 className="mp-select"
                 value={filterStatus}
-                onChange={e => { setFilterStatus(e.target.value); setPage(1); }}
+                onChange={(e) => {
+                  setFilterStatus(e.target.value);
+                  setPage(1);
+                }}
               >
                 <option value="all">Todos los Estados</option>
                 <option value="active">Activos</option>
@@ -286,47 +356,63 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginated.map(owner => (
+                  {paginated.map((owner) => (
                     <tr key={owner._id}>
                       <td>
                         <div className="mp-owner-cell">
                           <div className="mp-owner-avatar">
-                            {owner.avatar
-                              ? <img src={owner.avatar} alt={owner.name} />
-                              : <UserCircle size={30} />}
+                            {owner.avatar ? (
+                              <img src={owner.avatar} alt={owner.name} />
+                            ) : (
+                              <UserCircle size={30} />
+                            )}
                           </div>
                           <div>
                             <p className="mp-owner-name">{owner.name}</p>
-                            <p className="mp-owner-loc">{owner.location || owner.city || '—'}</p>
+                            <p className="mp-owner-loc">
+                              {owner.location || owner.city || "—"}
+                            </p>
                           </div>
                         </div>
                       </td>
                       <td className="mp-cell-muted">{owner.email}</td>
-                      <td className="mp-cell-muted">{formatDate(owner.createdAt)}</td>
+                      <td className="mp-cell-muted">
+                        {formatDate(owner.createdAt)}
+                      </td>
                       <td>
                         <span className="mp-complexes-pill">
                           {owner.complexesCount ?? owner.complexes?.length ?? 0}
                         </span>
                       </td>
                       <td>
-                        <span className={`mp-status-badge ${isActive(owner) ? 'active' : 'suspended'}`}>
+                        <span
+                          className={`mp-status-badge ${isActive(owner) ? "active" : "suspended"}`}
+                        >
                           <span className="mp-dot" />
-                          {isActive(owner) ? 'ACTIVO' : 'SUSPENDIDO'}
+                          {isActive(owner) ? "ACTIVO" : "SUSPENDIDO"}
                         </span>
                       </td>
                       <td>
                         <div className="mp-actions">
-                          <button className="mp-action-icon" title="Editar" onClick={() => openEdit(owner)}>
+                          <button
+                            className="mp-action-icon"
+                            title="Editar"
+                            onClick={() => openEdit(owner)}
+                          >
                             <Pencil size={14} />
                           </button>
-                          <button className="mp-action-icon danger" title="Eliminar" onClick={() => openDelete(owner)}>
+                          <button
+                            className="mp-action-icon danger"
+                            title="Eliminar"
+                            onClick={() => openDelete(owner)}
+                          >
                             <Trash2 size={14} />
                           </button>
                           <button
-                            className={`mp-action-btn ${isActive(owner) ? 'suspend' : 'activate'}`}
+                            className={`mp-action-btn ${isActive(owner) ? "suspend" : "activate"}`}
                             onClick={() => handleToggleStatus(owner)}
                           >
-                            {isActive(owner) ? 'Suspender' : 'Activar'}
+                            {isActive(owner) ? "Suspender" : "Activar"}
                           </button>
                         </div>
                       </td>
@@ -343,23 +429,35 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {paginated.map(owner => (
-                    <tr key={owner._id} onClick={() => setDetailOwner(owner)} style={{ cursor: 'pointer' }}>
+                  {paginated.map((owner) => (
+                    <tr
+                      key={owner._id}
+                      onClick={() => setDetailOwner(owner)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td>
                         <div className="mp-owner-cell">
                           <div className="mp-owner-avatar">
-                            {owner.avatar ? <img src={owner.avatar} alt={owner.name} /> : <UserCircle size={30} />}
+                            {owner.avatar ? (
+                              <img src={owner.avatar} alt={owner.name} />
+                            ) : (
+                              <UserCircle size={30} />
+                            )}
                           </div>
                           <div>
                             <p className="mp-owner-name">{owner.name}</p>
-                            <p className="mp-owner-loc">{owner.location || owner.city || '—'}</p>
+                            <p className="mp-owner-loc">
+                              {owner.location || owner.city || "—"}
+                            </p>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <span className={`mp-status-badge ${isActive(owner) ? 'active' : 'suspended'}`}>
+                        <span
+                          className={`mp-status-badge ${isActive(owner) ? "active" : "suspended"}`}
+                        >
                           <span className="mp-dot" />
-                          {isActive(owner) ? 'ACTIVO' : 'SUSPENDIDO'}
+                          {isActive(owner) ? "ACTIVO" : "SUSPENDIDO"}
                         </span>
                       </td>
                     </tr>
@@ -372,21 +470,25 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
           {!loading && totalPages > 1 && (
             <div className="mp-pagination">
               <span className="mp-pagination-info">
-                Mostrando {(page - 1) * PER_PAGE + 1} a{' '}
-                {Math.min(page * PER_PAGE, filtered.length)} de {filtered.length} resultados
+                Mostrando {(page - 1) * PER_PAGE + 1} a{" "}
+                {Math.min(page * PER_PAGE, filtered.length)} de{" "}
+                {filtered.length} resultados
               </span>
               <div className="mp-page-controls">
                 <button
                   className="mp-page-btn"
-                  onClick={() => setPage(p => p - 1)}
+                  onClick={() => setPage((p) => p - 1)}
                   disabled={page === 1}
                 >
                   <ChevronLeft size={15} />
                 </button>
-                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => i + 1).map(p => (
+                {Array.from(
+                  { length: Math.min(totalPages, 5) },
+                  (_, i) => i + 1,
+                ).map((p) => (
                   <button
                     key={p}
-                    className={`mp-page-btn ${page === p ? 'active' : ''}`}
+                    className={`mp-page-btn ${page === p ? "active" : ""}`}
                     onClick={() => setPage(p)}
                   >
                     {p}
@@ -394,7 +496,7 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                 ))}
                 <button
                   className="mp-page-btn"
-                  onClick={() => setPage(p => p + 1)}
+                  onClick={() => setPage((p) => p + 1)}
                   disabled={page === totalPages}
                 >
                   <ChevronRight size={15} />
@@ -405,12 +507,18 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
         </div>
       </div>
 
-      {(modal === 'create' || modal === 'edit') && (
+      {(modal === "create" || modal === "edit") && (
         <div className="mp-overlay" onClick={closeModal}>
-          <div className="mp-modal" onClick={e => e.stopPropagation()}>
+          <div className="mp-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mp-modal-head">
-              <h3>{modal === 'create' ? 'Nuevo Propietario' : 'Editar Propietario'}</h3>
-              <button className="mp-modal-close" onClick={closeModal}><X size={17} /></button>
+              <h3>
+                {modal === "create"
+                  ? "Nuevo Propietario"
+                  : "Editar Propietario"}
+              </h3>
+              <button className="mp-modal-close" onClick={closeModal}>
+                <X size={17} />
+              </button>
             </div>
             <div className="mp-modal-body">
               {formError && <div className="mp-form-error">{formError}</div>}
@@ -419,43 +527,67 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                 type="text"
                 placeholder="Ej: Carlos Ruiz"
                 value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
               />
               <label>Email</label>
               <input
                 type="email"
                 placeholder="email@ejemplo.com"
                 value={form.email}
-                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
               />
-              <label>{modal === 'create' ? 'Contraseña' : 'Nueva contraseña (opcional)'}</label>
+              <label>
+                {modal === "create"
+                  ? "Contraseña"
+                  : "Nueva contraseña (opcional)"}
+              </label>
               <input
                 type="password"
-                placeholder={modal === 'create' ? 'Mínimo 8 caracteres' : 'Dejar vacío para no cambiar'}
+                placeholder={
+                  modal === "create"
+                    ? "Mínimo 8 caracteres"
+                    : "Dejar vacío para no cambiar"
+                }
                 value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, password: e.target.value }))
+                }
               />
               <label>Ubicación del Complejo</label>
               <select
                 value={form.location}
-                onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, location: e.target.value }))
+                }
               >
-                <option value="" disabled>Seleccioná una ciudad...</option>
-                <option value="San Miguel de Tucumán">San Miguel de Tucumán</option>
+                <option value="" disabled>
+                  Seleccioná una ciudad...
+                </option>
+                <option value="San Miguel de Tucumán">
+                  San Miguel de Tucumán
+                </option>
                 <option value="Yerba Buena">Yerba Buena</option>
                 <option value="Tafí Viejo">Tafí Viejo</option>
               </select>
             </div>
             <div className="mp-modal-foot">
-              <button className="mp-btn-cancel" onClick={closeModal}>Cancelar</button>
+              <button className="mp-btn-cancel" onClick={closeModal}>
+                Cancelar
+              </button>
               <button
                 className="mp-btn-primary"
-                onClick={modal === 'create' ? handleCreate : handleEdit}
+                onClick={modal === "create" ? handleCreate : handleEdit}
                 disabled={formLoading}
               >
                 {formLoading
-                  ? 'Guardando...'
-                  : modal === 'create' ? 'Crear Propietario' : 'Guardar Cambios'}
+                  ? "Guardando..."
+                  : modal === "create"
+                    ? "Crear Propietario"
+                    : "Guardar Cambios"}
               </button>
             </div>
           </div>
@@ -464,59 +596,127 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
 
       {detailOwner && (
         <div className="mp-detail-overlay" onClick={() => setDetailOwner(null)}>
-          <div className="mp-detail-modal" onClick={e => e.stopPropagation()}>
+          <div className="mp-detail-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mp-detail-header">
               <div className="mp-owner-cell">
-                <div className="mp-owner-avatar" style={{ width: 48, height: 48 }}>
-                  {detailOwner.avatar ? <img src={detailOwner.avatar} alt={detailOwner.name} /> : <UserCircle size={40} />}
+                <div
+                  className="mp-owner-avatar"
+                  style={{ width: 48, height: 48 }}
+                >
+                  {detailOwner.avatar ? (
+                    <img src={detailOwner.avatar} alt={detailOwner.name} />
+                  ) : (
+                    <UserCircle size={40} />
+                  )}
                 </div>
                 <div>
-                  <p className="mp-owner-name" style={{ fontSize: 16 }}>{detailOwner.name}</p>
-                  <span className={`mp-status-badge ${isActive(detailOwner) ? 'active' : 'suspended'}`}>
-                    <span className="mp-dot" />{isActive(detailOwner) ? 'ACTIVO' : 'SUSPENDIDO'}
+                  <p className="mp-owner-name" style={{ fontSize: 16 }}>
+                    {detailOwner.name}
+                  </p>
+                  <span
+                    className={`mp-status-badge ${isActive(detailOwner) ? "active" : "suspended"}`}
+                  >
+                    <span className="mp-dot" />
+                    {isActive(detailOwner) ? "ACTIVO" : "SUSPENDIDO"}
                   </span>
                 </div>
               </div>
-              <button className="mp-detail-close" onClick={() => setDetailOwner(null)}><X size={18} /></button>
+              <button
+                className="mp-detail-close"
+                onClick={() => setDetailOwner(null)}
+              >
+                <X size={18} />
+              </button>
             </div>
 
             <div className="mp-detail-body">
-              <div className="mp-detail-row"><span>Email</span><strong>{detailOwner.email}</strong></div>
-              <div className="mp-detail-row"><span>Registro</span><strong>{formatDate(detailOwner.createdAt)}</strong></div>
-              <div className="mp-detail-row"><span>Complejos</span><strong>{detailOwner.complexesCount ?? detailOwner.complexes?.length ?? 0}</strong></div>
-              <div className="mp-detail-row"><span>Ciudad</span><strong>{detailOwner.location || detailOwner.city || '—'}</strong></div>
+              <div className="mp-detail-row">
+                <span>Email</span>
+                <strong>{detailOwner.email}</strong>
+              </div>
+              <div className="mp-detail-row">
+                <span>Registro</span>
+                <strong>{formatDate(detailOwner.createdAt)}</strong>
+              </div>
+              <div className="mp-detail-row">
+                <span>Complejos</span>
+                <strong>
+                  {detailOwner.complexesCount ??
+                    detailOwner.complexes?.length ??
+                    0}
+                </strong>
+              </div>
+              <div className="mp-detail-row">
+                <span>Ciudad</span>
+                <strong>
+                  {detailOwner.location || detailOwner.city || "—"}
+                </strong>
+              </div>
             </div>
 
             <div className="mp-detail-actions">
-              <button className="mp-action-icon" onClick={() => { setDetailOwner(null); openEdit(detailOwner); }}><Pencil size={14} /> Editar</button>
-              <button className="mp-action-icon danger" onClick={() => { setDetailOwner(null); openDelete(detailOwner); }}><Trash2 size={14} /> Eliminar</button>
-              <button className={`mp-action-btn ${isActive(detailOwner) ? 'suspend' : 'activate'}`} onClick={() => { handleToggleStatus(detailOwner); setDetailOwner(null); }}>
-                {isActive(detailOwner) ? 'Suspender' : 'Activar'}
+              <button
+                className="mp-action-icon"
+                onClick={() => {
+                  setDetailOwner(null);
+                  openEdit(detailOwner);
+                }}
+              >
+                <Pencil size={14} /> Editar
+              </button>
+              <button
+                className="mp-action-icon danger"
+                onClick={() => {
+                  setDetailOwner(null);
+                  openDelete(detailOwner);
+                }}
+              >
+                <Trash2 size={14} /> Eliminar
+              </button>
+              <button
+                className={`mp-action-btn ${isActive(detailOwner) ? "suspend" : "activate"}`}
+                onClick={() => {
+                  handleToggleStatus(detailOwner);
+                  setDetailOwner(null);
+                }}
+              >
+                {isActive(detailOwner) ? "Suspender" : "Activar"}
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {modal === 'delete' && (
+      {modal === "delete" && (
         <div className="mp-overlay" onClick={closeModal}>
-          <div className="mp-modal mp-modal--sm" onClick={e => e.stopPropagation()}>
+          <div
+            className="mp-modal mp-modal--sm"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mp-modal-head">
               <h3>Eliminar propietario</h3>
-              <button className="mp-modal-close" onClick={closeModal}><X size={17} /></button>
+              <button className="mp-modal-close" onClick={closeModal}>
+                <X size={17} />
+              </button>
             </div>
             <div className="mp-modal-body">
               {formError && <div className="mp-form-error">{formError}</div>}
               <p className="mp-delete-msg">
-                ¿Estás seguro de que deseas eliminar a{' '}
+                ¿Estás seguro de que deseas eliminar a{" "}
                 <strong>{selectedOwner?.name}</strong>?<br />
                 Esta acción no se puede deshacer.
               </p>
             </div>
             <div className="mp-modal-foot">
-              <button className="mp-btn-cancel" onClick={closeModal}>Cancelar</button>
-              <button className="mp-btn-danger" onClick={handleDelete} disabled={formLoading}>
-                {formLoading ? 'Eliminando...' : 'Eliminar'}
+              <button className="mp-btn-cancel" onClick={closeModal}>
+                Cancelar
+              </button>
+              <button
+                className="mp-btn-danger"
+                onClick={handleDelete}
+                disabled={formLoading}
+              >
+                {formLoading ? "Eliminando..." : "Eliminar"}
               </button>
             </div>
           </div>
