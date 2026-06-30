@@ -2,10 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import "./AboutUs.css";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-const marisolImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/mar-padel.jpg';
-const aldanaImg  = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/ald-padel.jpg';
-const facundoImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/fac-padel.jpg';
-const octavioImg = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/oc-padel.jpg';
+const marisolImg =
+  "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/mar-padel.jpg";
+const aldanaImg =
+  "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/ald-padel.jpg";
+const facundoImg =
+  "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/fac-padel.jpg";
+const octavioImg =
+  "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/oc-padel.jpg";
 
 function useCounter(target, duration = 1800, startCounting) {
   const [count, setCount] = useState(0);
@@ -15,8 +19,10 @@ function useCounter(target, duration = 1800, startCounting) {
     const step = Math.ceil(target / (duration / 16));
     const timer = setInterval(() => {
       start += step;
-      if (start >= target) { setCount(target); clearInterval(timer); }
-      else setCount(start);
+      if (start >= target) {
+        setCount(target);
+        clearInterval(timer);
+      } else setCount(start);
     }, 16);
     return () => clearInterval(timer);
   }, [startCounting, target, duration]);
@@ -29,22 +35,26 @@ function AboutUs() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStarted(true); observer.disconnect(); } },
-      { threshold: 0.3 }
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
     );
     if (statsRef.current) observer.observe(statsRef.current);
     return () => observer.disconnect();
   }, []);
 
   const count1 = useCounter(404, 1800, started);
-  const count2 = useCounter(8,   1200, started);
-  const count3 = useCounter(4,   1000, started);
+  const count2 = useCounter(8, 1200, started);
+  const count3 = useCounter(4, 1000, started);
 
   return (
     <>
       <Navbar />
       <div className="about-page">
-
         <section className="about-hero">
           <div className="about-hero-content">
             <span className="about-tag">EL FUTURO DEL PÁDEL</span>
@@ -52,9 +62,10 @@ function AboutUs() {
               Nuestra misión es <span>digitalizar el pádel</span>.
             </h1>
             <p>
-              Nacimos de la intersección entre la pasión por el deporte y la obsesión por la
-              eficiencia tecnológica. En PadelTime, eliminamos las fricciones operativas
-              para que los clubes crezcan y los jugadores nunca dejen de competir.
+              Nacimos de la intersección entre la pasión por el deporte y la
+              obsesión por la eficiencia tecnológica. En PadelTime, eliminamos
+              las fricciones operativas para que los clubes crezcan y los
+              jugadores nunca dejen de competir.
             </p>
           </div>
         </section>
@@ -63,7 +74,9 @@ function AboutUs() {
           <article className="stat-card">
             <h2>{count1}+</h2>
             <h3>Clubes Activos</h3>
-            <p>Optimizando su gestión diaria con nuestra tecnología de punta.</p>
+            <p>
+              Optimizando su gestión diaria con nuestra tecnología de punta.
+            </p>
           </article>
           <article className="stat-card">
             <h2>{count2}+</h2>
@@ -79,21 +92,62 @@ function AboutUs() {
 
         <section className="about-vision">
           <div className="vision-main">
-            <svg className="vision-chart" viewBox="0 0 450 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              className="vision-chart"
+              viewBox="0 0 450 130"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               {[
-                [0,18],[15,32],[30,22],[45,48],[60,36],[75,60],[90,44],[105,72],
-                [120,58],[135,88],[150,70],[165,104],[180,82],[195,120],[210,98],
-                [225,112],[240,90],[255,118],[270,96],[285,108],[300,80],[315,94],
-                [330,68],[345,84],[360,56],[375,70],[390,42],[405,54],[420,30],[435,20],
+                [0, 18],
+                [15, 32],
+                [30, 22],
+                [45, 48],
+                [60, 36],
+                [75, 60],
+                [90, 44],
+                [105, 72],
+                [120, 58],
+                [135, 88],
+                [150, 70],
+                [165, 104],
+                [180, 82],
+                [195, 120],
+                [210, 98],
+                [225, 112],
+                [240, 90],
+                [255, 118],
+                [270, 96],
+                [285, 108],
+                [300, 80],
+                [315, 94],
+                [330, 68],
+                [345, 84],
+                [360, 56],
+                [375, 70],
+                [390, 42],
+                [405, 54],
+                [420, 30],
+                [435, 20],
               ].map(([x, h]) => (
-                <rect key={x} x={x} y={130 - h} width="10" height={h} fill="#bef264" opacity="0.55" rx="2" />
+                <rect
+                  key={x}
+                  x={x}
+                  y={130 - h}
+                  width="10"
+                  height={h}
+                  fill="#bef264"
+                  opacity="0.55"
+                  rx="2"
+                />
               ))}
             </svg>
             <span className="vision-icon">🚀</span>
             <h2>Nuestra Visión 2026</h2>
             <p>
-              Liderar la transformación digital del deporte amateur en Tucumán, convirtiéndonos
-              en el estándar de oro para la administración de recintos deportivos de la región.
+              Liderar la transformación digital del deporte amateur en Tucumán,
+              convirtiéndonos en el estándar de oro para la administración de
+              recintos deportivos de la región.
             </p>
           </div>
           <div className="vision-side">
@@ -107,8 +161,8 @@ function AboutUs() {
             <article className="vision-card">
               <h3>Experiencia de Usuario</h3>
               <p>
-                Diseñado para ser veloz. Reservas completadas en menos de
-                3 clics desde cualquier dispositivo.
+                Diseñado para ser veloz. Reservas completadas en menos de 3
+                clics desde cualquier dispositivo.
               </p>
             </article>
           </div>
@@ -150,7 +204,6 @@ function AboutUs() {
             </article>
           </div>
         </section>
-
       </div>
       <Footer />
     </>

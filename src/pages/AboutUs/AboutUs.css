@@ -1,15 +1,21 @@
-/* ── Page wrapper ── */
 .about-page {
   min-height: 100vh;
   color: white;
   background:
-    radial-gradient(circle at top left, rgba(190,242,100,.10), transparent 25%),
-    radial-gradient(circle at bottom right, rgba(59,130,246,.08), transparent 30%),
+    radial-gradient(
+      circle at top left,
+      rgba(190, 242, 100, 0.1),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.08),
+      transparent 30%
+    ),
     #07152f;
   overflow-x: hidden;
 }
 
-/* ── Hero ── */
 .about-hero {
   min-height: 62vh;
   display: flex;
@@ -17,8 +23,9 @@
   justify-content: center;
   padding: 4rem 1.5rem;
   background:
-    linear-gradient(rgba(7,21,47,.85), rgba(7,21,47,.95)),
-    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg") center / cover no-repeat;
+    linear-gradient(rgba(7, 21, 47, 0.85), rgba(7, 21, 47, 0.95)),
+    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg")
+      center / cover no-repeat;
 }
 
 .about-hero-content {
@@ -54,7 +61,6 @@
   line-height: 1.8;
 }
 
-/* ── Stats ── */
 .about-stats {
   max-width: 1100px;
   margin: -50px auto 0;
@@ -76,9 +82,9 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(8px);
-  transition: transform .3s ease;
+  transition: transform 0.3s ease;
 }
 
 .stat-card::before {
@@ -100,12 +106,12 @@
   color: #bef264;
   font-size: 3.2rem;
   font-weight: 800;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .stat-card h3 {
   font-size: 1.1rem;
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
   color: white;
   font-weight: 700;
 }
@@ -114,10 +120,9 @@
   color: #94a3b8;
   line-height: 1.6;
   max-width: 240px;
-  font-size: .88rem;
+  font-size: 0.88rem;
 }
 
-/* ── Vision ── */
 .about-vision {
   max-width: 1200px;
   margin: 7rem auto;
@@ -136,22 +141,27 @@
   transform: translateX(-50%);
   width: 120px;
   height: 1px;
-  background: rgba(255,255,255,.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .vision-main {
   position: relative;
   border-radius: 24px;
   padding: 2.5rem;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   min-height: 380px;
   overflow: hidden;
   background:
-    linear-gradient(to top, rgba(7,21,47,.95) 45%, rgba(7,21,47,.55) 100%),
-    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg") center / cover no-repeat;
+    linear-gradient(
+      to top,
+      rgba(7, 21, 47, 0.95) 45%,
+      rgba(7, 21, 47, 0.55) 100%
+    ),
+    url("https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/padel-fon.jpg")
+      center / cover no-repeat;
 }
 
 .vision-chart {
@@ -164,7 +174,6 @@
   z-index: 0;
 }
 
-/* capa oscura que tapa la base de las barras y da fondo al texto */
 .vision-main::before {
   content: "";
   position: absolute;
@@ -172,7 +181,7 @@
   left: 0;
   right: 0;
   height: 60%;
-  background: linear-gradient(to top, rgba(7,21,47,1) 45%, transparent 100%);
+  background: linear-gradient(to top, rgba(7, 21, 47, 1) 45%, transparent 100%);
   z-index: 1;
   pointer-events: none;
 }
@@ -187,7 +196,7 @@
 
 .vision-main h2 {
   font-size: 2rem;
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
   line-height: 1.1;
   font-weight: 800;
   position: relative;
@@ -196,7 +205,7 @@
 
 .vision-main p {
   color: #cbd5e1;
-  font-size: .95rem;
+  font-size: 0.95rem;
   line-height: 1.8;
   position: relative;
   z-index: 2;
@@ -212,12 +221,14 @@
   background: #0f1f3d;
   border-radius: 16px;
   padding: 2rem 2rem;
-  border: 1px solid rgba(190,242,100,.35);
+  border: 1px solid rgba(190, 242, 100, 0.35);
   display: flex;
   flex-direction: column;
   justify-content: center;
   backdrop-filter: blur(8px);
-  transition: transform .3s ease, border-color .3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease;
   flex: 1;
 }
 
@@ -237,7 +248,6 @@
   line-height: 1.8;
 }
 
-/* ── Team ── */
 .about-team {
   max-width: 1200px;
   margin: 8rem auto;
@@ -272,20 +282,22 @@
 
 .team-member {
   background:
-    linear-gradient(180deg, rgba(255,255,255,.03), transparent),
-    #0f1f3d;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent), #0f1f3d;
   border-radius: 24px;
   padding: 2.5rem 1.5rem;
   text-align: center;
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(8px);
-  transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .team-member:hover {
   transform: translateY(-10px);
-  border-color: rgba(190,242,100,.4);
-  box-shadow: 0 20px 40px rgba(0,0,0,.25);
+  border-color: rgba(190, 242, 100, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
 .member-avatar {
@@ -295,7 +307,7 @@
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid #bef264;
-  box-shadow: 0 0 20px rgba(190,242,100,.25);
+  box-shadow: 0 0 20px rgba(190, 242, 100, 0.25);
 }
 
 .member-avatar img {
@@ -307,18 +319,17 @@
 
 .team-member h3 {
   font-size: 1.2rem;
-  margin-bottom: .75rem;
+  margin-bottom: 0.75rem;
   font-weight: 700;
 }
 
 .team-member span {
   color: #bef264;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 700;
   letter-spacing: 1px;
 }
 
-/* ── Section dividers ── */
 .about-stats {
   position: relative;
 }
@@ -331,10 +342,9 @@
   transform: translateX(-50%);
   width: 120px;
   height: 1px;
-  background: rgba(255,255,255,.08);
+  background: rgba(255, 255, 255, 0.08);
 }
 
-/* ── Responsive ── */
 @media (max-width: 900px) {
   .about-stats {
     grid-template-columns: 1fr;

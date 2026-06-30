@@ -1,4 +1,3 @@
-/* ── Layout ─────────────────────────────────────────────────────────────────── */
 .sa-layout {
   position: fixed;
   inset: 0;
@@ -8,7 +7,6 @@
   z-index: 10;
 }
 
-/* ── Sidebar ──────────────────────────────────────────────────────────────── */
 .sa-sidebar {
   width: 228px;
   flex-shrink: 0;
@@ -19,7 +17,6 @@
   overflow: hidden;
 }
 
-/* ── Brand ───────────────────────────────────────────────────────────────── */
 .sa-brand {
   padding: 22px 20px 18px;
   border-bottom: 1px solid var(--color-border-subtle);
@@ -40,7 +37,6 @@
   color: var(--color-text-muted);
 }
 
-/* ── Nav ─────────────────────────────────────────────────────────────────── */
 .sa-nav {
   flex: 1;
   padding: 12px 10px;
@@ -65,19 +61,21 @@
   color: var(--color-text-muted);
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .sa-nav-item:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--color-text-base);
 }
 .sa-nav-item.active {
-  background: rgba(190, 242, 100, 0.10);
+  background: rgba(190, 242, 100, 0.1);
   color: var(--color-primary);
   position: relative;
 }
 .sa-nav-item.active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 50%;
@@ -91,7 +89,6 @@
   color: var(--color-primary);
 }
 
-/* ── Sidebar Bottom ──────────────────────────────────────────────────────── */
 .sa-sidebar-bottom {
   display: flex;
   flex-direction: column;
@@ -113,11 +110,12 @@
   font-weight: var(--fw-bold);
   font-family: var(--font-base);
   cursor: pointer;
-  transition: opacity .15s;
+  transition: opacity 0.15s;
 }
-.sa-new-owner-btn:hover { opacity: .88; }
+.sa-new-owner-btn:hover {
+  opacity: 0.88;
+}
 
-/* ── Sidebar Footer ──────────────────────────────────────────────────────── */
 .sa-sidebar-footer {
   padding: 14px 10px;
   border-top: 1px solid var(--color-border-subtle);
@@ -179,7 +177,9 @@
   border-radius: 6px;
   display: flex;
   align-items: center;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
   flex-shrink: 0;
 }
 .sa-btn-logout:hover {
@@ -187,14 +187,12 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* ── Main area ───────────────────────────────────────────────────────────── */
 .sa-main {
   flex: 1;
   overflow-y: auto;
   min-width: 0;
 }
 
-/* ── Coming soon / Access denied ─────────────────────────────────────────── */
 .sa-coming-soon,
 .sa-access-denied {
   display: flex;
@@ -223,18 +221,15 @@
   margin-bottom: 8px;
 }
 
-/* ── Hamburger oculto en desktop ── */
 .sa-hamburger {
   display: none;
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sa-layout {
     position: relative;
   }
 
-  /* Sidebar oculto por defecto, slide-in */
   .sa-sidebar {
     position: fixed;
     top: 0;
@@ -250,13 +245,11 @@
     transform: translateX(0);
   }
 
-  /* Main ocupa todo el ancho */
   .sa-main {
     width: 100%;
     padding: 16px;
   }
 
-  /* Hamburger */
   .sa-hamburger {
     display: flex;
     align-items: center;
@@ -271,15 +264,13 @@
     margin-bottom: 16px;
   }
 
-  /* Overlay oscuro */
   .sa-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 199;
   }
 
-  /* Sidebar vuelve a mostrar texto completo cuando está abierto */
   .sa-brand-name,
   .sa-brand-sub,
   .sa-nav-item span,

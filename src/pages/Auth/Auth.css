@@ -11,10 +11,10 @@
 }
 
 .auth-wrapper::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
-  background-image: url('https://res.cloudinary.com/dabikk5ei/image/upload/v1780864371/screen_qjbrfd.png');
+  background-image: url("https://res.cloudinary.com/dabikk5ei/image/upload/v1780864371/screen_qjbrfd.png");
   background-size: cover;
   background-position: center;
   filter: brightness(0.25) saturate(0.6);
@@ -54,7 +54,9 @@
   color: var(--color-text-muted);
   background: transparent;
   display: block;
-  transition: color 0.2s, background 0.2s;
+  transition:
+    color 0.2s,
+    background 0.2s;
 }
 
 .auth-tab.active {
@@ -241,7 +243,9 @@
   font-weight: var(--fw-bold);
   letter-spacing: 0.6px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
 
 .btn-auth:hover:not(:disabled) {
@@ -356,7 +360,9 @@
   font-weight: var(--fw-medium);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
 }
 .dev-btn:hover {
   color: var(--color-primary);

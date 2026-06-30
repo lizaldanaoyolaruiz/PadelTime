@@ -1,4 +1,3 @@
-/* ── Wrapper de página ───────────────────────────────── */
 .detail-wrapper {
   display: flex;
   flex-direction: column;
@@ -15,7 +14,6 @@
   box-sizing: border-box;
 }
 
-/* ── Botón volver ────────────────────────────────────── */
 .detail-back-row {
   margin-bottom: 24px;
   text-align: left;
@@ -36,7 +34,6 @@
   color: var(--color-primary);
 }
 
-/* ── Hero ────────────────────────────────────────────── */
 .detail-hero {
   position: relative;
   border-radius: 16px;
@@ -58,7 +55,11 @@
   left: 0;
   right: 0;
   padding: 40px 28px 24px;
-  background: linear-gradient(to top, rgba(11, 17, 30, 0.92) 0%, transparent 100%);
+  background: linear-gradient(
+    to top,
+    rgba(11, 17, 30, 0.92) 0%,
+    transparent 100%
+  );
   text-align: left;
 }
 
@@ -107,7 +108,6 @@
   color: var(--color-text-base);
 }
 
-/* ── Grid de contenido ───────────────────────────────── */
 .detail-content {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -116,7 +116,6 @@
   text-align: left;
 }
 
-/* ── Columna info ────────────────────────────────────── */
 .detail-description {
   color: var(--color-text-muted);
   font-size: var(--text-base);
@@ -184,7 +183,6 @@
   padding: 6px 12px;
 }
 
-/* ── Panel de reserva ────────────────────────────────── */
 .booking-panel {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border-subtle);
@@ -239,7 +237,6 @@
   opacity: 0.6;
 }
 
-/* Botón principal del panel de reserva */
 .btn-ver-disponibilidad {
   display: flex;
   align-items: center;
@@ -257,7 +254,9 @@
   letter-spacing: 0.3px;
   cursor: not-allowed;
   opacity: 0.65;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .avail-note {
@@ -267,7 +266,6 @@
   margin: 0;
 }
 
-/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 768px) {
   .detail-content {
     grid-template-columns: 1fr;

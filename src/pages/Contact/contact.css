@@ -1,6 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 
-/* ── Wrapper de página ───────────────────────────────── */
 .contact-wrapper {
   display: flex;
   flex-direction: column;
@@ -8,7 +7,6 @@
   background-color: transparent;
 }
 
-/* ── Página ──────────────────────────────────────────── */
 .contact-page {
   flex: 1;
   padding: 50px;
@@ -17,10 +15,9 @@
   margin: 0 auto;
   box-sizing: border-box;
   color: white;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
-/* ── Hero ────────────────────────────────────────────── */
 .contact-hero {
   margin-bottom: 40px;
 }
@@ -41,21 +38,22 @@
   line-height: 1.6;
 }
 
-/* ── Grid principal ──────────────────────────────────── */
 .contact-grid {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 30px;
 }
 
-/* ── Tarjetas base ───────────────────────────────────── */
 .form-card,
 .info-card {
   background: #15233d;
   border-radius: 18px;
   padding: 30px;
   border: 1px solid rgba(155, 226, 45, 0.2);
-  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s,
+    transform 0.3s;
 }
 
 .form-card:hover,
@@ -65,7 +63,6 @@
   transform: translateY(-2px);
 }
 
-/* ── Formulario ──────────────────────────────────────── */
 .form-card form {
   display: flex;
   flex-direction: column;
@@ -98,8 +95,10 @@
   color: white;
   padding: 14px;
   font-size: 16px;
-  font-family: 'Outfit', sans-serif;
-  transition: border-color 0.3s, box-shadow 0.3s;
+  font-family: "Outfit", sans-serif;
+  transition:
+    border-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .field select option {
@@ -132,7 +131,6 @@
   font-size: 13px;
 }
 
-/* ── Botón enviar ────────────────────────────────────── */
 .submit-btn {
   background: #9be22d;
   color: #02112d;
@@ -141,10 +139,12 @@
   border-radius: 12px;
   font-size: 18px;
   font-weight: 700;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   cursor: pointer;
   letter-spacing: 0.5px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .submit-btn:hover:not(:disabled) {
@@ -161,7 +161,6 @@
   cursor: not-allowed;
 }
 
-/* ── Feedback de envío ───────────────────────────────── */
 .status-msg {
   font-weight: 600;
   font-size: 15px;
@@ -182,7 +181,6 @@
   border: 1px solid rgba(255, 122, 122, 0.25);
 }
 
-/* ── Sidebar ─────────────────────────────────────────── */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -208,7 +206,6 @@
   color: #d0d6e0;
 }
 
-/* ── WhatsApp card ───────────────────────────────────── */
 .whatsapp-card {
   cursor: pointer;
 }
@@ -234,7 +231,6 @@
   transform: translateX(4px);
 }
 
-/* ── Redes sociales ──────────────────────────────────── */
 .info-card h4 {
   font-size: 12px;
   font-weight: 700;
@@ -260,7 +256,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.2s;
+  transition:
+    background 0.25s,
+    color 0.25s,
+    transform 0.2s,
+    box-shadow 0.2s;
   text-decoration: none;
 }
 
@@ -271,13 +271,14 @@
   box-shadow: 0 0 15px rgba(155, 226, 45, 0.5);
 }
 
-/* ── Imagen lateral ──────────────────────────────────── */
 .padel-image {
   width: 100%;
   border-radius: 18px;
   object-fit: cover;
   height: 200px;
-  transition: box-shadow 0.3s, transform 0.3s;
+  transition:
+    box-shadow 0.3s,
+    transform 0.3s;
 }
 
 .padel-image:hover {
@@ -285,7 +286,6 @@
   transform: translateY(-2px);
 }
 
-/* ── Sección mapa ────────────────────────────────────── */
 .map-section {
   margin-top: 50px;
 }
@@ -295,7 +295,7 @@
   font-weight: 800;
   color: white;
   margin: 0 0 6px;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
 }
 
 .map-subtitle {
@@ -321,7 +321,6 @@
   justify-content: center;
 }
 
-/* Patrón de cuadrícula que simula calles */
 .map-grid {
   position: absolute;
   inset: 0;
@@ -330,7 +329,11 @@
     linear-gradient(90deg, rgba(155, 226, 45, 0.04) 1px, transparent 1px),
     linear-gradient(rgba(155, 226, 45, 0.015) 1px, transparent 1px),
     linear-gradient(90deg, rgba(155, 226, 45, 0.015) 1px, transparent 1px);
-  background-size: 80px 80px, 80px 80px, 20px 20px, 20px 20px;
+  background-size:
+    80px 80px,
+    80px 80px,
+    20px 20px,
+    20px 20px;
 }
 
 .map-pin-label {
@@ -340,7 +343,7 @@
   align-items: center;
   gap: 8px;
   color: white;
-  font-family: 'Outfit', sans-serif;
+  font-family: "Outfit", sans-serif;
   font-weight: 600;
   font-size: 15px;
   text-align: center;
@@ -351,7 +354,6 @@
   filter: drop-shadow(0 0 8px rgba(155, 226, 45, 0.7));
 }
 
-/* ── Responsive ──────────────────────────────────────── */
 @media (max-width: 900px) {
   .contact-page {
     padding: 25px;

@@ -110,7 +110,7 @@
   z-index: 200;
   max-height: 240px;
   overflow-y: auto;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .hero-dropdown-item {
@@ -119,7 +119,9 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: background 0.12s, color 0.12s;
+  transition:
+    background 0.12s,
+    color 0.12s;
 }
 
 .hero-dropdown-item:hover {
@@ -192,7 +194,10 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
 .club-card:hover {
@@ -215,7 +220,11 @@
 }
 
 .club-image--empty {
-  background: linear-gradient(135deg, rgba(190, 242, 100, 0.05) 0%, rgba(15, 23, 42, 0.9) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(190, 242, 100, 0.05) 0%,
+    rgba(15, 23, 42, 0.9) 100%
+  );
 }
 
 .club-image--logo {
@@ -488,7 +497,9 @@
 }
 .interactive-dashboard {
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .interactive-dashboard:hover {
@@ -509,7 +520,7 @@
   .clubs-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .solutions {
     grid-template-columns: 1fr;
     text-align: center;

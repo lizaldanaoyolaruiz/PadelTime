@@ -29,7 +29,9 @@
   margin-bottom: 0.5rem;
 }
 
-.summary-card, .breakdown-card, .payment-methods-card {
+.summary-card,
+.breakdown-card,
+.payment-methods-card {
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
   border-radius: 12px;
@@ -89,7 +91,8 @@
   gap: 0.5rem;
 }
 
-.datetime-block .label, .breakdown-card .label {
+.datetime-block .label,
+.breakdown-card .label {
   color: var(--color-text-muted);
   font-size: 0.75rem;
   font-weight: var(--fw-bold);
@@ -179,7 +182,9 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .method-box:hover {
@@ -199,11 +204,11 @@
 }
 
 .mp-icon {
-  background: #009EE3;
+  background: #009ee3;
 }
 
 .wa-icon {
-  background: #25D366;
+  background: #25d366;
 }
 
 .method-box h3 {
@@ -218,7 +223,8 @@
   margin-bottom: 1.25rem;
 }
 
-.btn-mp, .btn-wa {
+.btn-mp,
+.btn-wa {
   width: 100%;
   padding: 0.75rem;
   border: none;
@@ -230,14 +236,15 @@
 }
 
 .btn-mp {
-  background: #009EE3;
+  background: #009ee3;
 }
 
 .btn-wa {
-  background: #128C7E;
+  background: #128c7e;
 }
 
-.btn-mp:hover, .btn-wa:hover {
+.btn-mp:hover,
+.btn-wa:hover {
   opacity: 0.9;
 }
 
@@ -298,8 +305,9 @@
   letter-spacing: 1px;
 }
 
-.divider::before, .divider::after {
-  content: '';
+.divider::before,
+.divider::after {
+  content: "";
   flex: 1;
   border-bottom: 1px solid var(--color-border-subtle);
 }

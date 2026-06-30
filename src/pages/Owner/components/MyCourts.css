@@ -32,8 +32,12 @@
   gap: 16px;
   transition: border-color 0.2s;
 }
-.cancha-card:hover { border-color: var(--color-border); }
-.cancha-card--disabled { opacity: 0.55; }
+.cancha-card:hover {
+  border-color: var(--color-border);
+}
+.cancha-card--disabled {
+  opacity: 0.55;
+}
 
 .cancha-info {
   display: flex;
@@ -91,14 +95,12 @@
   flex-shrink: 0;
 }
 
-/* Compact photo grid inside court modal */
 .images-grid--sm .img-thumb,
 .images-grid--sm .img-add {
   width: 80px;
   height: 64px;
 }
 
-/* Court photo picker inside modal */
 .court-photo-add {
   width: 100%;
   height: 72px;
@@ -113,7 +115,9 @@
   color: var(--color-text-muted);
   font-size: var(--text-sm);
   font-family: var(--font-base);
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
 .court-photo-add:hover {
   border-color: var(--color-primary);
@@ -150,26 +154,31 @@
   color: #fff;
   transition: background 0.2s;
 }
-.court-photo-remove:hover { background: rgba(239, 68, 68, 0.85); }
+.court-photo-remove:hover {
+  background: rgba(239, 68, 68, 0.85);
+}
 
-/* Toggle switch */
 .toggle-switch {
   position: relative;
   display: inline-flex;
   cursor: pointer;
 }
-.toggle-switch input { display: none; }
+.toggle-switch input {
+  display: none;
+}
 .toggle-track {
   width: 40px;
   height: 22px;
   background: var(--color-surface-3);
   border: 1px solid var(--color-border);
   border-radius: 11px;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   display: block;
 }
 .toggle-track::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 3px;
   left: 3px;
@@ -177,7 +186,9 @@
   height: 16px;
   background: var(--color-text-muted);
   border-radius: 50%;
-  transition: transform 0.2s, background 0.2s;
+  transition:
+    transform 0.2s,
+    background 0.2s;
 }
 .toggle-switch input:checked + .toggle-track {
   background: rgba(190, 242, 100, 0.2);
@@ -200,17 +211,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.2s, background 0.2s;
+  transition:
+    opacity 0.2s,
+    background 0.2s;
 }
-.icon-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.icon-btn--edit   { background: var(--color-surface-3); color: var(--color-text-muted); }
-.icon-btn--edit:hover:not(:disabled)   { color: var(--color-text-base); }
-.icon-btn--delete { background: rgba(239, 68, 68, 0.1); color: var(--color-error); }
-.icon-btn--delete:hover:not(:disabled) { background: rgba(239, 68, 68, 0.2); }
+.icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.icon-btn--edit {
+  background: var(--color-surface-3);
+  color: var(--color-text-muted);
+}
+.icon-btn--edit:hover:not(:disabled) {
+  color: var(--color-text-base);
+}
+.icon-btn--delete {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+.icon-btn--delete:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.2);
+}
 
-/* Modal styles moved to OwnerDashboard.css */
-
-/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .cancha-card {
     flex-wrap: wrap;

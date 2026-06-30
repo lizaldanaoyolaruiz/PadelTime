@@ -1,28 +1,31 @@
-﻿import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import { getMyComplex, updateComplex } from '../../../services/complexService';
-import api from '../../../services/axios';
-import './PaymentConfig.css';
+﻿import { useState, useEffect } from "react";
+import { toast } from "sonner";
+import { Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { getMyComplex, updateComplex } from "../../../services/complexService";
+import api from "../../../services/axios";
+import "./PaymentConfig.css";
 
 export default function PaymentConfig() {
   const [complexId, setComplexId] = useState(null);
-  const [mpKey,     setMpKey]     = useState('');
-  const [showKey,   setShowKey]   = useState(false);
-  const [loading,   setLoading]   = useState(true);
-  const [saving,    setSaving]    = useState(false);
+  const [mpKey, setMpKey] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
     getMyComplex()
-      .then(res => {
+      .then((res) => {
         const complex = res.data.complex || res.data;
         setComplexId(complex._id);
-        setConnected(!!complex.mercadopagoActive || !!complex.mpTokenConfigured);
-        if (complex.mpTokenConfigured) setMpKey('••••••••••••');
+        setConnected(
+          !!complex.mercadopagoActive || !!complex.mpTokenConfigured,
+        );
+        if (complex.mpTokenConfigured) setMpKey("••••••••••••");
       })
-      .catch(err => {
-        if (err.response?.status !== 404) toast.error('Error cargando configuración');
+      .catch((err) => {
+        if (err.response?.status !== 404)
+          toast.error("Error cargando configuración");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -30,21 +33,21 @@ export default function PaymentConfig() {
   const handleSave = async (e) => {
     e.preventDefault();
     if (!complexId) {
-      toast.error('Primero debés crear un complejo');
+      toast.error("Primero debés crear un complejo");
       return;
     }
     setSaving(true);
     try {
       const payload = {};
-      if (mpKey.trim() && !mpKey.includes('•')) {
-        payload.mpAccessToken     = mpKey.trim();
+      if (mpKey.trim() && !mpKey.includes("•")) {
+        payload.mpAccessToken = mpKey.trim();
         payload.mercadopagoActive = true;
       }
       await updateComplex(complexId, payload);
       if (payload.mercadopagoActive) setConnected(true);
-      toast.success('Configuración guardada correctamente');
+      toast.success("Configuración guardada correctamente");
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al guardar');
+      toast.error(err.response?.data?.message || "Error al guardar");
     } finally {
       setSaving(false);
     }
@@ -55,24 +58,27 @@ export default function PaymentConfig() {
     setSaving(true);
     try {
       await api.delete(`/complexes/${complexId}/mp-token`);
-      setMpKey('');
+      setMpKey("");
       setConnected(false);
-      toast.success('Token de Mercado Pago eliminado correctamente.');
+      toast.success("Token de Mercado Pago eliminado correctamente.");
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error al eliminar el token.');
+      toast.error(err.response?.data?.message || "Error al eliminar el token.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) return <div className="panel-loading">Cargando configuración...</div>;
+  if (loading)
+    return <div className="panel-loading">Cargando configuración...</div>;
 
   return (
     <div className="panel-wrap">
       <div className="panel-header">
         <div>
           <h2>Configuración de Pagos</h2>
-          <p className="panel-subtitle">Vinculá tu cuenta de Mercado Pago para recibir pagos online.</p>
+          <p className="panel-subtitle">
+            Vinculá tu cuenta de Mercado Pago para recibir pagos online.
+          </p>
         </div>
         {connected && (
           <span className="status-badge status-approved">
@@ -86,8 +92,8 @@ export default function PaymentConfig() {
         <div className="form-section">
           <h3 className="section-title">Mercado Pago — Access Token</h3>
           <p className="section-desc">
-            Ingresá tu Access Token de producción para recibir los pagos directamente en tu cuenta.
-            Lo encontrás en{' '}
+            Ingresá tu Access Token de producción para recibir los pagos
+            directamente en tu cuenta. Lo encontrás en{" "}
             <a
               href="https://www.mercadopago.com.ar/developers/panel"
               target="_blank"
@@ -95,18 +101,19 @@ export default function PaymentConfig() {
               className="link-mp"
             >
               Panel de Desarrolladores de MP
-            </a>.
+            </a>
+            .
           </p>
 
           <div className="mp-input-wrap">
             <input
-              type={showKey ? 'text' : 'password'}
+              type={showKey ? "text" : "password"}
               className="form-input"
               placeholder="APP_USR-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
               value={mpKey}
-              onChange={e => {
+              onChange={(e) => {
                 const val = e.target.value;
-                setMpKey(val.includes('•') ? '' : val);
+                setMpKey(val.includes("•") ? "" : val);
               }}
               autoComplete="off"
               spellCheck={false}
@@ -114,7 +121,7 @@ export default function PaymentConfig() {
             <button
               type="button"
               className="btn-eye-mp"
-              onClick={() => setShowKey(v => !v)}
+              onClick={() => setShowKey((v) => !v)}
               tabIndex={-1}
             >
               {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -140,8 +147,12 @@ export default function PaymentConfig() {
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={saving || !complexId}>
-            {saving ? 'Guardando...' : 'Guardar configuración'}
+          <button
+            type="submit"
+            className="btn-primary"
+            disabled={saving || !complexId}
+          >
+            {saving ? "Guardando..." : "Guardar configuración"}
           </button>
         </div>
       </form>

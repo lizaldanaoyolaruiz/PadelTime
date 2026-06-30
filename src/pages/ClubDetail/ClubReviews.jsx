@@ -1,17 +1,21 @@
-﻿import { useState, useEffect, useCallback } from 'react';
-import { toast } from 'sonner';
-import useAuthStore from '../../store/authStore';
-import { confirmDelete } from '../../utils/alerts';
+﻿import { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
+import useAuthStore from "../../store/authStore";
+import { confirmDelete } from "../../utils/alerts";
 import {
   canReviewComplex,
   createReview,
   updateReview,
   deleteReview,
   getComplexReviews,
-} from '../../services/reviewService';
-import './ClubReviews.css';
+} from "../../services/reviewService";
+import "./ClubReviews.css";
 
-const AVAILABLE_TAGS = ['Buena iluminación', 'Vestuarios limpios', 'Césped en buen estado'];
+const AVAILABLE_TAGS = [
+  "Buena iluminación",
+  "Vestuarios limpios",
+  "Césped en buen estado",
+];
 
 const ClubReviews = ({ complexId }) => {
   const { isAuthenticated, user } = useAuthStore();
@@ -19,7 +23,7 @@ const ClubReviews = ({ complexId }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
@@ -45,38 +49,42 @@ const ClubReviews = ({ complexId }) => {
   }, [complexId]);
 
   const cargarCanReview = useCallback(async () => {
-    if (!complexId || !isAuthenticated || user?.role !== 'player') return;
+    if (!complexId || !isAuthenticated || user?.role !== "player") return;
     try {
       const res = await canReviewComplex(complexId);
       const data = res.data || {};
       setAlreadyReviewed(!!data.alreadyReviewed);
       setMyReview(data.review || null);
-    } catch {
-
-    }
+    } catch {}
   }, [complexId, isAuthenticated, user]);
 
-  useEffect(() => { cargarReviews(); }, [cargarReviews]);
-  useEffect(() => { cargarCanReview(); }, [cargarCanReview]);
+  useEffect(() => {
+    cargarReviews();
+  }, [cargarReviews]);
+  useEffect(() => {
+    cargarCanReview();
+  }, [cargarCanReview]);
 
   useEffect(() => {
     if (alreadyReviewed && !myReview && user) {
       const userId = user._id || user.id;
-      const found = reviews.find((r) => r.user?._id === userId || r.user?.id === userId);
+      const found = reviews.find(
+        (r) => r.user?._id === userId || r.user?.id === userId,
+      );
       if (found) setMyReview(found);
     }
   }, [alreadyReviewed, myReview, reviews, user]);
 
   const toggleTag = (tag) => {
     setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag],
     );
   };
 
   const openCreateModal = () => {
     setEditingReview(null);
     setRating(0);
-    setComment('');
+    setComment("");
     setSelectedTags([]);
     setIsModalOpen(true);
   };
@@ -85,55 +93,61 @@ const ClubReviews = ({ complexId }) => {
     if (!myReview) return;
     setEditingReview(myReview);
     setRating(myReview.rating || 0);
-    setComment(myReview.comment || '');
+    setComment(myReview.comment || "");
     setSelectedTags(Array.isArray(myReview.tags) ? myReview.tags : []);
     setIsModalOpen(true);
   };
 
   const handleDelete = async () => {
     if (!myReview) return;
-    const result = await confirmDelete('Se eliminará tu valoración de este complejo.');
+    const result = await confirmDelete(
+      "Se eliminará tu valoración de este complejo.",
+    );
     if (!result.isConfirmed) return;
 
     try {
       await deleteReview(myReview._id);
-      toast.success('Valoración eliminada.');
+      toast.success("Valoración eliminada.");
       setMyReview(null);
       setAlreadyReviewed(false);
       cargarReviews();
       cargarCanReview();
     } catch (err) {
       const message = err.response?.data?.message;
-      toast.error(message || 'Ocurrió un error al eliminar la valoración.');
+      toast.error(message || "Ocurrió un error al eliminar la valoración.");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (rating === 0) {
-      toast.error('Por favor, selecciona una calificación.');
+      toast.error("Por favor, selecciona una calificación.");
       return;
     }
 
     setSubmitting(true);
     try {
       if (editingReview) {
-        await updateReview(editingReview._id, { rating, comment, tags: selectedTags });
-        toast.success('Valoración actualizada.');
+        await updateReview(editingReview._id, {
+          rating,
+          comment,
+          tags: selectedTags,
+        });
+        toast.success("Valoración actualizada.");
       } else {
         await createReview({ complexId, rating, comment, tags: selectedTags });
-        toast.success('¡Gracias por tu valoración!');
+        toast.success("¡Gracias por tu valoración!");
       }
       setIsModalOpen(false);
       setEditingReview(null);
       setRating(0);
-      setComment('');
+      setComment("");
       setSelectedTags([]);
       cargarReviews();
       cargarCanReview();
     } catch (err) {
       const message = err.response?.data?.message;
-      toast.error(message || 'Ocurrió un error al guardar la valoración.');
+      toast.error(message || "Ocurrió un error al guardar la valoración.");
     } finally {
       setSubmitting(false);
     }
@@ -142,7 +156,7 @@ const ClubReviews = ({ complexId }) => {
   const StarIcon = ({ filled, onClick, onMouseEnter, onMouseLeave }) => (
     <svg
       viewBox="0 0 24 24"
-      className={`star-icon ${filled ? 'filled' : ''}`}
+      className={`star-icon ${filled ? "filled" : ""}`}
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
@@ -152,11 +166,17 @@ const ClubReviews = ({ complexId }) => {
   );
 
   const formatearFecha = (fecha) => {
-    if (!fecha) return '';
-    return new Date(fecha).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (!fecha) return "";
+    return new Date(fecha).toLocaleDateString("es-AR", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   };
 
-  const ratingCounts = [5, 4, 3, 2, 1].map((star) => reviews.filter((r) => r.rating === star).length);
+  const ratingCounts = [5, 4, 3, 2, 1].map(
+    (star) => reviews.filter((r) => r.rating === star).length,
+  );
   const maxCount = Math.max(1, ...ratingCounts);
 
   return (
@@ -185,17 +205,32 @@ const ClubReviews = ({ complexId }) => {
                       <StarIcon key={i} filled={i < myReview.rating} />
                     ))}
                   </div>
-                  {myReview.comment && <p className="review-text">{myReview.comment}</p>}
+                  {myReview.comment && (
+                    <p className="review-text">{myReview.comment}</p>
+                  )}
                 </>
               )}
               <div className="my-review-actions">
-                <button className="btn-secondary" onClick={openEditModal}>Editar</button>
-                <button className="btn-danger" onClick={handleDelete}>Eliminar valoración</button>
+                <button className="btn-secondary" onClick={openEditModal}>
+                  Editar
+                </button>
+                <button className="btn-danger" onClick={handleDelete}>
+                  Eliminar valoración
+                </button>
               </div>
             </div>
           ) : (
             <button className="btn-rate" onClick={openCreateModal}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                width="16"
+                height="16"
+              >
                 <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
               </svg>
               Valorar Experiencia
@@ -210,7 +245,9 @@ const ClubReviews = ({ complexId }) => {
               <div className="bar-track">
                 <div
                   className="bar-fill"
-                  style={{ width: `${(ratingCounts[index] / maxCount) * 100}%` }}
+                  style={{
+                    width: `${(ratingCounts[index] / maxCount) * 100}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -219,7 +256,9 @@ const ClubReviews = ({ complexId }) => {
 
         <div className="reviews-list-col">
           {reviews.length === 0 && (
-            <p className="review-text">Todavía no hay reseñas para este complejo.</p>
+            <p className="review-text">
+              Todavía no hay reseñas para este complejo.
+            </p>
           )}
           {reviews.map((review) => (
             <div className="review-item" key={review._id}>
@@ -232,7 +271,9 @@ const ClubReviews = ({ complexId }) => {
                     ))}
                   </div>
                 </div>
-                <span className="review-date">{formatearFecha(review.createdAt)}</span>
+                <span className="review-date">
+                  {formatearFecha(review.createdAt)}
+                </span>
               </div>
               <p className="review-text">{review.comment}</p>
             </div>
@@ -243,8 +284,17 @@ const ClubReviews = ({ complexId }) => {
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setIsModalOpen(false)}>✕</button>
-            <h3>{editingReview ? 'Editar tu valoración' : '¿Cómo fue tu experiencia hoy?'}</h3>
+            <button
+              className="modal-close"
+              onClick={() => setIsModalOpen(false)}
+            >
+              ✕
+            </button>
+            <h3>
+              {editingReview
+                ? "Editar tu valoración"
+                : "¿Cómo fue tu experiencia hoy?"}
+            </h3>
 
             <form onSubmit={handleSubmit}>
               <div className="modal-stars-selector">
@@ -264,7 +314,7 @@ const ClubReviews = ({ complexId }) => {
                   <button
                     type="button"
                     key={tag}
-                    className={`tag-chip ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                    className={`tag-chip ${selectedTags.includes(tag) ? "selected" : ""}`}
                     onClick={() => toggleTag(tag)}
                   >
                     {tag}
@@ -279,8 +329,16 @@ const ClubReviews = ({ complexId }) => {
                 onChange={(e) => setComment(e.target.value)}
                 rows="4"
               ></textarea>
-              <button type="submit" className="btn-submit-review" disabled={submitting}>
-                {submitting ? 'Guardando...' : editingReview ? 'Guardar Cambios' : 'Enviar Valoración'}
+              <button
+                type="submit"
+                className="btn-submit-review"
+                disabled={submitting}
+              >
+                {submitting
+                  ? "Guardando..."
+                  : editingReview
+                    ? "Guardar Cambios"
+                    : "Enviar Valoración"}
               </button>
             </form>
           </div>

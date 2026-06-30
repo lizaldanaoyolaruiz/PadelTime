@@ -32,12 +32,20 @@ export default function Error404() {
           </div>
 
           <div className="e404-cards">
-            <div className="e404-card" onClick={() => navigate('/complejos')} style={{ cursor: 'pointer' }}>
+            <div
+              className="e404-card"
+              onClick={() => navigate("/complejos")}
+              style={{ cursor: "pointer" }}
+            >
               <h3>Clubes</h3>
               <p>Encuentra tu pista</p>
             </div>
 
-            <div className="e404-card" onClick={() => navigate('/panelcliente')} style={{ cursor: 'pointer' }}>
+            <div
+              className="e404-card"
+              onClick={() => navigate("/panelcliente")}
+              style={{ cursor: "pointer" }}
+            >
               <h3>Reservas</h3>
               <p>Gestiona tus partidos</p>
             </div>

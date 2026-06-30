@@ -1,32 +1,49 @@
-import { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Trophy, CalendarDays, MapPin, Users } from 'lucide-react';
-import { getTournaments, createTournament, updateTournament, deleteTournament } from '../../../services/tournamentsService';
-import { confirmDelete, successAlert, errorAlert } from '../../../utils/alerts';
-import { CATEGORIAS, ESTADOS } from '../utils/schemas/tournamentSchema';
-import TournamentsForm from './TournamentsForm';
-import './Tournaments.css';
+import { useState, useEffect } from "react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Trophy,
+  CalendarDays,
+  MapPin,
+  Users,
+} from "lucide-react";
+import {
+  getTournaments,
+  createTournament,
+  updateTournament,
+  deleteTournament,
+} from "../../../services/tournamentsService";
+import { confirmDelete, successAlert, errorAlert } from "../../../utils/alerts";
+import { CATEGORIAS, ESTADOS } from "../utils/schemas/tournamentSchema";
+import TournamentsForm from "./TournamentsForm";
+import "./Tournaments.css";
 
 const ESTADO_BADGE = {
-  activo:     'torneo-badge--activo',
-  finalizado: 'torneo-badge--finalizado',
-  cancelado:  'torneo-badge--cancelado',
+  activo: "torneo-badge--activo",
+  finalizado: "torneo-badge--finalizado",
+  cancelado: "torneo-badge--cancelado",
 };
 
 function fmtDate(dateStr) {
-  if (!dateStr) return '—';
-  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-ES', {
-    day: '2-digit', month: 'short', year: 'numeric',
+  if (!dateStr) return "—";
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
   });
 }
 
 export default function TournamentsList() {
-  const [torneos,    setTorneos]    = useState([]);
-  const [loading,    setLoading]    = useState(true);
-  const [modal,      setModal]      = useState(null);
+  const [torneos, setTorneos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
-  const [filter,     setFilter]     = useState('todos');
+  const [filter, setFilter] = useState("todos");
 
-  useEffect(() => { fetchTorneos(); }, []);
+  useEffect(() => {
+    fetchTorneos();
+  }, []);
 
   const fetchTorneos = async () => {
     try {
@@ -34,7 +51,9 @@ export default function TournamentsList() {
       const res = await getTournaments();
       setTorneos(res.data.torneos || res.data || []);
     } catch (err) {
-      await errorAlert(err.response?.data?.message || 'Error cargando torneos.');
+      await errorAlert(
+        err.response?.data?.message || "Error cargando torneos.",
+      );
     } finally {
       setLoading(false);
     }
@@ -45,41 +64,46 @@ export default function TournamentsList() {
       if (modal?.torneo?._id) {
         const res = await updateTournament(modal.torneo._id, data);
         const updated = res.data.torneo || res.data;
-        setTorneos(prev => prev.map(t => t._id === updated._id ? updated : t));
+        setTorneos((prev) =>
+          prev.map((t) => (t._id === updated._id ? updated : t)),
+        );
         setModal(null);
-        await successAlert('Torneo actualizado correctamente.');
+        await successAlert("Torneo actualizado correctamente.");
       } else {
         const res = await createTournament(data);
         const created = res.data.torneo || res.data;
-        setTorneos(prev => [...prev, created]);
+        setTorneos((prev) => [...prev, created]);
         setModal(null);
-        await successAlert('Torneo creado correctamente.');
+        await successAlert("Torneo creado correctamente.");
       }
     } catch (err) {
-      await errorAlert(err.response?.data?.message || 'Error al guardar el torneo.');
+      await errorAlert(
+        err.response?.data?.message || "Error al guardar el torneo.",
+      );
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await confirmDelete('El torneo se eliminará permanentemente.');
+    const result = await confirmDelete(
+      "El torneo se eliminará permanentemente.",
+    );
     if (!result.isConfirmed) return;
     setDeletingId(id);
     try {
       await deleteTournament(id);
-      setTorneos(prev => prev.filter(t => t._id !== id));
-      await successAlert('Torneo eliminado.');
+      setTorneos((prev) => prev.filter((t) => t._id !== id));
+      await successAlert("Torneo eliminado.");
     } catch {
-      await errorAlert('Error al eliminar el torneo.');
+      await errorAlert("Error al eliminar el torneo.");
     } finally {
       setDeletingId(null);
     }
   };
 
-  const catLabel = (v) => CATEGORIAS.find(c => c.value === v)?.label ?? v;
+  const catLabel = (v) => CATEGORIAS.find((c) => c.value === v)?.label ?? v;
 
-  const filtered = filter === 'todos'
-    ? torneos
-    : torneos.filter(t => t.estado === filter);
+  const filtered =
+    filter === "todos" ? torneos : torneos.filter((t) => t.estado === filter);
 
   if (loading) return <div className="panel-loading">Cargando torneos...</div>;
 
@@ -89,7 +113,8 @@ export default function TournamentsList() {
         <div>
           <h2>Torneos</h2>
           <p className="panel-subtitle">
-            Gestioná los torneos del club. Los activos aparecen en el portal público.
+            Gestioná los torneos del club. Los activos aparecen en el portal
+            público.
           </p>
         </div>
         <button className="btn-primary" onClick={() => setModal({})}>
@@ -100,21 +125,21 @@ export default function TournamentsList() {
 
       <div className="torneos-filters">
         {[
-          { key: 'todos',     label: 'Todos'     },
-          { key: 'activo',    label: 'Activos'   },
-          { key: 'finalizado',label: 'Finalizados'},
-          { key: 'cancelado', label: 'Cancelados'},
-        ].map(f => (
+          { key: "todos", label: "Todos" },
+          { key: "activo", label: "Activos" },
+          { key: "finalizado", label: "Finalizados" },
+          { key: "cancelado", label: "Cancelados" },
+        ].map((f) => (
           <button
             key={f.key}
-            className={`torneos-filter-btn${filter === f.key ? ' torneos-filter-btn--active' : ''}`}
+            className={`torneos-filter-btn${filter === f.key ? " torneos-filter-btn--active" : ""}`}
             onClick={() => setFilter(f.key)}
           >
             {f.label}
           </button>
         ))}
         <span className="torneos-count">
-          {filtered.length} torneo{filtered.length !== 1 ? 's' : ''}
+          {filtered.length} torneo{filtered.length !== 1 ? "s" : ""}
         </span>
       </div>
 
@@ -123,11 +148,11 @@ export default function TournamentsList() {
         <div className="canchas-empty">
           <Trophy size={36} className="torneos-empty-icon" />
           <p>
-            {filter === 'todos'
-              ? 'Todavía no hay torneos creados.'
+            {filter === "todos"
+              ? "Todavía no hay torneos creados."
               : `No hay torneos con ese estado.`}
           </p>
-          {filter === 'todos' && (
+          {filter === "todos" && (
             <button className="btn-primary" onClick={() => setModal({})}>
               Crear primer torneo
             </button>
@@ -135,7 +160,7 @@ export default function TournamentsList() {
         </div>
       ) : (
         <div className="torneos-list">
-          {filtered.map(torneo => (
+          {filtered.map((torneo) => (
             <div key={torneo._id} className="torneo-card">
               <div className="torneo-card-main">
                 <div className="torneo-icon-wrap">
@@ -144,10 +169,15 @@ export default function TournamentsList() {
                 <div className="torneo-info">
                   <div className="torneo-name-row">
                     <span className="torneo-name">{torneo.nombre}</span>
-                    <span className={`torneo-badge ${ESTADO_BADGE[torneo.estado] || ''}`}>
-                      {ESTADOS.find(e => e.value === torneo.estado)?.label || torneo.estado}
+                    <span
+                      className={`torneo-badge ${ESTADO_BADGE[torneo.estado] || ""}`}
+                    >
+                      {ESTADOS.find((e) => e.value === torneo.estado)?.label ||
+                        torneo.estado}
                     </span>
-                    <span className="torneo-categoria">{catLabel(torneo.categoria)}</span>
+                    <span className="torneo-categoria">
+                      {catLabel(torneo.categoria)}
+                    </span>
                   </div>
                   <div className="torneo-meta">
                     <span className="torneo-meta-item">
