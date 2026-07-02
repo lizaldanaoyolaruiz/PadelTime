@@ -82,6 +82,10 @@ const ClubReviews = ({ complexId }) => {
   };
 
   const openCreateModal = () => {
+    if (!isAuthenticated) {
+      toast.info("Iniciá sesión para dejar tu reseña.");
+      return;
+    }
     setEditingReview(null);
     setRating(0);
     setComment("");
