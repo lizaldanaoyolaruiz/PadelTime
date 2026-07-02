@@ -84,9 +84,10 @@ const BookingConfirmation = () => {
         const complex = complexRes.data.complex;
 
         const fechaObj = new Date(`${date}T12:00:00`);
-        const precioAlquiler = court.pricePerHour || 0;
+        const precioAlquiler = court.pricePerHour || complex.price || 0;
+        const precioLuz = 1500;
         const depositPct = complex.depositPercentage || 30;
-        const total = precioAlquiler;
+        const total = precioAlquiler + precioLuz;
         const senia = Math.round((total * depositPct) / 100);
 
         setDatosReserva({
@@ -104,9 +105,10 @@ const BookingConfirmation = () => {
           anio: fechaObj.getFullYear(),
           horario: `${startTime} - ${endTime}`,
           precioAlquiler,
-          precioLuz: 0,
+          precioLuz,
           total,
           senia,
+          mercadopagoActive: complex.mercadopagoActive || false,
         });
       } catch {
         setErrorCarga(
