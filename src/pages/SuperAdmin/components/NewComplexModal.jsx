@@ -25,9 +25,13 @@ export function NewComplexModal({ onClose, onCreated }) {
     try {
       const res = await createComplexByAdmin({
         name: data.name,
+        owner: data.owner,
         ownerEmail: data.email,
+        phone: data.phone,
+        courts: parseInt(data.courts, 10),
         city: data.city,
         address: data.address,
+        province: data.province,
         observations: data.observations,
       });
       toast.success(
@@ -138,15 +142,15 @@ export function NewComplexModal({ onClose, onCreated }) {
               {...register("phone")}
               className={`gc-new-input${errors.phone ? " gc-new-input--error" : ""}`}
               type="tel"
-              placeholder="+34 911 000 000"
-              maxLength={18}
+              placeholder="+5493813550986"
+              maxLength={14}
               onKeyDown={blockNonPhone}
             />
             {errors.phone ? (
               <span className="gc-new-error">{errors.phone.message}</span>
             ) : (
               <span className="gc-new-hint">
-                Mín. 10 dígitos — solo números y +
+                13 dígitos, sin espacios (ej: +5493813550986)
               </span>
             )}
           </div>
