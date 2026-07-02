@@ -18,9 +18,13 @@ import {
 } from "lucide-react";
 import api from "../../services/axios";
 import useAuthStore from "../../store/authStore";
+import { blockNonLetters } from "./utils/validations";
 import "./ManagementPanel.css";
 
 const PER_PAGE = 10;
+const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+)*$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const STRONG_PW = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).+$/;
 
 export default function ManagementPanel({ triggerCreate = 0 }) {
   const { user: authUser } = useAuthStore();
@@ -131,9 +135,38 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     setModal("delete");
   };
 
+  const validateOwnerForm = ({ requirePassword }) => {
+    if (!form.name || !form.email || (requirePassword && !form.password)) {
+      return "Nombre, email y contraseña son obligatorios.";
+    }
+    if (form.name.trim().length < 3 || form.name.trim().length > 101) {
+      return "El nombre debe tener entre 3 y 101 caracteres.";
+    }
+    if (!NAME_RE.test(form.name.trim())) {
+      return "El nombre solo puede contener letras.";
+    }
+    if (
+      form.email.trim().length < 6 ||
+      form.email.trim().length > 100 ||
+      !EMAIL_RE.test(form.email.trim())
+    ) {
+      return "Ingresá un email válido.";
+    }
+    if (form.password) {
+      if (form.password.length < 8 || form.password.length > 64) {
+        return "La contraseña debe tener entre 8 y 64 caracteres.";
+      }
+      if (!STRONG_PW.test(form.password)) {
+        return "La contraseña debe incluir mayúscula, minúscula, número y carácter especial.";
+      }
+    }
+    return null;
+  };
+
   const handleCreate = async () => {
-    if (!form.name || !form.email || !form.password) {
-      setFormError("Nombre, email y contraseña son obligatorios.");
+    const error = validateOwnerForm({ requirePassword: true });
+    if (error) {
+      setFormError(error);
       return;
     }
     try {
@@ -151,8 +184,9 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
   };
 
   const handleEdit = async () => {
-    if (!form.name || !form.email) {
-      setFormError("Nombre y email son obligatorios.");
+    const error = validateOwnerForm({ requirePassword: false });
+    if (error) {
+      setFormError(error);
       return;
     }
     try {
@@ -526,6 +560,8 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
               <input
                 type="text"
                 placeholder="Ej: Carlos Ruiz"
+                maxLength={101}
+                onKeyDown={blockNonLetters}
                 value={form.name}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, name: e.target.value }))
@@ -535,28 +571,26 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
               <input
                 type="email"
                 placeholder="email@ejemplo.com"
+                maxLength={100}
                 value={form.email}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, email: e.target.value }))
                 }
               />
-              <label>
-                {modal === "create"
-                  ? "Contraseña"
-                  : "Nueva contraseña (opcional)"}
-              </label>
-              <input
-                type="password"
-                placeholder={
-                  modal === "create"
-                    ? "Mínimo 8 caracteres"
-                    : "Dejar vacío para no cambiar"
-                }
-                value={form.password}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, password: e.target.value }))
-                }
-              />
+              {modal === "create" && (
+                <>
+                  <label>Contraseña</label>
+                  <input
+                    type="password"
+                    placeholder="Mín. 8 car., mayúscula, minúscula, número y símbolo"
+                    maxLength={64}
+                    value={form.password}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, password: e.target.value }))
+                    }
+                  />
+                </>
+              )}
               <label>Ubicación del Complejo</label>
               <select
                 value={form.location}

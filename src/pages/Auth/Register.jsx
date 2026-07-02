@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toastSuccess, toastError, toastWarning } from "../../utils/toasts";
 import { registerSchema } from "../../utils/authValidations";
+import { blockNonLetters } from "../../utils/keyboardValidations";
 import { EyeIcon, EyeOffIcon } from "../../components/ui/EyeIcons";
 import useAuthStore from "../../store/authStore";
 import "./Auth.css";
@@ -116,6 +117,8 @@ export default function Register() {
                 <input
                   type="text"
                   placeholder="Tu nombre"
+                  maxLength={50}
+                  onKeyDown={blockNonLetters}
                   {...register("nombre")}
                 />
               </div>
@@ -149,6 +152,8 @@ export default function Register() {
                 <input
                   type="text"
                   placeholder="Tu apellido"
+                  maxLength={50}
+                  onKeyDown={blockNonLetters}
                   {...register("apellido")}
                 />
               </div>

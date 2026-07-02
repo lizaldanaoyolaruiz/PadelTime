@@ -57,7 +57,7 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
               <Users size={11} /> {complex.owner?.name}
             </span>
             <span>
-              <Calendar size={11} /> {formatDate(complex.registeredAt)}
+              <Calendar size={11} /> {formatDate(complex.createdAt)}
             </span>
           </div>
           <div

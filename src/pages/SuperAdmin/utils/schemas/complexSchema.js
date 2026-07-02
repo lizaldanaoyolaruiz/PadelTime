@@ -3,8 +3,9 @@ import { CITIES } from "../../../../constants/cities";
 
 const LETTERS_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'\-.]+$/;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_RE = /^\+?[0-9][\d\s\-()]{8,}$/;
+const PHONE_RE = /^\+?[0-9]{13}$/;
 const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s'\-&.]+$/;
+const ADDRESS_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s.,'-]+$/;
 
 export const complexSchema = z.object({
   name: z
@@ -31,9 +32,7 @@ export const complexSchema = z.object({
   phone: z
     .string()
     .min(1, "Campo requerido")
-    .regex(PHONE_RE, "Solo números, +, guiones y paréntesis")
-    .refine((v) => v.replace(/\D/g, "").length >= 10, "Mínimo 10 dígitos")
-    .refine((v) => v.replace(/\D/g, "").length <= 15, "Máximo 15 dígitos"),
+    .regex(PHONE_RE, "Deben ser 13 dígitos, sin espacios (ej: +5493813550986)"),
 
   courts: z
     .string()
@@ -42,14 +41,21 @@ export const complexSchema = z.object({
     .refine((v) => parseInt(v) >= 1, "Mínimo 1 pista")
     .refine((v) => parseInt(v) <= 50, "Máximo 50 pistas"),
 
-  city: z.enum(CITIES, {
-    errorMap: () => ({ message: "Seleccioná una ciudad" }),
-  }),
+  city: z.enum(CITIES, { error: "Seleccioná una ciudad" }),
 
   address: z
     .string()
     .min(5, "Mínimo 5 caracteres")
-    .max(120, "Máximo 120 caracteres"),
+    .max(120, "Máximo 120 caracteres")
+    .regex(ADDRESS_RE, "Contiene caracteres no permitidos"),
+
+  province: z
+    .string()
+    .min(3, "Mínimo 3 caracteres")
+    .max(50, "Máximo 50 caracteres")
+    .regex(LETTERS_RE, "Solo se permiten letras y espacios")
+    .optional()
+    .default("Tucumán"),
 
   observations: z
     .string()

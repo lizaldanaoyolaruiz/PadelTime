@@ -18,6 +18,27 @@ import Swal from "sweetalert2";
 import { confirmLogout } from "../../utils/alerts";
 import "./ClientPanel.css";
 
+const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+)*$/;
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const STRONG_PW = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).+$/;
+
+const NAV_KEYS = [
+  "Backspace",
+  "Delete",
+  "Tab",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowUp",
+  "ArrowDown",
+  "Home",
+  "End",
+];
+const blockNonLetters = (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey || NAV_KEYS.includes(e.key)) return;
+  if (/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]$/.test(e.key)) return;
+  e.preventDefault();
+};
+
 const STATUS_MAP = {
   pending: { label: "Pendiente", cls: "pendiente" },
   confirmed: { label: "Confirmado", cls: "confirmado" },
@@ -194,9 +215,31 @@ export default function ClientPanel() {
       setFormErr("Nombre y email son obligatorios.");
       return;
     }
-    if (form.password && form.password.length < 8) {
-      setFormErr("La contraseña debe tener al menos 8 caracteres.");
+    const name = form.name.trim();
+    if (name.length < 3 || name.length > 101) {
+      setFormErr("El nombre debe tener entre 3 y 101 caracteres.");
       return;
+    }
+    if (!NAME_RE.test(name)) {
+      setFormErr("El nombre solo puede contener letras.");
+      return;
+    }
+    const email = form.email.trim();
+    if (email.length < 6 || email.length > 100 || !EMAIL_RE.test(email)) {
+      setFormErr("Ingresá un email válido.");
+      return;
+    }
+    if (form.password) {
+      if (form.password.length < 8 || form.password.length > 64) {
+        setFormErr("La contraseña debe tener entre 8 y 64 caracteres.");
+        return;
+      }
+      if (!STRONG_PW.test(form.password)) {
+        setFormErr(
+          "La contraseña debe incluir mayúscula, minúscula, número y carácter especial.",
+        );
+        return;
+      }
     }
     if (form.password !== form.confirmPassword) {
       setFormErr("Las contraseñas no coinciden.");
@@ -824,6 +867,8 @@ export default function ClientPanel() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, name: e.target.value }))
                 }
+                onKeyDown={blockNonLetters}
+                maxLength={101}
                 placeholder="Tu nombre"
               />
               <label>Email</label>
@@ -833,6 +878,7 @@ export default function ClientPanel() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, email: e.target.value }))
                 }
+                maxLength={100}
                 placeholder="tu@email.com"
               />
               <label>Nueva contraseña (opcional)</label>
@@ -842,7 +888,8 @@ export default function ClientPanel() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, password: e.target.value }))
                 }
-                placeholder="Mínimo 8 caracteres"
+                maxLength={64}
+                placeholder="Mín. 8 car., mayúscula, minúscula, número y símbolo"
               />
               <label>Confirmar nueva contraseña</label>
               <input
@@ -851,6 +898,7 @@ export default function ClientPanel() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, confirmPassword: e.target.value }))
                 }
+                maxLength={64}
                 placeholder="Repetí la contraseña"
                 style={{
                   borderColor:
