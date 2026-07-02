@@ -327,8 +327,8 @@ export default function NewReservationModal({
                 <input
                   type="tel"
                   className={`form-input${errors.jugadorTelefono ? " input-error" : ""}`}
-                  placeholder="+54 9 11 1234-5678"
-                  maxLength={18}
+                  placeholder="+5493813550986"
+                  maxLength={14}
                   onKeyDown={blockNonPhone}
                   {...register("jugadorTelefono")}
                 />
@@ -338,7 +338,7 @@ export default function NewReservationModal({
                   </span>
                 ) : (
                   <span className="form-hint">
-                    Solo números y + — 7 a 15 dígitos
+                    13 dígitos, sin espacios (ej: +5493813550986)
                   </span>
                 )}
               </div>

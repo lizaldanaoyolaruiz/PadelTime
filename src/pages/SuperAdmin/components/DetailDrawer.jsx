@@ -100,7 +100,7 @@ export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
                 <span className="gc-drawer-field-label">
                   <MapPin size={12} /> Dirección
                 </span>
-                <span className="gc-drawer-field-value">{complex.address}</span>
+                <span className="gc-drawer-field-value">{complex.location}</span>
               </div>
               <div className="gc-drawer-field">
                 <span className="gc-drawer-field-label">Ciudad</span>
@@ -117,7 +117,7 @@ export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
                   <Calendar size={12} /> Fecha Registro
                 </span>
                 <span className="gc-drawer-field-value">
-                  {formatDate(complex.registeredAt)}
+                  {formatDate(complex.createdAt)}
                 </span>
               </div>
               <div className="gc-drawer-field">

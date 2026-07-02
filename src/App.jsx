@@ -57,14 +57,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/nosotros" element={<AboutUs />} />
-        <Route
-          path="/complejo/:id"
-          element={
-            <ProtectedRoute>
-              <ClubDetail />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/complejo/:id" element={<ClubDetail />} />
         <Route
           path="/complejos"
           element={

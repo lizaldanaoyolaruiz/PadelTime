@@ -5,6 +5,7 @@ import { Mail, Phone, ArrowRight, MapPin } from "lucide-react";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import { contactSchema } from "../../utils/authValidations";
+import { blockNonLetters } from "../../utils/keyboardValidations";
 import "./contact.css";
 
 const ASUNTOS = ["Soporte Técnico", "Registrar Club", "Comercial"];
@@ -76,6 +77,8 @@ export default function ContactPage() {
                   <label>Nombre completo</label>
                   <input
                     placeholder="Tu nombre completo"
+                    maxLength={50}
+                    onKeyDown={blockNonLetters}
                     {...register("nombre")}
                   />
                   {errors.nombre && (
@@ -117,6 +120,7 @@ export default function ContactPage() {
                 <textarea
                   rows="6"
                   placeholder="¿En qué podemos ayudarte hoy?"
+                  maxLength={2000}
                   {...register("mensaje")}
                 />
                 {errors.mensaje && (

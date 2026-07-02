@@ -64,7 +64,7 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                 </td>
                 <td>
                   <span className="gc-date">
-                    {formatDate(complex.registeredAt)}
+                    {formatDate(complex.createdAt)}
                   </span>
                 </td>
                 <td>

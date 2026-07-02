@@ -24,6 +24,7 @@ import {
   blockNonPhone,
   blockNonDigits,
 } from "../utils/validations";
+import { CITIES } from "../../../constants/cities";
 
 function EditComplexForm({
   complex,
@@ -40,8 +41,16 @@ function EditComplexForm({
   } = useComplexForm(complex);
 
   const watchedName = watch("name", complex.name || "");
-  const watchedOwner = watch("owner", complex.owner || "");
-  const watchedAddress = watch("address", complex.address || "");
+  const watchedOwner = watch(
+    "owner",
+    (typeof complex.owner === "object"
+      ? complex.owner?.name
+      : complex.owner) || "",
+  );
+  const watchedAddress = watch(
+    "address",
+    complex.address || complex.location || "",
+  );
   const watchedObservations = watch("observations", complex.observations || "");
 
   const onSubmit = async (data) => {
@@ -158,15 +167,15 @@ function EditComplexForm({
               {...register("phone")}
               className={`gc-new-input${errors.phone ? " gc-new-input--error" : ""}`}
               type="tel"
-              placeholder="+34 911 000 000"
-              maxLength={18}
+              placeholder="+5493813550986"
+              maxLength={14}
               onKeyDown={blockNonPhone}
             />
             {errors.phone ? (
               <span className="gc-new-error">{errors.phone.message}</span>
             ) : (
               <span className="gc-new-hint">
-                Mín. 10 dígitos — solo números y +
+                13 dígitos, sin espacios (ej: +5493813550986)
               </span>
             )}
           </div>
@@ -214,17 +223,21 @@ function EditComplexForm({
             <label className="gc-new-label">
               Ciudad <span className="gc-required">*</span>
             </label>
-            <input
+            <select
               {...register("city")}
               className={`gc-new-input${errors.city ? " gc-new-input--error" : ""}`}
-              placeholder="Ej: Barcelona"
-              maxLength={50}
-              onKeyDown={blockNonLetters}
-            />
-            {errors.city ? (
+            >
+              <option value="" disabled>
+                Seleccioná una ciudad...
+              </option>
+              {CITIES.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+            {errors.city && (
               <span className="gc-new-error">{errors.city.message}</span>
-            ) : (
-              <span className="gc-new-hint">Solo letras — mín. 3</span>
             )}
           </div>
 
@@ -423,6 +436,7 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
               rows={3}
+              maxLength={300}
               aria-label="Motivo del rechazo"
             />
             <div className="gc-modal-actions">

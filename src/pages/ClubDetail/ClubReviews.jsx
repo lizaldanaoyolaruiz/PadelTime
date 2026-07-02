@@ -82,6 +82,10 @@ const ClubReviews = ({ complexId }) => {
   };
 
   const openCreateModal = () => {
+    if (!isAuthenticated) {
+      toast.info("Iniciá sesión para dejar tu reseña.");
+      return;
+    }
     setEditingReview(null);
     setRating(0);
     setComment("");
@@ -328,7 +332,9 @@ const ClubReviews = ({ complexId }) => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 rows="4"
+                maxLength={1000}
               ></textarea>
+              <span className="form-hint">{comment.length}/1000</span>
               <button
                 type="submit"
                 className="btn-submit-review"
