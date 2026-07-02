@@ -2,20 +2,24 @@ import { z } from 'zod';
 import { CITIES } from '../../../../constants/cities';
 
 const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
+const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s'\-&.]+$/;
+const ADDRESS_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s.,'-]+$/;
 
 export const complexSchema = z
   .object({
     name: z
       .string()
       .min(3, 'Mínimo 3 caracteres')
-      .max(100, 'Máximo 100 caracteres'),
-    city: z.enum(CITIES, { errorMap: () => ({ message: 'Seleccioná una ciudad' }) }),
+      .max(100, 'Máximo 100 caracteres')
+      .regex(NAME_RE, 'Solo letras, números, guiones y &'),
+    city: z.enum(CITIES, { error: 'Seleccioná una ciudad' }),
     address: z
       .string()
       .min(5, 'Mínimo 5 caracteres')
-      .max(120, 'Máximo 120 caracteres'),
+      .max(120, 'Máximo 120 caracteres')
+      .regex(ADDRESS_RE, 'Contiene caracteres no permitidos'),
     price: z.coerce
-      .number({ invalid_type_error: 'Ingresá un número válido' })
+      .number({ error: 'Ingresá un número válido' })
       .positive('Debe ser mayor a 0')
       .max(999999, 'Precio demasiado alto'),
     openTime: z.string().min(1, 'El horario de apertura es requerido').regex(TIME_RE, 'Formato HH:MM requerido'),
@@ -23,7 +27,7 @@ export const complexSchema = z
     whatsapp: z
       .string()
       .min(1, 'El WhatsApp es requerido')
-      .regex(/^\+?[\d\s\-]{7,15}$/, 'Teléfono inválido (7–15 dígitos)'),
+      .regex(/^\+?[0-9]{13}$/, 'Deben ser 13 dígitos, sin espacios (ej: +5493813550986)'),
     description: z
       .string()
       .min(3, 'Mínimo 3 caracteres')
@@ -32,8 +36,10 @@ export const complexSchema = z
       (val) => (val === '' || val === undefined || val === null ? undefined : Number(val)),
       z
         .number({
-          required_error: 'El porcentaje de seña es requerido',
-          invalid_type_error: 'Ingresá un número válido',
+          error: (issue) =>
+            issue.input === undefined
+              ? 'El porcentaje de seña es requerido'
+              : 'Ingresá un número válido',
         })
         .int('Debe ser un número entero')
         .min(0, 'Mínimo 0%')
