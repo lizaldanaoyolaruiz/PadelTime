@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+$/;
+const NAME_RE =
+  /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+(?: [a-zA-ZáéíóúÁÉÍÓÚüÜñÑ'-]+)*$/;
 const STRONG_PW = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d])/;
 
 const nameField = (label) =>
@@ -26,10 +27,13 @@ const emailField = z
   .email("Ingresa un correo electrónico válido");
 
 export const contactSchema = z.object({
-  nombre: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  nombre: nameField("Nombre"),
   email: emailField,
-  asunto: z.string().min(1, "Selecciona un asunto"),
-  mensaje: z.string().min(10, "El mensaje debe tener al menos 10 caracteres"),
+  asunto: z.string().min(1, "Selecciona un asunto").max(100, "Máximo 100 caracteres"),
+  mensaje: z
+    .string()
+    .min(10, "El mensaje debe tener al menos 10 caracteres")
+    .max(2000, "Máximo 2000 caracteres"),
 });
 
 export const loginSchema = z.object({
@@ -43,7 +47,10 @@ export const registerSchema = z
     apellido: nameField("Apellido"),
     email: emailField,
     password: passwordField,
-    confirmPassword: z.string().min(3, "Repite tu contraseña"),
+    confirmPassword: z
+      .string()
+      .min(8, "Repite tu contraseña")
+      .max(64, "Máximo 64 caracteres"),
   })
   .refine((d) => d.password === d.confirmPassword, {
     message: "Las contraseñas no coinciden",
