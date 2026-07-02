@@ -2,7 +2,7 @@
   min-height: 100vh;
   background-color: transparent;
   color: #f8fafc;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   display: flex;
   flex-direction: column;
 }
@@ -33,7 +33,11 @@
 .cd-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--bg-color, #0f172a) 0%, rgba(15, 23, 42, 0.4) 100%);
+  background: linear-gradient(
+    to top,
+    var(--bg-color, #0f172a) 0%,
+    rgba(15, 23, 42, 0.4) 100%
+  );
   z-index: 1;
 }
 
@@ -283,7 +287,9 @@
   border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
 }
 
 .cd-rec-card:hover {
@@ -353,8 +359,8 @@
   gap: 6px;
 }
 .cd-sched-day--off {
-  background: rgba(255,255,255,0.03);
-  border-color: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
   opacity: 0.5;
 }
 .cd-sched-label {

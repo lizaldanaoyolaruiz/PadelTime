@@ -25,7 +25,7 @@
   background: #95ff00;
   border-radius: 50%;
   filter: blur(150px);
-  opacity: 0.10;
+  opacity: 0.1;
   pointer-events: none;
 }
 
@@ -73,7 +73,10 @@
   transform: translate(-50%, -50%);
   box-shadow: 0 0 60px #70ff00;
   cursor: pointer;
-  transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease;
   animation: bounce 2.5s ease-in-out infinite;
 }
 
@@ -82,14 +85,19 @@
   background: #aaff00;
   box-shadow:
     0 0 80px #aaff00,
-    0 0 140px rgba(170,255,0,.5),
-    0 30px 40px rgba(0,0,0,.35);
+    0 0 140px rgba(170, 255, 0, 0.5),
+    0 30px 40px rgba(0, 0, 0, 0.35);
   animation-play-state: paused;
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translate(-50%, -50%); }
-  50%       { transform: translate(-50%, -62%); }
+  0%,
+  100% {
+    transform: translate(-50%, -50%);
+  }
+  50% {
+    transform: translate(-50%, -62%);
+  }
 }
 
 .e404-content h1 {
@@ -129,7 +137,9 @@
   white-space: nowrap;
 }
 
-.e404-btn-primary:hover { opacity: 0.88; }
+.e404-btn-primary:hover {
+  opacity: 0.88;
+}
 
 .e404-btn-secondary {
   background: transparent;
@@ -140,11 +150,16 @@
   cursor: pointer;
   font-size: 1rem;
   font-family: inherit;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
   white-space: nowrap;
 }
 
-.e404-btn-secondary:hover { border-color: #94a3b8; color: #f1f5f9; }
+.e404-btn-secondary:hover {
+  border-color: #94a3b8;
+  color: #f1f5f9;
+}
 
 .e404-cards {
   margin-top: 4rem;
@@ -161,7 +176,9 @@
   padding: 24px 20px;
   border-radius: 18px;
   text-align: left;
-  transition: border-color 0.2s, transform 0.2s;
+  transition:
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .e404-card:hover {

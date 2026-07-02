@@ -1,5 +1,3 @@
-/* ── Torneos Section (Home) ───────────────────────────────────────────────── */
-
 .ts-section {
   padding: 2rem 4rem;
   width: 100%;
@@ -65,9 +63,9 @@
   transition: opacity 0.2s;
   white-space: nowrap;
 }
-.ts-ver-todos:hover { opacity: 0.75; }
-
-/* ── Cards grid ─────────────────────────────────────────────────────────── */
+.ts-ver-todos:hover {
+  opacity: 0.75;
+}
 
 .ts-grid {
   display: grid;
@@ -84,7 +82,10 @@
   flex-direction: column;
   gap: 10px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 .ts-card:hover {
   transform: translateY(-3px);
@@ -112,7 +113,7 @@
   border: 1px solid rgba(132, 204, 22, 0.3);
 }
 .ts-badge-activo::before {
-  content: '';
+  content: "";
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -161,7 +162,11 @@
   font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
-.ts-meta-item svg { flex-shrink: 0; color: var(--color-primary); opacity: 0.7; }
+.ts-meta-item svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+  opacity: 0.7;
+}
 
 .ts-card-footer {
   margin-top: auto;
@@ -174,8 +179,6 @@
   font-weight: var(--fw-semibold);
   color: var(--color-primary);
 }
-
-/* ── Modal de detalle ────────────────────────────────────────────────────── */
 
 .ts-modal-overlay {
   position: fixed;
@@ -218,7 +221,10 @@
   flex-shrink: 0;
 }
 
-.ts-modal-title-wrap { flex: 1; min-width: 0; }
+.ts-modal-title-wrap {
+  flex: 1;
+  min-width: 0;
+}
 
 .ts-modal-title {
   font-size: var(--text-lg);
@@ -268,9 +274,13 @@
   flex-shrink: 0;
   transition: color 0.2s;
 }
-.ts-modal-close:hover { color: var(--color-text-base); }
+.ts-modal-close:hover {
+  color: var(--color-text-base);
+}
 
-.ts-modal-body { padding: 20px; }
+.ts-modal-body {
+  padding: 20px;
+}
 
 .ts-modal-desc {
   font-size: var(--text-sm);
@@ -291,8 +301,16 @@
   gap: 10px;
   color: var(--color-primary);
 }
-.ts-modal-field svg { flex-shrink: 0; margin-top: 2px; opacity: 0.8; }
-.ts-modal-field > div { display: flex; flex-direction: column; gap: 2px; }
+.ts-modal-field svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+.ts-modal-field > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
 
 .ts-modal-field-label {
   font-size: var(--text-xs);
@@ -321,7 +339,9 @@
   font-family: var(--font-base);
   border-radius: 10px;
   text-decoration: none;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background 0.2s,
+    transform 0.15s;
   width: 100%;
   box-sizing: border-box;
 }
@@ -330,17 +350,27 @@
   transform: translateY(-1px);
 }
 
-/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .ts-section { padding: 2rem; }
+  .ts-section {
+    padding: 2rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .ts-grid { grid-template-columns: 1fr 1fr; }
+  .ts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 576px) {
-  .ts-section { padding: 2rem 1.5rem; }
-  .ts-grid { grid-template-columns: 1fr; }
-  .ts-header { flex-direction: column; align-items: flex-start; }
+  .ts-section {
+    padding: 2rem 1.5rem;
+  }
+  .ts-grid {
+    grid-template-columns: 1fr;
+  }
+  .ts-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }

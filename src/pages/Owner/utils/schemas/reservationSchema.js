@@ -31,7 +31,7 @@ export const reservationSchema = z.object({
   jugadorTelefono: z
     .string()
     .min(1, 'El teléfono es requerido')
-    .regex(/^\+?[\d\s\-]{7,15}$/, 'Teléfono inválido (7–15 dígitos)'),
+    .regex(/^\+?[0-9]{13}$/, 'Deben ser 13 dígitos, sin espacios (ej: +5493813550986)'),
   observaciones: z
     .string()
     .min(3, 'Mínimo 3 caracteres')

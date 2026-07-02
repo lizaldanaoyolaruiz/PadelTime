@@ -1,66 +1,82 @@
-import { useState, useEffect } from 'react';
-import { Search, Plus, Shield } from 'lucide-react';
-import { getAllComplexes } from '../../services/complexService';
-import { FILTERS, STATUS_MAP } from './utils/constants';
-import { StatCards }         from './components/StatCards';
-import { ComplexTable }      from './components/ComplexTable';
-import { ComplexMobileList } from './components/ComplexMobileList';
-import { DetailDrawer }      from './components/DetailDrawer';
-import { NewComplexModal }   from './components/NewComplexModal';
-import { ActionModals }      from './components/ActionModals';
-import './ComplexManagement.css';
+import { useState, useEffect } from "react";
+import { Search, Plus, Shield } from "lucide-react";
+import { getAllComplexes } from "../../services/complexService";
+import { FILTERS, STATUS_MAP } from "./utils/constants";
+import { StatCards } from "./components/StatCards";
+import { ComplexTable } from "./components/ComplexTable";
+import { ComplexMobileList } from "./components/ComplexMobileList";
+import { DetailDrawer } from "./components/DetailDrawer";
+import { NewComplexModal } from "./components/NewComplexModal";
+import { ActionModals } from "./components/ActionModals";
+import "./ComplexManagement.css";
 
 export default function ComplexManagement() {
-  const [complexes,    setComplexes]    = useState([]);
-  const [loading,      setLoading]      = useState(true);
-  const [searchTerm,   setSearchTerm]   = useState('');
-  const [activeFilter, setActiveFilter] = useState('ALL');
+  const [complexes, setComplexes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("ALL");
   const [selectedComplex, setSelectedComplex] = useState(null);
-  const [showDetail,   setShowDetail]   = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
   const [showNewModal, setShowNewModal] = useState(false);
-  const [actionModal,  setActionModal]  = useState({ open: false, type: null, complex: null });
+  const [actionModal, setActionModal] = useState({
+    open: false,
+    type: null,
+    complex: null,
+  });
 
   useEffect(() => {
     getAllComplexes()
-      .then(res => setComplexes(res.data.data || []))
-      .catch(err => console.error('Error cargando complejos:', err))
+      .then((res) => setComplexes(res.data.data || []))
+      .catch((err) => console.error("Error cargando complejos:", err))
       .finally(() => setLoading(false));
   }, []);
 
-  const pendingCount = complexes.filter(c => c.status === 'pending').length;
+  const pendingCount = complexes.filter((c) => c.status === "pending").length;
 
-  const filtered = complexes.filter(c => {
+  const filtered = complexes.filter((c) => {
     const term = searchTerm.toLowerCase().trim();
-    const matchesSearch = !term ||
-      (c.name || '').toLowerCase().includes(term)              ||
-      (c.owner?.email || '').toLowerCase().includes(term)      ||
-      (c.owner?.name || '').toLowerCase().includes(term)       ||
-      (c.city || '').toLowerCase().includes(term)              ||
-      (STATUS_MAP[c.status]?.label || '').toLowerCase().includes(term);
-    const matchesFilter = activeFilter === 'ALL' || c.status === activeFilter;
+    const matchesSearch =
+      !term ||
+      (c.name || "").toLowerCase().includes(term) ||
+      (c.owner?.email || "").toLowerCase().includes(term) ||
+      (c.owner?.name || "").toLowerCase().includes(term) ||
+      (c.city || "").toLowerCase().includes(term) ||
+      (STATUS_MAP[c.status]?.label || "").toLowerCase().includes(term);
+    const matchesFilter = activeFilter === "ALL" || c.status === activeFilter;
     return matchesSearch && matchesFilter;
   });
 
-  const openDetail  = (complex) => { setSelectedComplex(complex); setShowDetail(true); };
+  const openDetail = (complex) => {
+    setSelectedComplex(complex);
+    setShowDetail(true);
+  };
   const closeDetail = () => setShowDetail(false);
 
-  const openAction  = (type, complex) => setActionModal({ open: true, type, complex });
-  const closeAction = () => setActionModal({ open: false, type: null, complex: null });
+  const openAction = (type, complex) =>
+    setActionModal({ open: true, type, complex });
+  const closeAction = () =>
+    setActionModal({ open: false, type: null, complex: null });
 
-  const handleDrawerAction = (type, complex) => { closeDetail(); openAction(type, complex); };
+  const handleDrawerAction = (type, complex) => {
+    closeDetail();
+    openAction(type, complex);
+  };
 
   const handleStatusUpdate = (id, status, extra = {}) =>
-    setComplexes(prev => prev.map(c => String(c._id) === String(id) ? { ...c, status, ...extra } : c));
+    setComplexes((prev) =>
+      prev.map((c) =>
+        String(c._id) === String(id) ? { ...c, status, ...extra } : c,
+      ),
+    );
 
   const handleComplexCreated = (newComplex) =>
-    setComplexes(prev => [newComplex, ...prev]);
+    setComplexes((prev) => [newComplex, ...prev]);
 
   const handleComplexDeleted = (id) =>
-    setComplexes(prev => prev.filter(c => String(c._id) !== String(id)));
+    setComplexes((prev) => prev.filter((c) => String(c._id) !== String(id)));
 
   return (
     <div className="gc-wrap">
-
       <div className="gc-header">
         <div className="gc-header-left">
           <div className="gc-super-badge">
@@ -69,17 +85,20 @@ export default function ComplexManagement() {
           </div>
           <h2 className="gc-title">Panel de Control</h2>
           <p className="gc-subtitle">
-            {loading ? 'Cargando datos...' : 'Bienvenido de nuevo. Hay '}
+            {loading ? "Cargando datos..." : "Bienvenido de nuevo. Hay "}
             {!loading && (
               <strong className="gc-subtitle-highlight">
-                {pendingCount} solicitud{pendingCount !== 1 ? 'es' : ''}
+                {pendingCount} solicitud{pendingCount !== 1 ? "es" : ""}
               </strong>
             )}
-            {!loading && ' pendientes de revisión.'}
+            {!loading && " pendientes de revisión."}
           </p>
         </div>
         <div className="gc-header-actions">
-          <button className="gc-btn-primary" onClick={() => setShowNewModal(true)}>
+          <button
+            className="gc-btn-primary"
+            onClick={() => setShowNewModal(true)}
+          >
             <Plus size={15} />
             <span>Nuevo Club</span>
           </button>
@@ -96,7 +115,9 @@ export default function ComplexManagement() {
             <h3 className="gc-table-title">
               Solicitudes de Nuevos Clubes
               {!loading && pendingCount > 0 && (
-                <span className="gc-table-badge">{pendingCount} PENDIENTES</span>
+                <span className="gc-table-badge">
+                  {pendingCount} PENDIENTES
+                </span>
               )}
             </h3>
             <div className="gc-search-wrap">
@@ -106,25 +127,29 @@ export default function ComplexManagement() {
                 className="gc-search-input"
                 placeholder="Buscar por nombre, ciudad o estado..."
                 value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 aria-label="Buscar complejo"
               />
             </div>
           </div>
 
-          <div className="gc-filters" role="tablist" aria-label="Filtrar complejos">
+          <div
+            className="gc-filters"
+            role="tablist"
+            aria-label="Filtrar complejos"
+          >
             {FILTERS.map(({ key, label }) => (
               <button
                 key={key}
                 role="tab"
                 aria-selected={activeFilter === key}
-                className={`gc-filter-btn${activeFilter === key ? ' active' : ''}`}
+                className={`gc-filter-btn${activeFilter === key ? " active" : ""}`}
                 onClick={() => setActiveFilter(key)}
               >
                 {label}
-                {key !== 'ALL' && !loading && (
+                {key !== "ALL" && !loading && (
                   <span className="gc-filter-count">
-                    {complexes.filter(c => c.status === key).length}
+                    {complexes.filter((c) => c.status === key).length}
                   </span>
                 )}
               </button>
@@ -159,7 +184,11 @@ export default function ComplexManagement() {
           onClose={closeDetail}
           onAction={handleDrawerAction}
           onFeaturedToggle={(id, isFeatured) =>
-            setComplexes(prev => prev.map(c => String(c._id) === String(id) ? { ...c, isFeatured } : c))
+            setComplexes((prev) =>
+              prev.map((c) =>
+                String(c._id) === String(id) ? { ...c, isFeatured } : c,
+              ),
+            )
           }
         />
       )}
@@ -177,7 +206,6 @@ export default function ComplexManagement() {
         onStatusUpdate={handleStatusUpdate}
         onDelete={handleComplexDeleted}
       />
-
     </div>
   );
 }

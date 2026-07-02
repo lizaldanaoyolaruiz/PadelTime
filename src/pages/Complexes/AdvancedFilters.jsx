@@ -1,8 +1,8 @@
-import { SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown } from "lucide-react";
 
 const PRECIO_MIN_ARS = 1000;
 const PRECIO_MAX_ARS = 100000;
-const CIUDADES = ['San Miguel de Tucumán', 'Yerba Buena', 'Tafí Viejo'];
+const CIUDADES = ["San Miguel de Tucumán", "Yerba Buena", "Tafí Viejo"];
 
 const AdvancedFilters = ({
   searchQuery,
@@ -17,7 +17,8 @@ const AdvancedFilters = ({
   onToggleTipo,
   onReset,
 }) => {
-  const pctFill = ((precioMax - PRECIO_MIN_ARS) / (PRECIO_MAX_ARS - PRECIO_MIN_ARS)) * 100;
+  const pctFill =
+    ((precioMax - PRECIO_MIN_ARS) / (PRECIO_MAX_ARS - PRECIO_MIN_ARS)) * 100;
 
   return (
     <aside className="filtros-sidebar">
@@ -25,7 +26,9 @@ const AdvancedFilters = ({
         <div className="filtros-titulo">
           <SlidersHorizontal size={15} />
           Filtros
-          {totalActivos > 0 && <span className="filtros-badge">{totalActivos}</span>}
+          {totalActivos > 0 && (
+            <span className="filtros-badge">{totalActivos}</span>
+          )}
         </div>
         {totalActivos > 0 && (
           <button className="filtros-reset-btn" onClick={onReset}>
@@ -43,8 +46,10 @@ const AdvancedFilters = ({
             onChange={(e) => onChangeCiudad(e.target.value)}
           >
             <option value="">Todas las ciudades</option>
-            {CIUDADES.map(city => (
-              <option key={city} value={city}>{city}</option>
+            {CIUDADES.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
             ))}
           </select>
           <ChevronDown size={13} className="filtro-ciudad-chevron" />
@@ -54,12 +59,17 @@ const AdvancedFilters = ({
       <div className="filtro-seccion">
         <p className="filtro-seccion-titulo">Precio por hora ($)</p>
         <div className="precio-valor-row">
-          <span className="precio-valor-actual">${precioMax.toLocaleString('es-AR')}+</span>
+          <span className="precio-valor-actual">
+            ${precioMax.toLocaleString("es-AR")}+
+          </span>
         </div>
 
         <div className="precio-slider-container">
           <div className="precio-track">
-            <div className="precio-track-fill" style={{ width: `${pctFill}%` }} />
+            <div
+              className="precio-track-fill"
+              style={{ width: `${pctFill}%` }}
+            />
           </div>
           <input
             type="range"
@@ -81,12 +91,16 @@ const AdvancedFilters = ({
       {tiposDisponibles.length > 0 && (
         <div className="filtro-seccion">
           <p className="filtro-seccion-titulo">Tipo de Pista</p>
-          {tiposDisponibles.map(tipo => {
+          {tiposDisponibles.map((tipo) => {
             const seleccionado = tiposSeleccionados.includes(tipo);
             return (
               <label
                 key={tipo}
-                className={seleccionado ? 'filtro-checkbox-label checked' : 'filtro-checkbox-label'}
+                className={
+                  seleccionado
+                    ? "filtro-checkbox-label checked"
+                    : "filtro-checkbox-label"
+                }
               >
                 <input
                   type="checkbox"

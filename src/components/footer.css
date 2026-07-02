@@ -1,14 +1,9 @@
-/* ══════════════════════════════════
-   Footer — PadelTime
-   ══════════════════════════════════ */
-
 .footer {
   background-color: var(--color-surface-1);
   border-top: 1px solid var(--color-border-subtle);
   margin-top: auto;
 }
 
-/* ── Área de columnas ── */
 .footer-main {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -46,7 +41,6 @@
   color: var(--color-primary);
 }
 
-/* ── Barra inferior ── */
 .footer-bottom {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -71,7 +65,6 @@
   display: block;
 }
 
-/* ── Redes sociales ── */
 .footer-social {
   display: flex;
   align-items: center;
@@ -90,7 +83,6 @@
   color: var(--color-primary);
 }
 
-/* ── Responsive 1024px ── */
 @media (max-width: 1024px) {
   .footer-main {
     grid-template-columns: repeat(3, 1fr);
@@ -102,7 +94,6 @@
   }
 }
 
-/* ── Responsive 768px ── */
 @media (max-width: 768px) {
   .footer-main {
     grid-template-columns: repeat(2, 1fr);
@@ -127,7 +118,6 @@
   }
 }
 
-/* ── Responsive 480px ── */
 @media (max-width: 480px) {
   .footer-main {
     grid-template-columns: 1fr 1fr;

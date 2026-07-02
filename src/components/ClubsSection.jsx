@@ -1,16 +1,24 @@
-﻿import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { MapPin, Clock } from 'lucide-react';
-import { getPublicComplexes } from '../services/complexService';
+﻿import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { MapPin, Clock } from "lucide-react";
+import { getPublicComplexes } from "../services/complexService";
 
 const mapClub = (c) => ({
   id: c._id,
   name: c.name,
   image: c.image || c.photos?.[0] || null,
-  price: (c.precioPorHora || c.price) ? `$${Number(c.precioPorHora || c.price).toLocaleString('es-AR')}/h` : null,
-  location: [c.city, c.location].filter(Boolean).join(' — '),
-  time: c.openTime && c.closeTime ? `${c.openTime} – ${c.closeTime}` : 'Consultar horarios',
-  rating: c.ratingAverage ? `${c.ratingAverage} (${c.ratingCount || 0} reseñas)` : null,
+  price:
+    c.precioPorHora || c.price
+      ? `$${Number(c.precioPorHora || c.price).toLocaleString("es-AR")}/h`
+      : null,
+  location: [c.city, c.location].filter(Boolean).join(" — "),
+  time:
+    c.openTime && c.closeTime
+      ? `${c.openTime} – ${c.closeTime}`
+      : "Consultar horarios",
+  rating: c.ratingAverage
+    ? `${c.ratingAverage} (${c.ratingCount || 0} reseñas)`
+    : null,
 });
 
 const ClubsSection = () => {
@@ -19,9 +27,10 @@ const ClubsSection = () => {
 
   useEffect(() => {
     getPublicComplexes()
-      .then(res => {
-        const data = res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
-        const featured = data.filter(c => c.isFeatured);
+      .then((res) => {
+        const data =
+          res.data?.complexes ?? (Array.isArray(res.data) ? res.data : []);
+        const featured = data.filter((c) => c.isFeatured);
         setClubs((featured.length ? featured : data).slice(0, 3).map(mapClub));
       })
       .catch(() => setClubs([]))
@@ -37,7 +46,9 @@ const ClubsSection = () => {
           <h2>Clubes Destacados</h2>
           <p>Seleccionados por su excelencia y calidad técnica.</p>
         </div>
-        <Link to="/complejos" className="view-all">Ver todos los clubes →</Link>
+        <Link to="/complejos" className="view-all">
+          Ver todos los clubes →
+        </Link>
       </div>
 
       <div className="clubs-grid">
@@ -45,12 +56,20 @@ const ClubsSection = () => {
           <div className="club-card" key={club.id}>
             <div className="club-image-container">
               <img
-                src={club.image || 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png'}
+                src={
+                  club.image ||
+                  "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png"
+                }
                 alt={club.name}
-                className={`club-image${club.image ? '' : ' club-image--logo'}`}
+                className={`club-image${club.image ? "" : " club-image--logo"}`}
                 loading="lazy"
               />
-              <span className="badge-admin" title="Este club ha sido verificado por nuestro equipo.">✓ VERIFICADO</span>
+              <span
+                className="badge-admin"
+                title="Este club ha sido verificado por nuestro equipo."
+              >
+                ✓ VERIFICADO
+              </span>
             </div>
             <div className="club-info">
               <div className="club-title-row">
@@ -58,8 +77,12 @@ const ClubsSection = () => {
                 {club.price && <span className="club-price">{club.price}</span>}
               </div>
               <div className="club-details">
-                <p><MapPin size={13} /> {club.location}</p>
-                <p><Clock size={13} /> {club.time}</p>
+                <p>
+                  <MapPin size={13} /> {club.location}
+                </p>
+                <p>
+                  <Clock size={13} /> {club.time}
+                </p>
               </div>
               <Link to={`/complejo/${club.id}`} className="btn-detail">
                 VER DETALLE

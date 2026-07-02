@@ -1,28 +1,37 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../../components/Navbar';
-import Footer from '../../components/Footer';
-import ClubReviews from './ClubReviews';
-import WeeklyCalendar from '../../components/WeeklyCalendar/WeeklyCalendar';
-import { getPublicComplexById } from '../../services/complexService';
-import { getPublicCourts } from '../../services/courtService';
-import { getSlotsPublicos } from '../../services/reservationService';
-import { checkFavorito, agregarFavorito, quitarFavorito } from '../../services/favoriteService';
-import useAuthStore from '../../store/authStore';
-import './ClubDetail.css';
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import ClubReviews from "./ClubReviews";
+import WeeklyCalendar from "../../components/WeeklyCalendar/WeeklyCalendar";
+import { getPublicComplexById } from "../../services/complexService";
+import { getPublicCourts } from "../../services/courtService";
+import { getSlotsPublicos } from "../../services/reservationService";
+import {
+  checkFavorito,
+  agregarFavorito,
+  quitarFavorito,
+} from "../../services/favoriteService";
+import useAuthStore from "../../store/authStore";
+import "./ClubDetail.css";
 
-const TYPE_LABELS = { crystal: 'Cristal', panoramic: 'Panorámica' };
+const TYPE_LABELS = { crystal: "Cristal", panoramic: "Panorámica" };
 
 const mapCourt = (court, fallbackPrice = 0) => {
   const precio = court.pricePerHour || fallbackPrice || 0;
   return {
     id: court._id,
     name: court.name,
-    price: precio ? `$${Number(precio).toLocaleString('es-AR')}/h` : 'Consultar precio',
+    price: precio
+      ? `$${Number(precio).toLocaleString("es-AR")}/h`
+      : "Consultar precio",
     precioNumerico: precio,
-    status: court.enabled ? 'Habilitada' : 'Deshabilitada',
-    description: court.description || '',
-    tags: [TYPE_LABELS[court.type] || court.type, ...(court.features || [])].filter(Boolean),
+    status: court.enabled ? "Habilitada" : "Deshabilitada",
+    description: court.description || "",
+    tags: [
+      TYPE_LABELS[court.type] || court.type,
+      ...(court.features || []),
+    ].filter(Boolean),
     image: court.photo || court.photos?.[0] || null,
   };
 };
@@ -33,28 +42,31 @@ const ClubDetail = () => {
 
   const { isAuthenticated } = useAuthStore();
 
-  const [club,               setClub]               = useState(null);
-  const [canchas,            setCanchas]             = useState([]);
-  const [cargando,           setCargando]            = useState(true);
-  const [canchaSeleccionada, setCanchaSeleccionada]  = useState(null);
-  const [slotSeleccionado,   setSlotSeleccionado]    = useState(null);
-  const [esFavorito,         setEsFavorito]          = useState(false);
-  const [cargandoFav,        setCargandoFav]         = useState(false);
+  const [club, setClub] = useState(null);
+  const [canchas, setCanchas] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [canchaSeleccionada, setCanchaSeleccionada] = useState(null);
+  const [slotSeleccionado, setSlotSeleccionado] = useState(null);
+  const [esFavorito, setEsFavorito] = useState(false);
+  const [cargandoFav, setCargandoFav] = useState(false);
 
   const [calendarSlots, setCalendarSlots] = useState(null);
-  const [loadingSlots,  setLoadingSlots]  = useState(false);
-  const calCourtRef    = useRef(null);
-  const calWeekRef     = useRef(null);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const calCourtRef = useRef(null);
+  const calWeekRef = useRef(null);
   const reservaWrapRef = useRef(null);
 
   useEffect(() => {
     const handleClickFuera = (e) => {
-      if (reservaWrapRef.current && !reservaWrapRef.current.contains(e.target)) {
+      if (
+        reservaWrapRef.current &&
+        !reservaWrapRef.current.contains(e.target)
+      ) {
         setSlotSeleccionado(null);
       }
     };
-    document.addEventListener('mousedown', handleClickFuera);
-    return () => document.removeEventListener('mousedown', handleClickFuera);
+    document.addEventListener("mousedown", handleClickFuera);
+    return () => document.removeEventListener("mousedown", handleClickFuera);
   }, []);
 
   useEffect(() => {
@@ -70,31 +82,40 @@ const ClubDetail = () => {
         const allPhotos = complex?.photos || [];
         const principal = complex?.image;
         const fotosOrdenadas = principal
-          ? [principal, ...allPhotos.filter(p => p !== principal)]
+          ? [principal, ...allPhotos.filter((p) => p !== principal)]
           : allPhotos;
         setClub({
-          nombre: complex?.name || 'Complejo',
-          ubicacion: complex?.location || '',
-          telefono: complex?.whatsapp || 'No disponible',
-          horario: complex?.openTime && complex?.closeTime
-            ? `${complex.openTime} - ${complex.closeTime}`
-            : 'No disponible',
+          nombre: complex?.name || "Complejo",
+          ubicacion: complex?.location || "",
+          telefono: complex?.whatsapp || "No disponible",
+          horario:
+            complex?.openTime && complex?.closeTime
+              ? `${complex.openTime} - ${complex.closeTime}`
+              : "No disponible",
           mercadopagoActive: !!complex?.mercadopagoActive,
           fotos: fotosOrdenadas,
         });
 
-        const lista = (courtsRes.data?.courts || []).map(c => mapCourt(c, complex?.price));
+        const lista = (courtsRes.data?.courts || []).map((c) =>
+          mapCourt(c, complex?.price),
+        );
         setCanchas(lista);
         setCanchaSeleccionada(lista[0] || null);
 
         if (isAuthenticated) {
           checkFavorito(id)
-            .then(res => setEsFavorito(res.data.esFavorito))
+            .then((res) => setEsFavorito(res.data.esFavorito))
             .catch(() => {});
         }
       } catch (err) {
-        console.error('Error cargando el complejo:', err);
-        setClub({ nombre: 'Complejo no encontrado', ubicacion: '', telefono: '', horario: '', fotos: [] });
+        console.error("Error cargando el complejo:", err);
+        setClub({
+          nombre: "Complejo no encontrado",
+          ubicacion: "",
+          telefono: "",
+          horario: "",
+          fotos: [],
+        });
         setCanchas([]);
         setCanchaSeleccionada(null);
       } finally {
@@ -106,18 +127,18 @@ const ClubDetail = () => {
   }, [id]);
 
   const calendarCourts = useMemo(
-    () => canchas.map(c => ({ _id: c.id, name: c.name })),
-    [canchas]
+    () => canchas.map((c) => ({ _id: c.id, name: c.name })),
+    [canchas],
   );
 
   const fetchSlots = useCallback(async (courtId, monday) => {
     if (!courtId || !monday) return;
     setLoadingSlots(true);
     try {
-      const from = monday.toISOString().split('T')[0];
+      const from = monday.toISOString().split("T")[0];
       const toDate = new Date(monday);
       toDate.setDate(toDate.getDate() + 6);
-      const to = toDate.toISOString().split('T')[0];
+      const to = toDate.toISOString().split("T")[0];
       const res = await getSlotsPublicos({ courtId, from, to });
       setCalendarSlots(Array.isArray(res.data) ? res.data : []);
     } catch {
@@ -127,42 +148,50 @@ const ClubDetail = () => {
     }
   }, []);
 
-  const handleCalWeekChange = useCallback((monday) => {
-    calWeekRef.current = monday;
-    fetchSlots(calCourtRef.current, monday);
-  }, [fetchSlots]);
+  const handleCalWeekChange = useCallback(
+    (monday) => {
+      calWeekRef.current = monday;
+      fetchSlots(calCourtRef.current, monday);
+    },
+    [fetchSlots],
+  );
 
-  const handleCalCourtChange = useCallback((courtId) => {
-    calCourtRef.current = courtId;
-    fetchSlots(courtId, calWeekRef.current);
-  }, [fetchSlots]);
+  const handleCalCourtChange = useCallback(
+    (courtId) => {
+      calCourtRef.current = courtId;
+      fetchSlots(courtId, calWeekRef.current);
+    },
+    [fetchSlots],
+  );
 
   const irAConfirmacion = () => {
     if (!slotSeleccionado || !canchaSeleccionada) return;
     const { date, hour } = slotSeleccionado;
-    const startTime = String(hour).padStart(2, '0') + ':00';
-    const endTime   = String(hour + 1).padStart(2, '0') + ':00';
-    navigate('/confirmacion', {
+    const startTime = String(hour).padStart(2, "0") + ":00";
+    const endTime = String(hour + 1).padStart(2, "0") + ":00";
+    navigate("/confirmacion", {
       state: {
-        courtId:        canchaSeleccionada.id,
-        complexId:      id,
+        courtId: canchaSeleccionada.id,
+        complexId: id,
         date,
         startTime,
         endTime,
-        dia:            new Date(date + 'T12:00:00').getDate(),
-        mesNombre:      new Date(date + 'T12:00:00').toLocaleDateString('es-AR', { month: 'long' }),
-        anio:           new Date(date + 'T12:00:00').getFullYear(),
-        horario:        startTime,
-        clubNombre:     club?.nombre,
-        ubicacion:      club?.ubicacion,
-        canchaNombre:   canchaSeleccionada.name,
-        canchaImagen:   canchaSeleccionada.image,
+        dia: new Date(date + "T12:00:00").getDate(),
+        mesNombre: new Date(date + "T12:00:00").toLocaleDateString("es-AR", {
+          month: "long",
+        }),
+        anio: new Date(date + "T12:00:00").getFullYear(),
+        horario: startTime,
+        clubNombre: club?.nombre,
+        ubicacion: club?.ubicacion,
+        canchaNombre: canchaSeleccionada.name,
+        canchaImagen: canchaSeleccionada.image,
         precioAlquiler: canchaSeleccionada.precioNumerico,
-        precioLuz:      1500,
-        total:          canchaSeleccionada.precioNumerico + 1500,
-        senia:              Math.round((canchaSeleccionada.precioNumerico + 1500) * 0.3),
-        mercadopagoActive:  club?.mercadopagoActive || false,
-      }
+        precioLuz: 1500,
+        total: canchaSeleccionada.precioNumerico + 1500,
+        senia: Math.round((canchaSeleccionada.precioNumerico + 1500) * 0.3),
+        mercadopagoActive: club?.mercadopagoActive || false,
+      },
     });
   };
 
@@ -177,22 +206,32 @@ const ClubDetail = () => {
         await agregarFavorito(id);
         setEsFavorito(true);
       }
-    } catch {}
-    finally { setCargandoFav(false); }
+    } catch {
+    } finally {
+      setCargandoFav(false);
+    }
   };
 
-  const LOGO_URL = 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png';
+  const LOGO_URL =
+    "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png";
 
   const formatearDinero = (monto) =>
-    new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(monto);
+    new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+    }).format(monto);
 
-  if (cargando) return <div style={{ textAlign: 'center', padding: '100px' }}>Cargando complejo...</div>;
+  if (cargando)
+    return (
+      <div style={{ textAlign: "center", padding: "100px" }}>
+        Cargando complejo...
+      </div>
+    );
 
   return (
     <div className="page-wrapper">
       <Navbar />
       <main className="club-detail-main">
-
         <div className="club-header-section">
           <span className="badge-premium">✓ Club Premium</span>
           <h1>{club.nombre}</h1>
@@ -204,12 +243,14 @@ const ClubDetail = () => {
             </div>
             <div className="club-action-buttons">
               <button
-                className={`btn-secondary${esFavorito ? ' btn-favorito--activo' : ''}`}
+                className={`btn-secondary${esFavorito ? " btn-favorito--activo" : ""}`}
                 onClick={handleFavorito}
                 disabled={cargandoFav || !isAuthenticated}
-                title={!isAuthenticated ? 'Iniciá sesión para guardar favoritos' : ''}
+                title={
+                  !isAuthenticated ? "Iniciá sesión para guardar favoritos" : ""
+                }
               >
-                {esFavorito ? '♥ Guardado' : '♡ Favorito'}
+                {esFavorito ? "♥ Guardado" : "♡ Favorito"}
               </button>
             </div>
           </div>
@@ -218,9 +259,12 @@ const ClubDetail = () => {
         {(club.fotos.length > 0 || true) && (
           <div className="gallery-grid">
             <img
-              src={club.fotos[0] || 'https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png'}
+              src={
+                club.fotos[0] ||
+                "https://res.cloudinary.com/dabikk5ei/image/upload/padeltime/assets/logo_white.png"
+              }
               alt={club.nombre}
-              className={`img-main${club.fotos[0] ? '' : ' img-main--logo'}`}
+              className={`img-main${club.fotos[0] ? "" : " img-main--logo"}`}
             />
             {club.fotos.length > 1 && (
               <div className="gallery-right">
@@ -229,7 +273,7 @@ const ClubDetail = () => {
                     key={i}
                     src={url}
                     alt={`${club.nombre} ${i + 2}`}
-                    className={i === 2 ? 'img-wide' : 'img-sub'}
+                    className={i === 2 ? "img-wide" : "img-sub"}
                   />
                 ))}
               </div>
@@ -241,24 +285,26 @@ const ClubDetail = () => {
           <section className="courts-list">
             <div className="courts-header">
               <h2>Nuestras Canchas</h2>
-              <span style={{ color: 'var(--color-text-muted)' }}>
+              <span style={{ color: "var(--color-text-muted)" }}>
                 {canchas.length} canchas disponibles
               </span>
             </div>
 
             {canchas.map((cancha) => (
               <div
-                className={`court-card ${canchaSeleccionada?.id === cancha.id ? 'selected' : ''}`}
+                className={`court-card ${canchaSeleccionada?.id === cancha.id ? "selected" : ""}`}
                 key={cancha.id}
                 onClick={() => setCanchaSeleccionada(cancha)}
               >
                 <div className="court-media-col">
-                  <div className={`court-img-container${!cancha.image ? ' court-img-container--empty' : ''}`}>
+                  <div
+                    className={`court-img-container${!cancha.image ? " court-img-container--empty" : ""}`}
+                  >
                     <span className="badge-status">{cancha.status}</span>
                     <img
                       src={cancha.image || LOGO_URL}
                       alt={cancha.name}
-                      className={cancha.image ? '' : 'court-img--logo'}
+                      className={cancha.image ? "" : "court-img--logo"}
                     />
                     {canchaSeleccionada?.id === cancha.id && (
                       <div className="selected-badge">✓</div>
@@ -293,49 +339,52 @@ const ClubDetail = () => {
         </div>
 
         <div ref={reservaWrapRef}>
-        {canchas.length > 0 && (
-        <div className="cd-calendar-section">
-          <WeeklyCalendar
-            courts={calendarCourts}
-            slots={calendarSlots}
-            loading={loadingSlots}
-            showStats={false}
-            onWeekChange={handleCalWeekChange}
-            onCourtChange={handleCalCourtChange}
-            onSlotClick={(courtId, date, hour) => {
-              const cancha = canchas.find(c => c.id === courtId);
-              if (cancha) setCanchaSeleccionada(cancha);
-              setSlotSeleccionado({ courtId, date, hour });
-            }}
-          />
-        </div>
-        )}
+          {canchas.length > 0 && (
+            <div className="cd-calendar-section">
+              <WeeklyCalendar
+                courts={calendarCourts}
+                slots={calendarSlots}
+                loading={loadingSlots}
+                showStats={false}
+                onWeekChange={handleCalWeekChange}
+                onCourtChange={handleCalCourtChange}
+                onSlotClick={(courtId, date, hour) => {
+                  const cancha = canchas.find((c) => c.id === courtId);
+                  if (cancha) setCanchaSeleccionada(cancha);
+                  setSlotSeleccionado({ courtId, date, hour });
+                }}
+              />
+            </div>
+          )}
 
-        {canchaSeleccionada && (
-          <div className="cd-booking-summary">
-            <div className="cd-bs-row">
-              <span>{canchaSeleccionada.name} x 1h</span>
-              <span>{formatearDinero(canchaSeleccionada.precioNumerico)}</span>
+          {canchaSeleccionada && (
+            <div className="cd-booking-summary">
+              <div className="cd-bs-row">
+                <span>{canchaSeleccionada.name} x 1h</span>
+                <span>
+                  {formatearDinero(canchaSeleccionada.precioNumerico)}
+                </span>
+              </div>
+              <div className="cd-bs-row">
+                <span>Tasa de Servicio</span>
+                <span>{formatearDinero(1500)}</span>
+              </div>
+              <div className="cd-bs-total">
+                <span>Total</span>
+                <span>
+                  {formatearDinero(canchaSeleccionada.precioNumerico + 1500)}
+                </span>
+              </div>
+              {slotSeleccionado && (
+                <button className="btn-book" onClick={irAConfirmacion}>
+                  Realizar Reserva
+                </button>
+              )}
             </div>
-            <div className="cd-bs-row">
-              <span>Tasa de Servicio</span>
-              <span>{formatearDinero(1500)}</span>
-            </div>
-            <div className="cd-bs-total">
-              <span>Total</span>
-              <span>{formatearDinero(canchaSeleccionada.precioNumerico + 1500)}</span>
-            </div>
-            {slotSeleccionado && (
-              <button className="btn-book" onClick={irAConfirmacion}>
-                Realizar Reserva
-              </button>
-            )}
-          </div>
-        )}
+          )}
         </div>
 
         <ClubReviews complexId={id} />
-
       </main>
       <Footer />
     </div>

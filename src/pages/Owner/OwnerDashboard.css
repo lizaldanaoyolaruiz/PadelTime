@@ -1,4 +1,3 @@
-/* ── Layout ─────────────────────────────────────────────────────────────────── */
 .owner-layout {
   position: fixed;
   inset: 0;
@@ -8,7 +7,6 @@
   z-index: 10;
 }
 
-/* ── Sidebar ──────────────────────────────────────────────────────────────── */
 .owner-sidebar {
   width: 220px;
   flex-shrink: 0;
@@ -41,7 +39,6 @@
   letter-spacing: 0.8px;
 }
 
-/* ── Nav ─────────────────────────────────────────────────────────────────── */
 .sidebar-nav {
   flex: 1;
   padding: 12px 10px;
@@ -66,7 +63,9 @@
   color: var(--color-text-muted);
   cursor: pointer;
   text-align: left;
-  transition: background 0.15s, color 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s;
 }
 .nav-item:hover {
   background: rgba(255, 255, 255, 0.05);
@@ -80,7 +79,6 @@
   color: var(--color-primary);
 }
 
-/* ── Sidebar footer ──────────────────────────────────────────────────────── */
 .sidebar-footer {
   padding: 14px 10px;
   border-top: 1px solid var(--color-border-subtle);
@@ -138,7 +136,9 @@
   border-radius: 6px;
   display: flex;
   align-items: center;
-  transition: color 0.15s, background 0.15s;
+  transition:
+    color 0.15s,
+    background 0.15s;
   flex-shrink: 0;
 }
 .btn-logout:hover {
@@ -146,7 +146,6 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* ── Main area ───────────────────────────────────────────────────────────── */
 .owner-main {
   flex: 1;
   overflow-y: auto;
@@ -156,7 +155,6 @@
   min-width: 0;
 }
 
-/* ── Shared panel utilities (used by all panels) ─────────────────────────── */
 .panel-wrap {
   padding: 32px 36px;
   width: 100%;
@@ -181,7 +179,6 @@
   margin: 0;
 }
 
-/* Status badges */
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -209,7 +206,6 @@
   border: 1px solid var(--color-border-subtle);
 }
 
-/* Shared form primitives */
 .form-section {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border-subtle);
@@ -310,7 +306,6 @@ select.form-input option {
   padding-top: 4px;
 }
 
-/* Primary button */
 .btn-primary {
   padding: 11px 24px;
   background: var(--color-primary);
@@ -322,10 +317,17 @@ select.form-input option {
   font-family: var(--font-base);
   letter-spacing: 0.4px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
 }
-.btn-primary:hover:not(:disabled) { background: var(--color-secondary); }
-.btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+.btn-primary:hover:not(:disabled) {
+  background: var(--color-secondary);
+}
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 
 .btn-secondary {
   padding: 11px 20px;
@@ -337,11 +339,15 @@ select.form-input option {
   font-weight: var(--fw-medium);
   font-family: var(--font-base);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
 }
-.btn-secondary:hover { border-color: var(--color-text-muted); color: var(--color-text-base); }
+.btn-secondary:hover {
+  border-color: var(--color-text-muted);
+  color: var(--color-text-base);
+}
 
-/* Loading / coming soon */
 .panel-loading,
 .coming-soon {
   display: flex;
@@ -353,10 +359,16 @@ select.form-input option {
   gap: 8px;
   padding: 60px 20px;
 }
-.coming-soon h3 { margin: 0; font-size: var(--text-lg); color: var(--color-text-base); }
-.coming-soon p  { margin: 0; font-size: var(--text-sm); }
+.coming-soon h3 {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--color-text-base);
+}
+.coming-soon p {
+  margin: 0;
+  font-size: var(--text-sm);
+}
 
-/* ── Modal ───────────────────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -376,7 +388,9 @@ select.form-input option {
   max-height: 90vh;
   overflow-y: auto;
 }
-.modal-box--wide { max-width: 560px; }
+.modal-box--wide {
+  max-width: 560px;
+}
 .modal-header {
   display: flex;
   align-items: center;
@@ -399,7 +413,9 @@ select.form-input option {
   align-items: center;
   transition: color 0.2s;
 }
-.modal-close:hover { color: var(--color-text-base); }
+.modal-close:hover {
+  color: var(--color-text-base);
+}
 .modal-form {
   padding: 20px 24px 24px;
   display: flex;
@@ -417,7 +433,6 @@ select.form-input option {
   border-bottom: 1px solid var(--color-border-subtle);
 }
 
-/* ── Modal toggle ── */
 .modal-toggle {
   display: flex;
   gap: 8px;
@@ -450,19 +465,16 @@ select.form-input option {
   font-weight: 600;
 }
 
-/* Hamburger button — oculto por defecto (desktop) */
 .sidebar-hamburger {
   display: none;
 }
 
-/* ── Tablet: sidebar icon-only ────────────────────── */
 @media (max-width: 768px) {
   .owner-sidebar {
     width: 60px;
     overflow: hidden;
   }
 
-  /* Brand: solo muestra un bloque compacto, sin texto */
   .sidebar-brand {
     padding: 14px 8px;
     align-items: center;
@@ -474,7 +486,6 @@ select.form-input option {
     display: none;
   }
 
-  /* Avatar reducido al ancho del sidebar */
   .sidebar-brand .sidebar-profile-avatar-wrap {
     width: 36px !important;
     height: 36px !important;
@@ -488,12 +499,10 @@ select.form-input option {
     font-size: 0.75rem !important;
   }
 
-  /* Cámara badge - oculto en tablet */
   .sidebar-brand .sidebar-profile-avatar-wrap > div:last-child {
     display: none !important;
   }
 
-  /* Nav - solo iconos */
   .sidebar-user-info,
   .nav-item span,
   .btn-logout span {
@@ -511,7 +520,6 @@ select.form-input option {
     padding: 10px 0;
   }
 
-  /* Contenido principal */
   .panel-wrap {
     padding: 20px 16px;
   }
@@ -520,16 +528,13 @@ select.form-input option {
     grid-template-columns: 1fr;
   }
 
-  /* Panel header apila en tablet */
   .panel-header {
     flex-direction: column;
     gap: 10px;
   }
 }
 
-/* ── Mobile: sidebar oculto, hamburger visible ─────── */
 @media (max-width: 640px) {
-  /* Sidebar: oculto por defecto, slide-in cuando está abierto */
   .owner-sidebar {
     position: fixed;
     top: 0;
@@ -545,7 +550,6 @@ select.form-input option {
     transform: translateX(0);
   }
 
-  /* Mostrar textos dentro del sidebar en mobile (drawer completo) */
   .owner-sidebar--open .brand-name,
   .owner-sidebar--open .brand-sub,
   .owner-sidebar--open .sidebar-user-info,
@@ -558,7 +562,6 @@ select.form-input option {
     font-size: var(--text-lg);
   }
 
-  /* Restaurar avatar al tamaño original en drawer abierto */
   .owner-sidebar--open .sidebar-brand .sidebar-profile-avatar-wrap {
     width: 64px !important;
     height: 64px !important;
@@ -572,7 +575,10 @@ select.form-input option {
     font-size: 1.4rem !important;
   }
 
-  .owner-sidebar--open .sidebar-brand .sidebar-profile-avatar-wrap > div:last-child {
+  .owner-sidebar--open
+    .sidebar-brand
+    .sidebar-profile-avatar-wrap
+    > div:last-child {
     display: flex !important;
   }
 
@@ -604,10 +610,9 @@ select.form-input option {
   }
 
   .owner-sidebar--open .sidebar-footer .btn-logout::before {
-    content: 'Cerrar sesión';
+    content: "Cerrar sesión";
   }
 
-  /* Overlay oscuro detrás del sidebar */
   .sidebar-overlay {
     position: fixed;
     inset: 0;
@@ -615,7 +620,6 @@ select.form-input option {
     z-index: 199;
   }
 
-  /* Hamburger: visible en mobile */
   .sidebar-hamburger {
     display: flex;
     align-items: center;
@@ -641,7 +645,6 @@ select.form-input option {
     color: var(--color-primary);
   }
 
-  /* El main ocupa toda la pantalla (sin sidebar) */
   .owner-layout {
     flex-direction: column;
   }

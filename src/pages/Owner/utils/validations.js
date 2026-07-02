@@ -14,7 +14,8 @@ export function blockNonLetters(e) {
 
 export function blockNonPhone(e) {
   if (isCtrl(e) || NAV_KEYS.includes(e.key)) return;
-  if (/^[0-9+\-\s()]$/.test(e.key)) return;
+  if (e.key === '+' && e.currentTarget.selectionStart === 0) return;
+  if (/^[0-9]$/.test(e.key)) return;
   e.preventDefault();
 }
 
