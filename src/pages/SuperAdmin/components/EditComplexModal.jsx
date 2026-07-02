@@ -9,10 +9,19 @@ import { CITIES } from "../../../constants/cities";
 import "../ComplexManagement.css";
 
 export function EditComplexModal({ complex, onClose, onSave }) {
+  const ownerName =
+    typeof complex.owner === "object"
+      ? complex.owner?.name || ""
+      : complex.owner || "";
+  const ownerEmail =
+    typeof complex.owner === "object"
+      ? complex.owner?.email || ""
+      : complex.email || "";
+
   const [form, setForm] = useState({
     name: complex.name || "",
-    owner: complex.owner || "",
-    email: complex.email || "",
+    owner: ownerName,
+    email: ownerEmail,
     phone: complex.phone || "",
     courts: complex.courts || "",
     address: complex.address || "",
@@ -29,8 +38,8 @@ export function EditComplexModal({ complex, onClose, onSave }) {
       e.name = "Mínimo 3 caracteres";
     if (!form.owner || form.owner.trim().length < 3)
       e.owner = "Mínimo 3 caracteres";
-    if (!form.phone || form.phone.replace(/\D/g, "").length < 10)
-      e.phone = "Mínimo 10 dígitos";
+    if (!form.phone || !/^\+?[0-9]{13}$/.test(form.phone))
+      e.phone = "13 dígitos, sin espacios (ej: +5493813550986)";
     if (!form.courts || Number(form.courts) < 1 || Number(form.courts) > 50)
       e.courts = "Entre 1 y 50";
     if (!form.address || form.address.trim().length < 5)
@@ -42,7 +51,9 @@ export function EditComplexModal({ complex, onClose, onSave }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    const cleaned =
+      name === "phone" ? value.replace(/(?!^\+)[^\d]/g, "") : value;
+    setForm((prev) => ({ ...prev, [name]: cleaned }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   };
 
@@ -150,15 +161,15 @@ export function EditComplexModal({ complex, onClose, onSave }) {
               className={`gc-new-input${errors.phone ? " gc-new-input--error" : ""}`}
               value={form.phone}
               onChange={handleChange}
-              placeholder="+54 11 1234 5678"
-              maxLength={18}
+              placeholder="+5493813550986"
+              maxLength={14}
               onKeyDown={blockNonPhone}
             />
             {errors.phone ? (
               <span className="gc-new-error">{errors.phone}</span>
             ) : (
               <span className="gc-new-hint">
-                Mín. 10 dígitos — solo números y +
+                13 dígitos, sin espacios (ej: +5493813550986)
               </span>
             )}
           </div>
