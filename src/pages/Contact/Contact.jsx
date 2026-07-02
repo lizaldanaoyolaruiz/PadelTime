@@ -90,6 +90,7 @@ export default function ContactPage() {
                   <label>Email</label>
                   <input
                     placeholder="ejemplo@email.com"
+                    maxLength={100}
                     {...register("email")}
                   />
                   {errors.email && (
@@ -120,7 +121,7 @@ export default function ContactPage() {
                 <textarea
                   rows="6"
                   placeholder="¿En qué podemos ayudarte hoy?"
-                  maxLength={2000}
+                  maxLength={200}
                   {...register("mensaje")}
                 />
                 {errors.mensaje && (
