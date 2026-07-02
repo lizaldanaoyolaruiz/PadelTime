@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useTournamentForm } from "../utils/hooks/useTournamentForm";
 import { CATEGORIAS, ESTADOS } from "../utils/schemas/tournamentSchema";
+import { blockNonPhone, blockNonDigits } from "../utils/validations";
 import "./Tournaments.css";
 
 export default function TournamentsForm({ torneo, onClose, onSave }) {
@@ -98,6 +99,7 @@ export default function TournamentsForm({ torneo, onClose, onSave }) {
                 max="9999"
                 className={`form-input${errors.cupoMaximo ? " input-error" : ""}`}
                 placeholder="Ej: 32"
+                onKeyDown={blockNonDigits}
                 {...register("cupoMaximo")}
               />
               {errors.cupoMaximo && (
@@ -150,16 +152,16 @@ export default function TournamentsForm({ torneo, onClose, onSave }) {
             <input
               type="tel"
               className={`form-input${errors.whatsapp ? " input-error" : ""}`}
-              placeholder="Ej: 5493815001122"
-              maxLength={20}
+              placeholder="+5493813550986"
+              maxLength={14}
+              onKeyDown={blockNonPhone}
               {...register("whatsapp")}
             />
             {errors.whatsapp ? (
               <span className="error-msg">{errors.whatsapp.message}</span>
             ) : (
               <span className="form-hint">
-                Número sin espacios ni guiones — se usará para el botón de
-                reserva
+                13 dígitos, sin espacios (ej: +5493813550986)
               </span>
             )}
           </div>
