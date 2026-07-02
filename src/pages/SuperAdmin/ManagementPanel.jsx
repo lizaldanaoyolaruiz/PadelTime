@@ -43,6 +43,7 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     location: "",
   });
   const [formLoading, setFormLoading] = useState(false);
@@ -113,7 +114,13 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
   };
 
   const openCreate = () => {
-    setForm({ name: "", email: "", password: "", location: "" });
+    setForm({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      location: "",
+    });
     setFormError("");
     setModal("create");
   };
@@ -124,6 +131,7 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
       name: owner.name || "",
       email: owner.email || "",
       password: "",
+      confirmPassword: "",
       location: owner.location || owner.city || "",
     });
     setFormError("");
@@ -159,6 +167,9 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
       if (!STRONG_PW.test(form.password)) {
         return "La contraseña debe incluir mayúscula, minúscula, número y carácter especial.";
       }
+      if (form.password !== form.confirmPassword) {
+        return "Las contraseñas no coinciden.";
+      }
     }
     return null;
   };
@@ -171,7 +182,13 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
     }
     try {
       setFormLoading(true);
-      const res = await api.post("/admin/users", { ...form, role: "admin" });
+      const res = await api.post("/admin/users", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        location: form.location,
+        role: "admin",
+      });
       setOwners((prev) => [res.data.user || res.data, ...prev]);
       closeModal();
     } catch (err) {
@@ -587,6 +604,19 @@ export default function ManagementPanel({ triggerCreate = 0 }) {
                     value={form.password}
                     onChange={(e) =>
                       setForm((f) => ({ ...f, password: e.target.value }))
+                    }
+                  />
+                  <label>Confirmar contraseña</label>
+                  <input
+                    type="password"
+                    placeholder="Repetí la contraseña"
+                    maxLength={64}
+                    value={form.confirmPassword}
+                    onChange={(e) =>
+                      setForm((f) => ({
+                        ...f,
+                        confirmPassword: e.target.value,
+                      }))
                     }
                   />
                 </>
