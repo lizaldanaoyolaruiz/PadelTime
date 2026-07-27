@@ -106,6 +106,7 @@ export default function ClientPanel() {
   });
   const [bookingErr, setBookingErr] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
+  const [payingId, setPayingId] = useState(null);
 
   const fileInputRef = useRef(null);
 
@@ -377,6 +378,30 @@ export default function ClientPanel() {
       );
     } finally {
       setBookingLoading(false);
+    }
+  };
+
+  const handlePayBooking = async (bookingId) => {
+    try {
+      setPayingId(bookingId);
+      const res = await api.post(`/bookings/${bookingId}/pay`);
+      const initPoint = res.data.payment?.initPoint;
+      if (initPoint) {
+        window.open(initPoint, "_blank");
+      }
+    } catch (err) {
+      Swal.fire({
+        title: "No se pudo iniciar el pago",
+        text:
+          err.response?.data?.message ||
+          "Intentá nuevamente en unos minutos.",
+        icon: "error",
+        confirmButtonColor: "#ef4444",
+        background: "#0e1c42",
+        color: "#f8fafc",
+      });
+    } finally {
+      setPayingId(null);
     }
   };
 
@@ -669,6 +694,19 @@ export default function ClientPanel() {
                           <span className={`cp-status ${st.cls}`}>
                             {st.label}
                           </span>
+
+                          {b.status === "pending" &&
+                            b.confirmationMethod === "mercadopago" && (
+                              <button
+                                className="cp-rebook-btn"
+                                onClick={() => handlePayBooking(b._id)}
+                                disabled={payingId === b._id}
+                              >
+                                {payingId === b._id
+                                  ? "Generando pago..."
+                                  : "Pagar"}
+                              </button>
+                            )}
 
                           {["pending", "confirmed"].includes(b.status) && (
                             <button
