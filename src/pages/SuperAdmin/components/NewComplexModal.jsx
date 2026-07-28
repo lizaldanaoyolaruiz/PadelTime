@@ -98,6 +98,8 @@ export function NewComplexModal({ onClose, onCreated }) {
             )}
           </div>
 
+          {/* Nombre del propietario */}
+
           <div className="gc-new-field">
 
             <label className="gc-new-label">
@@ -120,6 +122,9 @@ export function NewComplexModal({ onClose, onCreated }) {
               </span>
             )}
           </div>
+
+
+          {/* Email del propietario */}
 
           <div className="gc-new-field">
 
