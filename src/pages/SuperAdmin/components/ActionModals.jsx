@@ -367,8 +367,10 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
       onStatusUpdate(complex._id, "suspended");
       toast.success("Complejo suspendido correctamente.");
       onClose();
-    } catch {
-      toast.error("Error al suspender el complejo.");
+    } catch (err) {
+      toast.error(
+        err.response?.data?.message || "Error al suspender el complejo.",
+      );
     } finally {
       setLoading(false);
     }
