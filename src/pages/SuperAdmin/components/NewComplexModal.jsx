@@ -102,9 +102,7 @@ export function NewComplexModal({ onClose, onCreated }) {
 
           <div className="gc-new-field">
 
-            <label className="gc-new-label">
-              Nombre del owner <span className="gc-required">*</span>
-            </label>
+        
 
             <label className="gc-new-label">Nombre del propietario <span className="gc-required">*</span></label>
             <input
@@ -128,9 +126,7 @@ export function NewComplexModal({ onClose, onCreated }) {
 
           <div className="gc-new-field">
 
-            <label className="gc-new-label">
-              Email del owner <span className="gc-required">*</span>
-            </label>
+    
 
             <label className="gc-new-label">Email del propietario <span className="gc-required">*</span></label>
 
