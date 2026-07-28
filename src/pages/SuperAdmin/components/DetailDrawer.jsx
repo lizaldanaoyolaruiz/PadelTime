@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   X,
   MapPin,
@@ -11,16 +11,129 @@ import {
   XCircle,
   PauseCircle,
   Star,
+  Upload,
+  ImagePlus,
 } from "lucide-react";
 import Swal from "sweetalert2";
 import { StatusBadge } from "./StatusBadge";
 import { ComplexAvatar } from "./ComplexAvatar";
 import { formatDate } from "../utils/utils";
-import { toggleFeatured } from "../../../services/complexService";
+import {
+  toggleFeatured,
+  uploadComplexPhotos,
+  deleteComplexPhoto,
+  setComplexPrincipalPhoto,
+} from "../../../services/complexService";
 
-export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
+const MAX_PHOTOS = 5;
+
+export function DetailDrawer({
+  complex,
+  onClose,
+  onAction,
+  onFeaturedToggle,
+  onPhotosUpdate,
+}) {
   const [featured, setFeatured] = useState(!!complex.isFeatured);
   const [loadingFeatured, setLoadingFeatured] = useState(false);
+
+  const [images, setImages] = useState(complex.photos || []);
+  const [principalUrl, setPrincipalUrl] = useState(
+    complex.image || complex.photos?.[0] || null,
+  );
+  const [uploadingImg, setUploadingImg] = useState(false);
+  const [deletingImgUrl, setDeletingImgUrl] = useState(null);
+  const fileRef = useRef(null);
+
+  useEffect(() => {
+    setImages(complex.photos || []);
+    setPrincipalUrl(complex.image || complex.photos?.[0] || null);
+  }, [complex._id]);
+
+  const notifyPhotos = (photos, image) => {
+    onPhotosUpdate?.(complex._id, { photos, image });
+  };
+
+  const handleFiles = async (e) => {
+    const files = Array.from(e.target.files);
+    if (fileRef.current) fileRef.current.value = "";
+    if (!files.length) return;
+
+    if (images.length + files.length > MAX_PHOTOS) {
+      Swal.fire({
+        title: `Máximo ${MAX_PHOTOS} imágenes permitidas.`,
+        icon: "warning",
+        background: "#1E293B",
+        color: "#F8FAFC",
+        confirmButtonColor: "#BEF264",
+      });
+      return;
+    }
+
+    setUploadingImg(true);
+    try {
+      const res = await uploadComplexPhotos(complex._id, files);
+      const updatedPhotos = res.data.photos || [];
+      setImages(updatedPhotos);
+      const nextPrincipal = principalUrl || updatedPhotos[0] || null;
+      setPrincipalUrl(nextPrincipal);
+      notifyPhotos(updatedPhotos, nextPrincipal);
+    } catch {
+      Swal.fire({
+        title: "Error al subir las fotos.",
+        text: "Intentá de nuevo.",
+        icon: "error",
+        background: "#1E293B",
+        color: "#F8FAFC",
+        confirmButtonColor: "#BEF264",
+      });
+    } finally {
+      setUploadingImg(false);
+    }
+  };
+
+  const handleRemoveImage = async (url) => {
+    setDeletingImgUrl(url);
+    try {
+      await deleteComplexPhoto(complex._id, url);
+      const next = images.filter((u) => u !== url);
+      setImages(next);
+      const nextPrincipal = principalUrl === url ? next[0] || null : principalUrl;
+      setPrincipalUrl(nextPrincipal);
+      notifyPhotos(next, nextPrincipal);
+    } catch {
+      Swal.fire({
+        title: "Error al eliminar la foto.",
+        icon: "error",
+        background: "#1E293B",
+        color: "#F8FAFC",
+        confirmButtonColor: "#BEF264",
+      });
+    } finally {
+      setDeletingImgUrl(null);
+    }
+  };
+
+  const handleSetPrincipal = async (url) => {
+    if (url === principalUrl) return;
+    const prev = principalUrl;
+    setPrincipalUrl(url);
+    try {
+      const res = await setComplexPrincipalPhoto(complex._id, url);
+      const finalUrl = res.data.image || url;
+      setPrincipalUrl(finalUrl);
+      notifyPhotos(images, finalUrl);
+    } catch {
+      setPrincipalUrl(prev);
+      Swal.fire({
+        title: "Error al marcar como foto principal.",
+        icon: "error",
+        background: "#1E293B",
+        color: "#F8FAFC",
+        confirmButtonColor: "#BEF264",
+      });
+    }
+  };
 
   const handleFeatured = async () => {
     if (featured) {
@@ -164,12 +277,73 @@ export function DetailDrawer({ complex, onClose, onAction, onFeaturedToggle }) {
 
           <div className="gc-drawer-section">
             <h4 className="gc-drawer-section-title">Fotos del Complejo</h4>
-            <div className="gc-photos-placeholder">
-              <Building2 size={28} />
-              <span>
-                Las fotos estarán disponibles una vez conectado al backend.
-              </span>
+            <div className="gc-photos-grid">
+              {images.map((url, i) => {
+                const isPrincipal = principalUrl === url;
+                return (
+                  <div
+                    key={url}
+                    className={`gc-photo-thumb${isPrincipal ? " gc-photo-thumb--principal" : ""}`}
+                  >
+                    <img src={url} alt={`Foto ${i + 1}`} />
+                    <button
+                      type="button"
+                      className="gc-photo-remove"
+                      onClick={() => handleRemoveImage(url)}
+                      title="Eliminar"
+                      disabled={!!deletingImgUrl}
+                    >
+                      <X size={14} />
+                    </button>
+                    {isPrincipal ? (
+                      <span className="gc-photo-badge">
+                        <Star size={9} /> Principal
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        className="gc-photo-set-principal"
+                        onClick={() => handleSetPrincipal(url)}
+                        title="Marcar como foto principal"
+                      >
+                        <Star size={12} />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+
+              {images.length < MAX_PHOTOS && (
+                <button
+                  type="button"
+                  className="gc-photo-add"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploadingImg}
+                >
+                  {uploadingImg ? (
+                    <Upload size={22} className="gc-photo-spin" />
+                  ) : (
+                    <ImagePlus size={22} />
+                  )}
+                  <span>{uploadingImg ? "Subiendo..." : "Agregar foto"}</span>
+                </button>
+              )}
+
+              {images.length === 0 && !uploadingImg && (
+                <div className="gc-photos-empty-hint">
+                  <Building2 size={20} />
+                  <span>Todavía no hay fotos cargadas.</span>
+                </div>
+              )}
             </div>
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              multiple
+              style={{ display: "none" }}
+              onChange={handleFiles}
+            />
           </div>
         </div>
 

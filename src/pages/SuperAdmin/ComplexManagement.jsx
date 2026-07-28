@@ -190,6 +190,18 @@ export default function ComplexManagement() {
               ),
             )
           }
+          onPhotosUpdate={(id, extra) => {
+            setComplexes((prev) =>
+              prev.map((c) =>
+                String(c._id) === String(id) ? { ...c, ...extra } : c,
+              ),
+            );
+            setSelectedComplex((prev) =>
+              prev && String(prev._id) === String(id)
+                ? { ...prev, ...extra }
+                : prev,
+            );
+          }}
         />
       )}
 
