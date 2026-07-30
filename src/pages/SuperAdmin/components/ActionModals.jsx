@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckCircle,
   XCircle,
@@ -15,6 +15,7 @@ import {
   suspendComplex,
   updateComplex,
   deleteComplex,
+  getComplexActiveBookingsCount,
   sendApprovalEmail,
   sendRejectionEmail,
 } from "../../../services/complexService";
@@ -309,6 +310,97 @@ function EditComplexForm({
   );
 }
 
+function DeleteComplexModal({ complex, onClose, onDelete, loading, setLoading }) {
+  const [activeBookings, setActiveBookings] = useState(0);
+  const [checking, setChecking] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    setChecking(true);
+    getComplexActiveBookingsCount(complex._id)
+      .then((res) => {
+        if (mounted) setActiveBookings(res.data.activeBookings ?? 0);
+      })
+      .catch(() => {
+        if (mounted) toast.error("No se pudo verificar si el complejo tiene alquileres activos.");
+      })
+      .finally(() => {
+        if (mounted) setChecking(false);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [complex._id]);
+
+  const hasActiveBookings = activeBookings > 0;
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      await deleteComplex(complex._id);
+      onDelete(complex._id);
+      toast.success("Complejo eliminado correctamente.");
+      onClose();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error al eliminar el complejo.");
+      if (err.response?.status === 409) {
+        setActiveBookings(err.response.data?.activeBookings ?? 1);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="gc-modal-overlay" role="dialog" aria-modal="true">
+      <div className="gc-modal">
+        <div className="gc-modal-icon gc-modal-icon--reject">
+          <Trash2 size={30} />
+        </div>
+        <h3 className="gc-modal-title">Eliminar Complejo</h3>
+
+        {checking ? (
+          <p className="gc-modal-text">Verificando alquileres activos...</p>
+        ) : hasActiveBookings ? (
+          <p className="gc-modal-text">
+            <strong>{complex.name}</strong> tiene{" "}
+            <strong>{activeBookings}</strong>{" "}
+            {activeBookings === 1
+              ? "alquiler activo (pagado/confirmado)"
+              : "alquileres activos (pagados/confirmados)"}{" "}
+            para fechas futuras. No se puede eliminar el complejo hasta que
+            esas reservas sean canceladas o reasignadas.
+          </p>
+        ) : (
+          <p className="gc-modal-text">
+            Esta acción es <strong>irreversible</strong>. ¿Confirmas que
+            deseas eliminar <strong>{complex.name}</strong>?
+          </p>
+        )}
+
+        <div className="gc-modal-actions">
+          <button
+            className="gc-modal-btn gc-modal-btn--cancel"
+            onClick={onClose}
+            disabled={loading}
+          >
+            {hasActiveBookings ? "Cerrar" : "Cancelar"}
+          </button>
+          {!hasActiveBookings && (
+            <button
+              className="gc-modal-btn gc-modal-btn--reject"
+              onClick={handleDelete}
+              disabled={loading || checking}
+            >
+              {loading ? "Eliminando..." : "Sí, eliminar"}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   const [rejectReason, setRejectReason] = useState("");
   const [loading, setLoading] = useState(false);
@@ -376,19 +468,17 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
     }
   };
 
-  const handleDelete = async () => {
-    setLoading(true);
-    try {
-      await deleteComplex(complex._id);
-      onDelete(complex._id);
-      toast.success("Complejo eliminado correctamente.");
-      onClose();
-    } catch {
-      toast.error("Error al eliminar el complejo.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (type === "delete") {
+    return (
+      <DeleteComplexModal
+        complex={complex}
+        onClose={onClose}
+        onDelete={onDelete}
+        loading={loading}
+        setLoading={setLoading}
+      />
+    );
+  }
 
   return (
     <div className="gc-modal-overlay" role="dialog" aria-modal="true">
@@ -490,34 +580,6 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
           </>
         )}
 
-        {type === "delete" && (
-          <>
-            <div className="gc-modal-icon gc-modal-icon--reject">
-              <Trash2 size={30} />
-            </div>
-            <h3 className="gc-modal-title">Eliminar Complejo</h3>
-            <p className="gc-modal-text">
-              Esta acción es <strong>irreversible</strong>. ¿Confirmas que
-              deseas eliminar <strong>{complex.name}</strong>?
-            </p>
-            <div className="gc-modal-actions">
-              <button
-                className="gc-modal-btn gc-modal-btn--cancel"
-                onClick={onClose}
-                disabled={loading}
-              >
-                Cancelar
-              </button>
-              <button
-                className="gc-modal-btn gc-modal-btn--reject"
-                onClick={handleDelete}
-                disabled={loading}
-              >
-                {loading ? "Eliminando..." : "Sí, eliminar"}
-              </button>
-            </div>
-          </>
-        )}
       </div>
     </div>
   );
