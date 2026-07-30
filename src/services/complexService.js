@@ -10,6 +10,8 @@ export const getMyComplex = (complexId) =>
 export const createComplex = (data) => api.post("/complexes", data);
 export const updateComplex = (id, data) => api.put(`/complexes/${id}`, data);
 export const deleteComplex = (id) => api.delete(`/complexes/${id}`);
+export const getComplexActiveBookingsCount = (id) =>
+  api.get(`/complexes/${id}/active-bookings-count`);
 
 export const uploadComplexPhotos = (id, files) => {
   const form = new FormData();

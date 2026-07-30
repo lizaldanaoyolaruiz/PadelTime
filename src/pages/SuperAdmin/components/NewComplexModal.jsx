@@ -98,10 +98,13 @@ export function NewComplexModal({ onClose, onCreated }) {
             )}
           </div>
 
+          {/* Nombre del propietario */}
+
           <div className="gc-new-field">
-            <label className="gc-new-label">
-              Nombre del owner <span className="gc-required">*</span>
-            </label>
+
+        
+
+            <label className="gc-new-label">Nombre del propietario <span className="gc-required">*</span></label>
             <input
               {...register("owner")}
               className={`gc-new-input${errors.owner ? " gc-new-input--error" : ""}`}
@@ -118,10 +121,15 @@ export function NewComplexModal({ onClose, onCreated }) {
             )}
           </div>
 
+
+          {/* Email del propietario */}
+
           <div className="gc-new-field">
-            <label className="gc-new-label">
-              Email del owner <span className="gc-required">*</span>
-            </label>
+
+    
+
+            <label className="gc-new-label">Email del propietario <span className="gc-required">*</span></label>
+
             <input
               {...register("email")}
               className={`gc-new-input${errors.email ? " gc-new-input--error" : ""}`}
