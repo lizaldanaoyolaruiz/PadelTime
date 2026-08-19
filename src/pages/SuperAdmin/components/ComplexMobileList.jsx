@@ -3,6 +3,7 @@ import {
   CheckCircle,
   XCircle,
   PauseCircle,
+  PlayCircle,
   Pencil,
   Trash2,
   Users,
@@ -92,6 +93,30 @@ export function ComplexMobileList({ filtered, loading, onDetail, onAction }) {
                 onClick={() => onAction("suspend", complex)}
               >
                 <PauseCircle size={13} /> Suspender
+              </button>
+            )}
+            {complex.status === "suspended" && (
+              <>
+                <button
+                  className="gc-action-btn gc-action-btn--approve"
+                  onClick={() => onAction("approve", complex)}
+                >
+                  <PlayCircle size={13} /> Reactivar
+                </button>
+                <button
+                  className="gc-action-btn gc-action-btn--reject"
+                  onClick={() => onAction("reject", complex)}
+                >
+                  <XCircle size={13} /> Rechazar
+                </button>
+              </>
+            )}
+            {complex.status === "rejected" && (
+              <button
+                className="gc-action-btn gc-action-btn--approve"
+                onClick={() => onAction("approve", complex)}
+              >
+                <PlayCircle size={13} /> Reactivar
               </button>
             )}
             <button

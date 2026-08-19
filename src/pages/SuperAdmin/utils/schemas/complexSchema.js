@@ -6,6 +6,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE_RE = /^\+?[0-9]{13}$/;
 const NAME_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s'\-&.]+$/;
 const ADDRESS_RE = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ0-9\s.,'-]+$/;
+const TIME_RE = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
 export const complexSchema = z.object({
   name: z
@@ -43,6 +44,16 @@ export const complexSchema = z.object({
 
   city: z.enum(CITIES, { error: "Seleccioná una ciudad" }),
 
+  openTime: z
+    .string()
+    .min(1, "El horario de apertura es requerido")
+    .regex(TIME_RE, "Formato HH:MM requerido"),
+
+  closeTime: z
+    .string()
+    .min(1, "El horario de cierre es requerido")
+    .regex(TIME_RE, "Formato HH:MM requerido"),
+
   address: z
     .string()
     .min(5, "Mínimo 5 caracteres")
@@ -62,4 +73,8 @@ export const complexSchema = z.object({
     .max(300, "Máximo 300 caracteres")
     .optional()
     .default(""),
-});
+})
+  .refine(
+    (d) => !d.openTime || !d.closeTime || d.openTime < d.closeTime,
+    { message: "El cierre debe ser posterior a la apertura", path: ["closeTime"] }
+  );
