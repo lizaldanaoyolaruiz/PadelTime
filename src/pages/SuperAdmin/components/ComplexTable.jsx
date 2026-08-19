@@ -3,6 +3,7 @@ import {
   CheckCircle,
   XCircle,
   PauseCircle,
+  PlayCircle,
   Pencil,
   Trash2,
 } from "lucide-react";
@@ -108,6 +109,36 @@ export function ComplexTable({ filtered, loading, onDetail, onAction }) {
                         aria-label="Suspender"
                       >
                         <PauseCircle size={14} />
+                      </button>
+                    )}
+                    {complex.status === "suspended" && (
+                      <>
+                        <button
+                          className="gc-action-btn gc-action-btn--approve"
+                          onClick={() => onAction("approve", complex)}
+                          title="Reactivar"
+                          aria-label="Reactivar"
+                        >
+                          <PlayCircle size={14} />
+                        </button>
+                        <button
+                          className="gc-action-btn gc-action-btn--reject"
+                          onClick={() => onAction("reject", complex)}
+                          title="Rechazar"
+                          aria-label="Rechazar"
+                        >
+                          <XCircle size={14} />
+                        </button>
+                      </>
+                    )}
+                    {complex.status === "rejected" && (
+                      <button
+                        className="gc-action-btn gc-action-btn--approve"
+                        onClick={() => onAction("approve", complex)}
+                        title="Reactivar"
+                        aria-label="Reactivar"
+                      >
+                        <PlayCircle size={14} />
                       </button>
                     )}
                     <button
