@@ -10,6 +10,7 @@ import {
   CheckCircle,
   XCircle,
   PauseCircle,
+  PlayCircle,
   Star,
   Upload,
   ImagePlus,
@@ -385,6 +386,30 @@ export function DetailDrawer({
                 {featured ? "Quitar destacado" : "Marcar destacado"}
               </button>
             </>
+          )}
+          {complex.status === "suspended" && (
+            <>
+              <button
+                className="gc-drawer-action-btn gc-drawer-action-btn--approve"
+                onClick={() => onAction("approve", complex)}
+              >
+                <PlayCircle size={15} /> Reactivar
+              </button>
+              <button
+                className="gc-drawer-action-btn gc-drawer-action-btn--reject"
+                onClick={() => onAction("reject", complex)}
+              >
+                <XCircle size={15} /> Rechazar
+              </button>
+            </>
+          )}
+          {complex.status === "rejected" && (
+            <button
+              className="gc-drawer-action-btn gc-drawer-action-btn--approve"
+              onClick={() => onAction("approve", complex)}
+            >
+              <PlayCircle size={15} /> Reactivar
+            </button>
           )}
           <button
             className="gc-drawer-action-btn gc-drawer-action-btn--close"

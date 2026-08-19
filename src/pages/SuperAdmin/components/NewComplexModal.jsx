@@ -32,6 +32,8 @@ export function NewComplexModal({ onClose, onCreated }) {
         city: data.city,
         address: data.address,
         province: data.province,
+        openTime: data.openTime,
+        closeTime: data.closeTime,
         observations: data.observations,
       });
       toast.success(
@@ -202,6 +204,34 @@ export function NewComplexModal({ onClose, onCreated }) {
             </select>
             {errors.city && (
               <span className="gc-new-error">{errors.city.message}</span>
+            )}
+          </div>
+
+          <div className="gc-new-field">
+            <label className="gc-new-label">
+              Horario de apertura <span className="gc-required">*</span>
+            </label>
+            <input
+              type="time"
+              {...register("openTime")}
+              className={`gc-new-input${errors.openTime ? " gc-new-input--error" : ""}`}
+            />
+            {errors.openTime && (
+              <span className="gc-new-error">{errors.openTime.message}</span>
+            )}
+          </div>
+
+          <div className="gc-new-field">
+            <label className="gc-new-label">
+              Horario de cierre <span className="gc-required">*</span>
+            </label>
+            <input
+              type="time"
+              {...register("closeTime")}
+              className={`gc-new-input${errors.closeTime ? " gc-new-input--error" : ""}`}
+            />
+            {errors.closeTime && (
+              <span className="gc-new-error">{errors.closeTime.message}</span>
             )}
           </div>
 

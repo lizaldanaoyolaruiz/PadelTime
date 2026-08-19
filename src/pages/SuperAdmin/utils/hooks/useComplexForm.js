@@ -11,6 +11,8 @@ const DEFAULT_VALUES = {
   city: "",
   province: "Tucumán",
   courts: "",
+  openTime: "",
+  closeTime: "",
   observations: "",
 };
 
