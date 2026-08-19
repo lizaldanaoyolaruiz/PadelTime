@@ -244,6 +244,34 @@ function EditComplexForm({
 
           <div className="gc-new-field">
             <label className="gc-new-label">
+              Horario de apertura <span className="gc-required">*</span>
+            </label>
+            <input
+              type="time"
+              {...register("openTime")}
+              className={`gc-new-input${errors.openTime ? " gc-new-input--error" : ""}`}
+            />
+            {errors.openTime && (
+              <span className="gc-new-error">{errors.openTime.message}</span>
+            )}
+          </div>
+
+          <div className="gc-new-field">
+            <label className="gc-new-label">
+              Horario de cierre <span className="gc-required">*</span>
+            </label>
+            <input
+              type="time"
+              {...register("closeTime")}
+              className={`gc-new-input${errors.closeTime ? " gc-new-input--error" : ""}`}
+            />
+            {errors.closeTime && (
+              <span className="gc-new-error">{errors.closeTime.message}</span>
+            )}
+          </div>
+
+          <div className="gc-new-field">
+            <label className="gc-new-label">
               Provincia <span className="gc-required">*</span>
             </label>
             <input
@@ -421,16 +449,25 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
   }
 
   const handleApprove = async () => {
+    const isReactivation = complex.status !== "pending";
     setLoading(true);
     try {
       await approveComplex(complex._id);
       await sendApprovalEmail(complex._id);
       onStatusUpdate(complex._id, "approved");
-      toast.success("Complejo aprobado correctamente.");
+      toast.success(
+        isReactivation
+          ? "Complejo reactivado correctamente."
+          : "Complejo aprobado correctamente.",
+      );
       toast.success("Email enviado al owner notificando aprobación.");
       onClose();
     } catch {
-      toast.error("Error al aprobar el complejo.");
+      toast.error(
+        isReactivation
+          ? "Error al reactivar el complejo."
+          : "Error al aprobar el complejo.",
+      );
     } finally {
       setLoading(false);
     }
@@ -488,10 +525,16 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
             <div className="gc-modal-icon gc-modal-icon--approve">
               <CheckCircle size={30} />
             </div>
-            <h3 className="gc-modal-title">Aprobar Complejo</h3>
+            <h3 className="gc-modal-title">
+              {complex.status === "pending"
+                ? "Aprobar Complejo"
+                : "Reactivar Complejo"}
+            </h3>
             <p className="gc-modal-text">
-              ¿Desea aprobar <strong>{complex.name}</strong>? Se enviará un
-              email de confirmación al owner.
+              ¿Desea{" "}
+              {complex.status === "pending" ? "aprobar" : "reactivar"}{" "}
+              <strong>{complex.name}</strong>? Se enviará un email de
+              confirmación al owner.
             </p>
             <div className="gc-modal-actions">
               <button
@@ -506,7 +549,13 @@ export function ActionModals({ modal, onClose, onStatusUpdate, onDelete }) {
                 onClick={handleApprove}
                 disabled={loading}
               >
-                {loading ? "Aprobando..." : "Sí, aprobar"}
+                {loading
+                  ? complex.status === "pending"
+                    ? "Aprobando..."
+                    : "Reactivando..."
+                  : complex.status === "pending"
+                    ? "Sí, aprobar"
+                    : "Sí, reactivar"}
               </button>
             </div>
           </>
