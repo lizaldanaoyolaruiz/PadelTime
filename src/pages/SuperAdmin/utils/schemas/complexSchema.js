@@ -42,6 +42,13 @@ export const complexSchema = z.object({
     .refine((v) => parseInt(v) >= 1, "Mínimo 1 pista")
     .refine((v) => parseInt(v) <= 50, "Máximo 50 pistas"),
 
+  price: z
+    .string()
+    .min(1, "Campo requerido")
+    .refine((v) => !isNaN(parseFloat(v)), "Ingresá un número válido")
+    .refine((v) => parseFloat(v) > 0, "Debe ser mayor a 0")
+    .refine((v) => parseFloat(v) <= 999999, "Precio demasiado alto"),
+
   city: z.enum(CITIES, { error: "Seleccioná una ciudad" }),
 
   openTime: z

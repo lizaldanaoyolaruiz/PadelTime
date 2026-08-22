@@ -29,6 +29,7 @@ export function NewComplexModal({ onClose, onCreated }) {
         ownerEmail: data.email,
         phone: data.phone,
         courts: parseInt(data.courts, 10),
+        price: parseFloat(data.price),
         city: data.city,
         address: data.address,
         province: data.province,
@@ -182,6 +183,26 @@ export function NewComplexModal({ onClose, onCreated }) {
               <span className="gc-new-error">{errors.courts.message}</span>
             ) : (
               <span className="gc-new-hint">Entre 1 y 50</span>
+            )}
+          </div>
+
+          <div className="gc-new-field">
+            <label className="gc-new-label">
+              Precio por hora ($) <span className="gc-required">*</span>
+            </label>
+            <input
+              {...register("price")}
+              className={`gc-new-input${errors.price ? " gc-new-input--error" : ""}`}
+              type="number"
+              min="0"
+              step="100"
+              placeholder="Ej: 3000"
+              onKeyDown={blockNonDigits}
+            />
+            {errors.price ? (
+              <span className="gc-new-error">{errors.price.message}</span>
+            ) : (
+              <span className="gc-new-hint">Solo números — máx. $999.999</span>
             )}
           </div>
 
