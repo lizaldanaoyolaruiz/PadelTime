@@ -11,6 +11,7 @@ const DEFAULT_VALUES = {
   city: "",
   province: "Tucumán",
   courts: "",
+  price: "",
   openTime: "",
   closeTime: "",
   observations: "",
@@ -36,6 +37,7 @@ export function useComplexForm(initialValues = {}) {
       email,
       address,
       courts: String(initialValues.courts || ""),
+      price: String(initialValues.price || ""),
     },
   });
 }
